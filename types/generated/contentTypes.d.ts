@@ -381,7 +381,7 @@ export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
     singularName: 'account';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     address: Schema.Attribute.String;
@@ -416,7 +416,7 @@ export interface ApiSettingSetting extends Struct.CollectionTypeSchema {
     singularName: 'setting';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     category: Schema.Attribute.String;
