@@ -15,6 +15,7 @@ module.exports = createCoreService('api::setting.setting', ({ strapi }) => ({
         ...item,
         key: '_' + item.pluralName,
         label: item.name,
+        collection: item.pluralName,
         icon: 'file-text',
         weight,
       });
