@@ -50,7 +50,8 @@ module.exports = createCoreService('api::setting.setting', ({ strapi }) => ({
     const availableMenus = await this.getAvailableMenus();
 
     let hiddenMenus = defaultMenus.filter((item) => {
-      return !availableMenus.includes(item.name);
+      // find item key in available menus
+      return !availableMenus.find((menu) => menu.key === item.key);
     });
 
     return hiddenMenus;

@@ -48,18 +48,44 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
   async updateMenus(ctx) {
     const { body } = ctx.request;
 
-    await strapi.db.query('api::setting.setting').update({
+    // check setting menu not exist -> create it
+    const setting = await strapi.db.query('api::setting.setting').findOne({
       where: {
         category: 'system',
         name: 'menu',
       },
+    });
+
+    if (setting) {
+      const result = await strapi.db.query('api::setting.setting').update({
+        where: {
+          category: 'system',
+          name: 'menu',
+        },
+        data: {
+          values: body,
+        },
+      });
+
+      return {
+        message: 'Update success',
+        data: result,
+        id: setting.id,
+      };
+    }
+
+    const result = await strapi.db.query('api::setting.setting').create({
       data: {
+        category: 'system',
+        name: 'menu',
         values: body,
       },
     });
 
     return {
-      message: 'Update success',
+      message: 'Create success',
+      data: result,
+      id: result.id,
     };
   },
 }));
