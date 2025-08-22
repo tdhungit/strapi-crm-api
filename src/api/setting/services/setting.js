@@ -1,0 +1,58 @@
+'use strict';
+
+// @ts-ignore
+const { createCoreService } = require('@strapi/strapi').factories;
+
+module.exports = createCoreService('api::setting.setting', ({ strapi }) => ({
+  async getDefaultMenus() {
+    // get content types
+    const contentTypes = await strapi.service('api::metadata.metadata').getContentTypes();
+
+    let menus = [];
+    let weight = 1;
+    contentTypes.forEach((item) => {
+      menus.push({
+        ...item,
+        key: '_' + item.pluralName,
+        label: item.name,
+        icon: 'file-text',
+        weight,
+      });
+      weight++;
+    });
+
+    return menus;
+  },
+
+  async getAvailableMenus() {
+    let menus = [];
+    const settingMenus = await strapi.db.query('api::setting.setting').findOne({
+      where: {
+        category: 'system',
+        name: 'menu',
+      },
+    });
+
+    if (settingMenus) {
+      settingMenus.values.forEach((item) => {
+        menus.push(item);
+      });
+    }
+
+    // sort by weight
+    menus.sort((a, b) => a.weight - b.weight);
+
+    return menus;
+  },
+
+  async getHiddenMenus() {
+    const defaultMenus = await this.getDefaultMenus();
+    const availableMenus = await this.getAvailableMenus();
+
+    let hiddenMenus = defaultMenus.filter((item) => {
+      return !availableMenus.includes(item.name);
+    });
+
+    return hiddenMenus;
+  },
+}));
