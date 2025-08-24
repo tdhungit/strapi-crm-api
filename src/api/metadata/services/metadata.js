@@ -6,6 +6,7 @@ module.exports = () => ({
       uid: ct.uid,
       ...ct.info,
       collectionName: ct.collectionName,
+      fields: ct.attributes,
     }));
 
     return contentTypes;
