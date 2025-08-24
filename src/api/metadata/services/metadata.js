@@ -13,4 +13,29 @@ module.exports = () => ({
 
     return contentTypes;
   },
+
+  async getContentTypeConfiguration(uid) {
+    const config = await strapi.db.query('strapi::core-store').findOne({
+      where: {
+        key: `plugin_content_manager_configuration_content_types::${uid}`,
+      },
+    });
+
+    if (!config) {
+      return {};
+    }
+
+    const parsedValue = JSON.parse(config.value || '{}');
+
+    // get schema
+    const schema = await strapi.contentType(uid);
+
+    return {
+      uid,
+      settings: parsedValue.settings || {},
+      metadatas: parsedValue.metadatas || {},
+      layouts: parsedValue.layouts || {},
+      fields: schema.attributes || {},
+    };
+  },
 });
