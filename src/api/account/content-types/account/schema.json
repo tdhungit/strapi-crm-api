@@ -34,6 +34,12 @@
     },
     "country": {
       "type": "string"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "accounts"
     }
   }
 }
