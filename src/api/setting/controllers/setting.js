@@ -15,10 +15,12 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
 
     const availableMenus = await strapi.service('api::setting.setting').getAvailableMenus();
     if (availableMenus.length > 0) {
+      settings['init'] = false;
       settings['menus'] = availableMenus;
     } else {
       // get default menus
       const defaultMenus = await strapi.service('api::setting.setting').getDefaultMenus();
+      settings['init'] = true;
       settings['menus'] = defaultMenus;
     }
 
