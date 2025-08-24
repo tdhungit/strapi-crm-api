@@ -8,31 +8,21 @@
 const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
-  async getMenus(ctx) {
+  async getAppSettings(ctx) {
+    let settings = {};
+
+    settings['content-types'] = await strapi.service('api::metadata.metadata').getAllContentTypes();
+
     const availableMenus = await strapi.service('api::setting.setting').getAvailableMenus();
     if (availableMenus.length > 0) {
-      return {
-        init: false,
-        menus: availableMenus,
-      };
+      settings['menus'] = availableMenus;
+    } else {
+      // get default menus
+      const defaultMenus = await strapi.service('api::setting.setting').getDefaultMenus();
+      settings['menus'] = defaultMenus;
     }
 
-    // get default menus
-    const defaultMenus = await strapi.service('api::setting.setting').getDefaultMenus();
-
-    // create new setting
-    // await strapi.service('api::setting.setting').create({
-    //   data: {
-    //     category: 'system',
-    //     name: 'menu',
-    //     values: defaultMenus,
-    //   },
-    // });
-
-    return {
-      init: true,
-      menus: defaultMenus,
-    };
+    return settings;
   },
 
   async getAvailableMenus() {

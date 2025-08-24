@@ -1,6 +1,16 @@
 'use strict';
 
 module.exports = () => ({
+  async getAllContentTypes() {
+    const contentTypes = Object.values(strapi.contentTypes).map((ct) => ({
+      uid: ct.uid,
+      ...ct.info,
+      collectionName: ct.collectionName,
+    }));
+
+    return contentTypes;
+  },
+
   async getContentTypes() {
     const contentTypes = Object.values(strapi.contentTypes)
       .filter((ct) => ct.uid.startsWith('api::') || ct.uid === 'plugin::users-permissions.user') // chỉ lấy custom content types và users

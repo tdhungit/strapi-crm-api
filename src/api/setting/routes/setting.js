@@ -2,8 +2,8 @@ module.exports = {
   routes: [
     {
       method: 'GET',
-      path: '/settings/menus',
-      handler: 'setting.getMenus',
+      path: '/settings/app',
+      handler: 'setting.getAppSettings',
     },
     {
       method: 'GET',
