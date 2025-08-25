@@ -51,4 +51,120 @@ module.exports = {
       },
     };
   },
+
+  async changeMyPassword(ctx) {
+    const user = ctx.state.user;
+    if (!user) {
+      return ctx.unauthorized('Authentication required');
+    }
+
+    const { currentPassword, newPassword, confirmPassword } = ctx.request.body;
+
+    // Validate required fields
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return ctx.badRequest('Current password, new password, and confirm password are required');
+    }
+
+    // Validate new password confirmation
+    if (newPassword !== confirmPassword) {
+      return ctx.badRequest('New password and confirm password do not match');
+    }
+
+    // Validate new password strength (minimum 6 characters)
+    if (newPassword.length < 6) {
+      return ctx.badRequest('New password must be at least 6 characters long');
+    }
+
+    try {
+      const bcrypt = require('bcryptjs');
+
+      // Get the current user with password field
+      const currentUser = await strapi.entityService.findOne(
+        'plugin::users-permissions.user',
+        user.id,
+        {
+          fields: ['id', 'email', 'password'],
+        }
+      );
+
+      if (!currentUser) {
+        return ctx.notFound('User not found');
+      }
+
+      // Verify current password
+      const isCurrentPasswordValid = await bcrypt.compare(currentPassword, currentUser.password);
+
+      if (!isCurrentPasswordValid) {
+        return ctx.badRequest('Current password is incorrect');
+      }
+
+      // Hash the new password
+      const saltRounds = 10;
+      const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+      // Update the user's password
+      await strapi.entityService.update('plugin::users-permissions.user', user.id, {
+        data: {
+          password: hashedNewPassword,
+        },
+      });
+
+      return ctx.send({
+        message: 'Password changed successfully',
+      });
+    } catch (error) {
+      strapi.log.error('Error changing password:', error);
+      return ctx.internalServerError('An error occurred while changing the password');
+    }
+  },
+
+  async changeUserPassword(ctx) {
+    const { id: userId } = ctx.state.user;
+    const { newPassword, confirmPassword } = ctx.request.body;
+
+    // Validate new password confirmation
+    if (newPassword !== confirmPassword) {
+      return ctx.badRequest('New password and confirm password do not match');
+    }
+
+    // Validate new password strength (minimum 6 characters)
+    if (newPassword.length < 6) {
+      return ctx.badRequest('New password must be at least 6 characters long');
+    }
+
+    try {
+      const bcrypt = require('bcryptjs');
+
+      // Get the current user with password field
+      const currentUser = await strapi.entityService.findOne(
+        'plugin::users-permissions.user',
+        userId,
+        {
+          fields: ['id', 'email', 'password'],
+        }
+      );
+
+      if (!currentUser) {
+        return ctx.notFound('User not found');
+      }
+
+      // Hash the new password
+      const saltRounds = 10;
+      const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+      // Update the user's password
+      await strapi.entityService.update('plugin::users-permissions.user', userId, {
+        data: {
+          password: hashedNewPassword,
+        },
+      });
+
+      return ctx.send({
+        message: 'Password changed successfully',
+      });
+    } catch (error) {
+      strapi.log.error('Error changing password:', error);
+      return ctx.internalServerError('An error occurred while changing the password');
+    }
+  },
 };

@@ -8,5 +8,13 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: 'POST',
+      path: '/users/change-password/:id',
+      handler: 'user.changeUserPassword',
+      config: {
+        policies: [],
+      },
+    },
   ],
 };
