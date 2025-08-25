@@ -9,6 +9,11 @@ module.exports = () => ({
       fields: ct.attributes,
     }));
 
+    for await (const contentType of contentTypes) {
+      const config = await this.getContentTypeConfiguration(contentType.uid);
+      contentType.settings = config.settings;
+    }
+
     return contentTypes;
   },
 
