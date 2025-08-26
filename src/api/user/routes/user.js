@@ -4,17 +4,26 @@ module.exports = {
       method: 'GET',
       path: '/users',
       handler: 'user.getAllUsers',
-      config: {
-        policies: [],
-      },
     },
     {
       method: 'POST',
       path: '/users/change-password/:id',
       handler: 'user.changeUserPassword',
-      config: {
-        policies: [],
-      },
+    },
+    {
+      method: 'POST',
+      path: '/users/change-my-password',
+      handler: 'user.changeMyPassword',
+    },
+    {
+      method: 'GET',
+      path: '/users/me',
+      handler: 'user.getCurrentUser',
+    },
+    {
+      method: 'PUT',
+      path: '/users/me',
+      handler: 'user.updateCurrentUser',
     },
   ],
 };

@@ -167,4 +167,42 @@ module.exports = {
       return ctx.internalServerError('An error occurred while changing the password');
     }
   },
+
+  async getCurrentUser(ctx) {
+    const user = ctx.state.user;
+    if (!user) {
+      return ctx.unauthorized('Authentication required');
+    }
+
+    const safeFields = ['id', 'email', 'username'];
+    const currentUser = await strapi.entityService.findOne(
+      'plugin::users-permissions.user',
+      user.id,
+      {
+        fields: safeFields,
+        populate: ['role'],
+      }
+    );
+
+    return currentUser;
+  },
+
+  async updateCurrentUser(ctx) {
+    const user = ctx.state.user;
+    if (!user) {
+      return ctx.unauthorized('Authentication required');
+    }
+
+    const { body } = ctx.request;
+
+    const updatedUser = await strapi.entityService.update(
+      'plugin::users-permissions.user',
+      user.id,
+      {
+        data: body,
+      }
+    );
+
+    return updatedUser;
+  },
 };
