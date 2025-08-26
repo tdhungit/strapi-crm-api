@@ -56,4 +56,36 @@ module.exports = createCoreService('api::setting.setting', ({ strapi }) => ({
 
     return hiddenMenus;
   },
+
+  async getSettings(category) {
+    const settings = await strapi.db.query('api::setting.setting').findMany({
+      where: {
+        category,
+      },
+    });
+
+    const result = {};
+    settings.forEach((item) => {
+      result[item.name] = item.values;
+    });
+
+    return result;
+  },
+
+  async updateSettings(category, body) {
+    for (let key in body) {
+      await strapi.db.query('api::setting.setting').updateOrCreate({
+        where: {
+          category,
+          name: key,
+        },
+        data: {
+          category,
+          name: key,
+          values: body[key],
+        },
+      });
+    }
+    return this.getSettings(category);
+  },
 }));

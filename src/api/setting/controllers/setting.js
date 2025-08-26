@@ -80,4 +80,17 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
       id: result.id,
     };
   },
+
+  async getSettings(ctx) {
+    const { category } = ctx.params;
+    const settings = await strapi.service('api::setting.setting').getSettings(category);
+    return settings;
+  },
+
+  async updateSettings(ctx) {
+    const { category } = ctx.params;
+    const { body } = ctx.request;
+    const settings = await strapi.service('api::setting.setting').updateSettings(category, body);
+    return settings;
+  },
 }));

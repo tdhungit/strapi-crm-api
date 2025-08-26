@@ -20,5 +20,15 @@ module.exports = {
       path: '/settings/menus',
       handler: 'setting.updateMenus',
     },
+    {
+      method: 'GET',
+      path: '/settings/:category',
+      handler: 'setting.getSettings',
+    },
+    {
+      method: 'PUT',
+      path: '/settings/:category',
+      handler: 'setting.updateSettings',
+    },
   ],
 };
