@@ -3,4 +3,4 @@
 // @ts-ignore
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::account.account');
+module.exports = createCoreRouter('api::contact.contact');

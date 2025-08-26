@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * account controller
- */
-
 // @ts-ignore
 const { createCoreController } = require('@strapi/strapi').factories;
 
