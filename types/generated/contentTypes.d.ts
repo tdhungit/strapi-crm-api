@@ -421,7 +421,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     singularName: 'contact';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
