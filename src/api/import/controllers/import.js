@@ -162,4 +162,74 @@ module.exports = createCoreController('api::import.import', ({ strapi }) => ({
       );
     }
   },
+
+  async exportToCSV(ctx) {
+    try {
+      // Get collection UID from request params
+      const { module } = ctx.params;
+      if (!module) {
+        return ctx.badRequest('Module is required');
+      }
+
+      const { filters = {}, sort = ['id:asc'] } = ctx.query;
+
+      // Get content type information
+      const contentType = await strapi
+        .service('api::metadata.metadata')
+        .getContentTypeFromCollectionName(module);
+      if (!contentType) {
+        return ctx.badRequest(`Collection ${module} does not exist`);
+      }
+
+      // Get the content type schema to determine exportable fields
+      const schema = strapi.contentType(contentType.uid);
+      const attributes = schema.attributes;
+
+      // Filter out non-exportable fields (relations, passwords, etc.)
+      const exportableFields = [];
+      const fieldLabels = [];
+
+      for (const [fieldName, fieldConfig] of Object.entries(attributes)) {
+        // Skip system fields and complex relations
+        if (
+          !['createdBy', 'updatedBy', 'localizations'].includes(fieldName) &&
+          fieldConfig.type !== 'password' &&
+          fieldConfig.type !== 'relation' &&
+          !fieldConfig.private
+        ) {
+          exportableFields.push(fieldName);
+          // Use displayName if available, otherwise use field name
+          fieldLabels.push(fieldConfig.displayName || fieldName);
+        }
+      }
+
+      // Fetch data from the collection
+      const assignedFilter = await strapi
+        .service('api::user.user')
+        .assignFilter(ctx.state.user.id, module);
+      const entities = await strapi.entityService.findMany(contentType.uid, {
+        filters: {
+          ...filters,
+          ...assignedFilter,
+        },
+        sort: sort,
+        populate: '*', // Populate relations for better export
+      });
+
+      // Convert data to CSV format
+      const csvData = strapi
+        .service('api::import.import')
+        .convertToCSV(entities, exportableFields, fieldLabels);
+
+      // Set response headers for file download
+      const filename = `${module}_export_${new Date().toISOString().split('T')[0]}.csv`;
+      ctx.set('Content-Type', 'text/csv');
+      ctx.set('Content-Disposition', `attachment; filename="${filename}"`);
+
+      return ctx.send(csvData);
+    } catch (error) {
+      strapi.log.error('Error exporting to CSV:', error);
+      return ctx.internalServerError('An error occurred while exporting to CSV: ' + error.message);
+    }
+  },
 }));

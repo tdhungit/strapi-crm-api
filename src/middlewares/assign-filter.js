@@ -9,7 +9,7 @@ module.exports = (config, { strapi }) => {
           if (id) {
             // get api name from url
             const parts = ctx.request.url.split('/');
-            const apiName = parts[2]; // ví dụ: accounts, contacts, deals
+            const apiName = parts[2];
             // get content type information
             const model = Object.values(strapi.contentTypes).find(
               (ct) => ct.collectionName === apiName
@@ -18,11 +18,14 @@ module.exports = (config, { strapi }) => {
             if (model && model.attributes.assigned_user) {
               // add assigned_user filter
               if (ctx.method === 'GET') {
+                const assignFilter = await strapi
+                  .service('api::user.user')
+                  .generateAssignFilter(id);
                 ctx.query = {
                   ...ctx.query,
                   filters: {
                     ...(ctx.query.filters || {}),
-                    assigned_user: { id: id },
+                    ...assignFilter,
                   },
                 };
               } else if (ctx.method === 'POST') {

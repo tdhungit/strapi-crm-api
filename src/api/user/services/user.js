@@ -1,7 +1,22 @@
 'use strict';
 
-/**
- * user service
- */
+module.exports = () => ({
+  async assignFilter(userId, collectionName) {
+    // get content type information
+    const model = Object.values(strapi.contentTypes).find(
+      (ct) => ct.collectionName === collectionName
+    );
+    // check assigned_user field exist
+    if (model && model.attributes.assigned_user) {
+      return await this.generateAssignFilter(userId);
+    }
 
-module.exports = () => ({});
+    return {};
+  },
+
+  async generateAssignFilter(userId) {
+    return {
+      assigned_user: { id: userId },
+    };
+  },
+});

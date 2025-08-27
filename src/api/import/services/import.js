@@ -53,4 +53,60 @@ module.exports = createCoreService('api::import.import', ({ strapi }) => ({
 
     return mappedRecord;
   },
+
+  convertToCSV(data, fields, headers) {
+    // Create CSV header row
+    const csvRows = [];
+    csvRows.push(headers.map((header) => this.escapeCSVField(header)).join(','));
+
+    // Convert each record to CSV row
+    data.forEach((record) => {
+      const row = fields.map((field) => {
+        let value = record[field];
+
+        // Handle different data types
+        if (value === null || value === undefined) {
+          return '';
+        }
+
+        // Handle dates
+        if (
+          value instanceof Date ||
+          (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}T/))
+        ) {
+          value = new Date(value).toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        }
+
+        // Handle objects/arrays (stringify them)
+        if (typeof value === 'object') {
+          value = JSON.stringify(value);
+        }
+
+        // Handle boolean
+        if (typeof value === 'boolean') {
+          value = value ? 'true' : 'false';
+        }
+
+        return this.escapeCSVField(String(value));
+      });
+
+      csvRows.push(row.join(','));
+    });
+
+    return csvRows.join('\n');
+  },
+
+  escapeCSVField(field) {
+    // Escape CSV field by wrapping in quotes if it contains comma, quote, or newline
+    if (
+      field.includes(',') ||
+      field.includes('"') ||
+      field.includes('\n') ||
+      field.includes('\r')
+    ) {
+      // Escape quotes by doubling them
+      return `"${field.replace(/"/g, '""')}"`;
+    }
+    return field;
+  },
 }));

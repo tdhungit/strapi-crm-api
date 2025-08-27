@@ -1,25 +1,30 @@
-# CSV Import API Documentation
+# CSV Import/Export API Documentation
 
 ## Overview
-The CSV Import API allows you to upload CSV files from the frontend and automatically import the data into your Strapi collections.
+
+The CSV Import/Export API allows you to upload CSV files from the frontend and automatically import the data into your Strapi collections, as well as export collection data to CSV format.
 
 ## Endpoints
 
 ### 1. Upload and Import CSV
+
 **POST** `/api/import/csv`
 
 Upload a CSV file and import its data into a specified collection.
 
 #### Request
+
 - **Method**: POST
 - **Content-Type**: multipart/form-data
 - **Authentication**: Required (Bearer token)
 
 #### Parameters
+
 - `file` (file, required): The CSV file to upload
 - `collectionUid` (string, required): The UID of the collection to import data into (e.g., "api::contact.contact", "api::account.account")
 
 #### Example Request (JavaScript/Fetch)
+
 ```javascript
 const formData = new FormData();
 formData.append('file', csvFile); // csvFile is a File object
@@ -28,7 +33,7 @@ formData.append('collectionUid', 'api::contact.contact');
 const response = await fetch('/api/import/csv', {
   method: 'POST',
   headers: {
-    'Authorization': `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   },
   body: formData,
 });
@@ -37,6 +42,7 @@ const result = await response.json();
 ```
 
 #### Example Request (cURL)
+
 ```bash
 curl -X POST \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -46,6 +52,7 @@ curl -X POST \
 ```
 
 #### Response
+
 ```json
 {
   "message": "CSV file uploaded and processed successfully",
@@ -61,15 +68,18 @@ curl -X POST \
 ```
 
 ### 2. Get Import History
+
 **GET** `/api/import/history`
 
 Retrieve a list of previously uploaded CSV files.
 
 #### Request
+
 - **Method**: GET
 - **Authentication**: Required (Bearer token)
 
 #### Response
+
 ```json
 {
   "data": [
@@ -88,15 +98,72 @@ Retrieve a list of previously uploaded CSV files.
 }
 ```
 
+### 3. Export Collection to CSV
+
+**GET** `/api/exports/csv`
+
+Export data from a collection to CSV format with field names as headers.
+
+#### Request
+
+- **Method**: GET
+- **Authentication**: Required (Bearer token)
+
+#### Parameters
+
+- `module` (string, required): The collection name to export (e.g., "contacts", "accounts")
+- `filters` (object, optional): Strapi filters to apply to the data
+- `sort` (array, optional): Sort order for the data (default: ["id:asc"])
+
+#### Example Request (JavaScript/Fetch)
+
+```javascript
+const response = await fetch('/api/exports/csv?module=contacts', {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
+// The response will be a CSV file download
+const csvData = await response.text();
+```
+
+#### Example Request with Filters (cURL)
+
+```bash
+curl -X GET \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://localhost:1337/api/exports/csv/contacts?filters[name][\$contains]=John"
+```
+
+#### Response
+
+The response will be a CSV file with:
+
+- **Content-Type**: `text/csv`
+- **Content-Disposition**: `attachment; filename="contacts_export_2023-12-01.csv"`
+- **Body**: CSV data with field names as headers
+
+Example CSV output:
+
+```csv
+id,name,email,phone,company,createdAt,updatedAt
+1,John Doe,john@example.com,+1234567890,Acme Corp,2023-12-01,2023-12-01
+2,Jane Smith,jane@example.com,+0987654321,Tech Inc,2023-12-01,2023-12-01
+```
+
 ## CSV File Format
 
 ### Requirements
+
 - File must have a `.csv` extension
 - First row should contain column headers
 - Column headers should match the field names in your Strapi collection
 - Empty lines are automatically skipped
 
 ### Example CSV for Contacts
+
 ```csv
 name,email,phone,company
 John Doe,john@example.com,+1234567890,Acme Corp
@@ -104,6 +171,7 @@ Jane Smith,jane@example.com,+0987654321,Tech Inc
 ```
 
 ### Example CSV for Accounts
+
 ```csv
 name,email,website,industry
 Acme Corporation,contact@acme.com,https://acme.com,Technology
@@ -111,7 +179,9 @@ Tech Solutions,info@techsol.com,https://techsol.com,Consulting
 ```
 
 ## Collection UIDs
+
 Common collection UIDs in this CRM system:
+
 - `api::contact.contact` - For contacts
 - `api::account.account` - For accounts
 - `plugin::users-permissions.user` - For users
@@ -121,6 +191,7 @@ Common collection UIDs in this CRM system:
 ### Common Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "error": {
@@ -132,6 +203,7 @@ Common collection UIDs in this CRM system:
 ```
 
 #### 400 Bad Request - Invalid Collection
+
 ```json
 {
   "error": {
@@ -143,6 +215,7 @@ Common collection UIDs in this CRM system:
 ```
 
 #### 401 Unauthorized
+
 ```json
 {
   "error": {
@@ -154,6 +227,7 @@ Common collection UIDs in this CRM system:
 ```
 
 #### 500 Internal Server Error
+
 ```json
 {
   "error": {
@@ -183,7 +257,7 @@ const CSVUpload = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-    
+
     setUploading(true);
     const formData = new FormData();
     formData.append('file', file);
@@ -193,13 +267,13 @@ const CSVUpload = () => {
       const response = await fetch('/api/import/csv', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: formData,
       });
 
       const result = await response.json();
-      
+
       if (response.ok) {
         alert('CSV imported successfully!');
       } else {
@@ -214,20 +288,68 @@ const CSVUpload = () => {
 
   return (
     <div>
-      <input
-        type="file"
-        accept=".csv"
-        onChange={(e) => setFile(e.target.files[0])}
-      />
-      <select
-        value={collectionUid}
-        onChange={(e) => setCollectionUid(e.target.value)}
-      >
-        <option value="api::contact.contact">Contacts</option>
-        <option value="api::account.account">Accounts</option>
+      <input type='file' accept='.csv' onChange={(e) => setFile(e.target.files[0])} />
+      <select value={collectionUid} onChange={(e) => setCollectionUid(e.target.value)}>
+        <option value='api::contact.contact'>Contacts</option>
+        <option value='api::account.account'>Accounts</option>
       </select>
       <button onClick={handleUpload} disabled={!file || uploading}>
         {uploading ? 'Uploading...' : 'Upload CSV'}
+      </button>
+    </div>
+  );
+};
+
+// Export component example
+const CSVExport = () => {
+  const [module, setModule] = useState('contacts');
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+
+    try {
+      const response = await fetch(`/api/exports/csv?module=${module}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        // Create a blob from the response
+        const blob = await response.blob();
+
+        // Create a download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${module}_export_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        alert('CSV exported successfully!');
+      } else {
+        const error = await response.json();
+        alert('Error: ' + error.error.message);
+      }
+    } catch (error) {
+      alert('Export failed: ' + error.message);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  return (
+    <div>
+      <select value={module} onChange={(e) => setModule(e.target.value)}>
+        <option value='contacts'>Contacts</option>
+        <option value='accounts'>Accounts</option>
+      </select>
+      <button onClick={handleExport} disabled={exporting}>
+        {exporting ? 'Exporting...' : 'Export to CSV'}
       </button>
     </div>
   );
