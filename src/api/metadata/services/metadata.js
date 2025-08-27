@@ -75,4 +75,18 @@ module.exports = () => ({
 
     return fixedData;
   },
+
+  async getLogo() {
+    const branding = await strapi.db.query('strapi::core-store').findOne({
+      where: {
+        key: `core_admin_project-settings`,
+      },
+    });
+
+    if (!branding) {
+      return {};
+    }
+
+    return branding.value;
+  },
 });

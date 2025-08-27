@@ -11,8 +11,10 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
   async getAppSettings(ctx) {
     let settings = {};
 
+    // get all content types
     settings['content-types'] = await strapi.service('api::metadata.metadata').getAllContentTypes();
 
+    // get main menus
     const availableMenus = await strapi.service('api::setting.setting').getAvailableMenus();
     if (availableMenus.length > 0) {
       settings['init'] = false;
@@ -23,6 +25,10 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
       settings['init'] = true;
       settings['menus'] = defaultMenus;
     }
+
+    // get logo
+    const logos = await strapi.service('api::metadata.metadata').getLogo();
+    settings['logo'] = JSON.parse(logos);
 
     return settings;
   },
@@ -95,16 +101,7 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
   },
 
   async getLogo(ctx) {
-    const branding = await strapi.db.query('strapi::core-store').findOne({
-      where: {
-        key: `core_admin_project-settings`,
-      },
-    });
-
-    if (!branding) {
-      return {};
-    }
-
-    return branding.value;
+    const branding = await strapi.service('api::metadata.metadata').getLogo();
+    return branding;
   },
 }));
