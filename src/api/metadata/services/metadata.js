@@ -30,6 +30,14 @@ module.exports = () => ({
     return contentTypes;
   },
 
+  async getContentTypeFromCollectionName(collectionName) {
+    const contentType = Object.values(strapi.contentTypes).find(
+      (ct) => ct.collectionName === collectionName
+    );
+
+    return contentType;
+  },
+
   async getContentTypeConfiguration(uid) {
     const config = await strapi.db.query('strapi::core-store').findOne({
       where: {
@@ -53,5 +61,18 @@ module.exports = () => ({
       layouts: parsedValue.layouts || {},
       fields: schema.attributes || {},
     };
+  },
+
+  async fixDataSave(uid, data) {
+    const fixedData = {};
+    const attributes = strapi.contentType(uid).attributes;
+
+    for (const key in data) {
+      if (attributes[key]) {
+        fixedData[key] = data[key];
+      }
+    }
+
+    return fixedData;
   },
 });

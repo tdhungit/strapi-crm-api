@@ -1,3 +1,11 @@
+'use strict';
+
 module.exports = {
-  routes: [],
+  routes: [
+    {
+      method: 'POST',
+      path: '/imports/csv',
+      handler: 'import.uploadCSVImport',
+    },
+  ],
 };

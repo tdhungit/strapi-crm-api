@@ -77,6 +77,12 @@
       "relation": "oneToMany",
       "target": "api::contact.contact",
       "mappedBy": "assigned_user"
+    },
+    "imports": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::import.import",
+      "mappedBy": "assigned_user"
     }
   }
 }
