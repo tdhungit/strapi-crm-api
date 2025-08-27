@@ -7,6 +7,7 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::import.import', ({ strapi }) => ({
   async uploadCSVImport(ctx) {
+    const user = ctx.state.user;
     try {
       // Get collection UID from request body or query
       const { module } = ctx.request.body || ctx.query;
@@ -112,6 +113,7 @@ module.exports = createCoreController('api::import.import', ({ strapi }) => ({
         {
           totalRows,
           uploadedFile: uploadedFileRecord,
+          assigned_user: user,
         }
       );
 
