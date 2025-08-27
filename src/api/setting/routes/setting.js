@@ -16,6 +16,11 @@ module.exports = {
       handler: 'setting.getHiddenMenus',
     },
     {
+      method: 'GET',
+      path: '/settings/logo',
+      handler: 'setting.getLogo',
+    },
+    {
       method: 'PUT',
       path: '/settings/menus',
       handler: 'setting.updateMenus',

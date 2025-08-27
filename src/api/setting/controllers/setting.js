@@ -93,4 +93,18 @@ module.exports = createCoreController('api::setting.setting', ({ strapi }) => ({
     const settings = await strapi.service('api::setting.setting').updateSettings(category, body);
     return settings;
   },
+
+  async getLogo(ctx) {
+    const branding = await strapi.db.query('strapi::core-store').findOne({
+      where: {
+        key: `core_admin_project-settings`,
+      },
+    });
+
+    if (!branding) {
+      return {};
+    }
+
+    return branding.value;
+  },
 }));
