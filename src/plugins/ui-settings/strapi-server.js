@@ -1,4 +1,4 @@
-module.exports = ({ strapi }) => {
+module.exports = () => {
   return {
     register() {},
 
@@ -8,13 +8,13 @@ module.exports = ({ strapi }) => {
     routes: [
       {
         method: 'GET',
-        path: '/ui-settings/config',
+        path: '/config',
         handler: 'ui-settings.getConfig',
-        config: { auth: false }, // public
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
       {
         method: 'POST',
-        path: '/ui-settings/config',
+        path: '/config',
         handler: 'ui-settings.setConfig',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
@@ -24,27 +24,51 @@ module.exports = ({ strapi }) => {
       'ui-settings': {
         async getConfig(ctx) {
           try {
-            const store = strapi.store({ type: 'plugin', name: 'ui-settings' });
-            const settings = (await store.get({ key: 'config' })) || {};
-            ctx.body = settings;
+            const store = strapi.db.query('strapi::core-store');
+            const settings = await store.findOne({
+              where: {
+                key: `plugin_ui-settings_config`,
+              },
+            });
+            if (settings?.value) {
+              return settings.value;
+            }
+            return {};
           } catch (error) {
             console.error('Error getting UI settings config:', error);
-            ctx.body = {};
+            return {};
           }
         },
 
         async setConfig(ctx) {
           try {
-            const { pageTitle, pageSubtitle, favicon } = ctx.request.body;
-            const store = strapi.store({ type: 'plugin', name: 'ui-settings' });
-            await store.set({
-              key: 'config',
-              value: { pageTitle, pageSubtitle, favicon },
+            const store = strapi.db.query('strapi::core-store');
+            const settings = await store.findOne({
+              where: {
+                key: `plugin_ui-settings_config`,
+              },
             });
-            ctx.body = { ok: true };
+            if (settings) {
+              await store.update({
+                where: {
+                  key: `plugin_ui-settings_config`,
+                },
+                data: {
+                  value: JSON.stringify(ctx.request.body),
+                },
+              });
+            } else {
+              await store.create({
+                data: {
+                  key: `plugin_ui-settings_config`,
+                  value: JSON.stringify(ctx.request.body),
+                },
+              });
+            }
+            return { status: 'ok' };
           } catch (error) {
             console.error('Error setting UI settings config:', error);
-            ctx.badRequest('Failed to save settings');
+            return { status: 'error' };
           }
         },
       },

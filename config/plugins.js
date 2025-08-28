@@ -1,10 +1,4 @@
 module.exports = ({ env }) => ({
-  tablify: {
-    enabled: true,
-    config: {
-      // optional configs
-    },
-  },
   upload: {
     config: {
       sizeLimit: env.int('UPLOAD_SIZE_LIMIT', 50 * 1024 * 1024), // 50MB default

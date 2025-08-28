@@ -1,52 +1,31 @@
 // @ts-nocheck
-import { Box, Field, Flex, TextInput } from '@strapi/design-system';
+import { useFetchClient } from '@strapi/admin/strapi-admin';
+import { Box, Button, Field, Flex, TextInput } from '@strapi/design-system';
 import React, { useEffect, useState } from 'react';
 
+const defaultSettings = {
+  pageTitle: '',
+  pageSubtitle: '',
+};
+
 const SettingsPage = () => {
-  const [settings, setSettings] = useState({
-    pageTitle: '',
-    pageSubtitle: '',
-  });
+  const [settings, setSettings] = useState(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [errors, setErrors] = useState({});
 
-  // Simple fetch function
-  const fetchData = async (url, options = {}) => {
-    const response = await fetch(`/api${url}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
-  };
+  const fetchClient = useFetchClient();
+  const { get, post } = fetchClient;
 
   // Load current settings
   useEffect(() => {
     const loadSettings = async () => {
       try {
         setIsLoading(true);
-        const response = await fetchData('/ui-settings/config');
-        if (response) {
-          setSettings({
-            pageTitle: response.pageTitle || '',
-            pageSubtitle: response.pageSubtitle || '',
-          });
-        }
+        const response = await get('/ui-settings/config');
+        setSettings(response?.data || defaultSettings);
       } catch (error) {
         console.error('Error loading settings:', error);
-        setNotification({
-          type: 'danger',
-          message: 'Failed to load settings',
-        });
       } finally {
         setIsLoading(false);
       }
@@ -91,26 +70,9 @@ const SettingsPage = () => {
 
     try {
       setIsSaving(true);
-      await fetchData('/ui-settings/config', {
-        method: 'POST',
-        body: JSON.stringify(settings),
-      });
-
-      setNotification({
-        type: 'success',
-        message: 'Settings saved successfully!',
-      });
-
-      // Clear notification after 3 seconds
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      await post('/ui-settings/config', settings);
     } catch (error) {
       console.error('Error saving settings:', error);
-      setNotification({
-        type: 'danger',
-        message: 'Failed to save settings',
-      });
     } finally {
       setIsSaving(false);
     }
@@ -138,7 +100,11 @@ const SettingsPage = () => {
           style={{ width: '100%', marginRight: 10 }}
         />
       </Field.Root>
-      <Flex alignItems='center'></Flex>
+      <Flex justifyContent='flex-end' style={{ marginTop: 15 }}>
+        <Button onClick={handleSave} loading={isSaving} disabled={isSaving}>
+          Save
+        </Button>
+      </Flex>
     </Box>
   );
 };
