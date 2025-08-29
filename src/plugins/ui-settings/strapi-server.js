@@ -10,7 +10,7 @@ module.exports = () => {
         method: 'GET',
         path: '/config',
         handler: 'ui-settings.getConfig',
-        config: { policies: ['admin::isAuthenticatedAdmin'] },
+        config: { auth: false },
       },
       {
         method: 'POST',
