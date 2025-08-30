@@ -5,11 +5,19 @@ module.exports = (config, { strapi }) => {
       const token = ctx.request.header.authorization;
       if (token) {
         try {
-          const { id } = await strapi.plugins['users-permissions'].services.jwt.getToken(ctx);
+          // get user id from token
+          const { id } =
+            await strapi.plugins['users-permissions'].services.jwt.getToken(
+              ctx
+            );
+          // check user id
           if (id) {
             // get api name from url
             const parts = ctx.request.url.split('/');
-            const apiName = parts[2];
+            let apiName = parts[2];
+            if (apiName.indexOf('?') > 0) {
+              apiName = apiName.split('?')[0];
+            }
             // get content type information
             const model = Object.values(strapi.contentTypes).find(
               (ct) => ct.collectionName === apiName
@@ -21,6 +29,7 @@ module.exports = (config, { strapi }) => {
                 const assignFilter = await strapi
                   .service('api::user.user')
                   .generateAssignFilter(id);
+                // merge with existing filters
                 ctx.query = {
                   ...ctx.query,
                   filters: {
