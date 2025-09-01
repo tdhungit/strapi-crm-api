@@ -14,7 +14,7 @@ export default () => ({
 
   async generateAssignFilter(userId) {
     return {
-      assigned_user: { id: userId },
+      assigned_user: { id: parseInt(userId, 10) },
     };
   },
 });
