@@ -33,14 +33,16 @@ export default factories.createCoreService(
         .pipe(parse({ columns: true, skip_empty_lines: true }));
 
       for await (const record of parser) {
+        const mappedRecord = await this.loadCSVDataWithFieldMapping(
+          record,
+          fieldMappings,
+          user
+        );
         // check service have method createOrUpdate
         if (strapi.service(collectionUid).createOrUpdate) {
-          const mappedRecord = await this.loadCSVDataWithFieldMapping(
-            record,
-            fieldMappings,
-            user
-          );
           await strapi.service(collectionUid).createOrUpdate(mappedRecord);
+        } else {
+          this.createOrUpdate(collectionUid, mappedRecord);
         }
       }
 
@@ -117,6 +119,26 @@ export default factories.createCoreService(
         return `"${field.replace(/"/g, '""')}"`;
       }
       return field;
+    },
+
+    async createOrUpdate(collectionUid: any, mappedRecord: any) {
+      let existRecord = null;
+      // check duplicated
+      if (strapi.service(collectionUid).checkDuplicate) {
+        existRecord = await strapi
+          .service(collectionUid)
+          .checkDuplicate(mappedRecord);
+      }
+
+      if (existRecord?.id) {
+        // update
+        await strapi.db
+          .query(collectionUid)
+          .update({ where: { id: existRecord.id }, data: mappedRecord });
+      } else {
+        // create
+        await strapi.db.query(collectionUid).create({ data: mappedRecord });
+      }
     },
   })
 );
