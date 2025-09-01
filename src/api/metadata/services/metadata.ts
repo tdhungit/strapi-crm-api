@@ -1,4 +1,4 @@
-export default {
+export default () => ({
   async getAllContentTypes() {
     const contentTypes = Object.values(strapi.contentTypes).map((ct) => ({
       uid: ct.uid,
@@ -92,4 +92,4 @@ export default {
 
     return branding.value;
   },
-};
+});

@@ -49,7 +49,7 @@ export default (config, { strapi }) => {
             }
           }
         } catch (error) {
-          console.log('Error assign filter', error);
+          // console.log('Error assign filter', error);
         }
       }
     }
