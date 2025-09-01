@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "imports",
+  "info": {
+    "singularName": "import",
+    "pluralName": "imports",
+    "displayName": "Import"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fileName": {
+      "type": "string",
+      "required": true
+    },
+    "filePath": {
+      "type": "string",
+      "required": true
+    },
+    "fieldMappings": {
+      "type": "json"
+    },
+    "importStatus": {
+      "type": "string"
+    },
+    "total": {
+      "type": "integer"
+    },
+    "success": {
+      "type": "integer"
+    },
+    "error": {
+      "type": "integer"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "imports"
+    }
+  }
+}
