@@ -20,6 +20,12 @@ module.exports = () => {
         handler: 'ui-settings.setConfig',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      {
+        method: 'POST',
+        path: '/upload-favicon',
+        handler: 'ui-settings.uploadFavicon',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
     ],
 
     controllers: {

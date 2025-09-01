@@ -49,5 +49,29 @@ export default {
         return { status: 'error' };
       }
     },
+
+    async uploadFavicon(ctx) {
+      try {
+        const { files } = ctx.request;
+        if (!files) {
+          return ctx.badRequest('No file uploaded');
+        }
+        const file = files.file;
+        const fileObj = Array.isArray(file) ? file[0] : file;
+        const uploadService = strapi.plugin('upload').service('upload');
+        const [upload] = await uploadService.upload({
+          files: fileObj,
+          data: {
+            fileInfo: {
+              name: fileObj.originalFilename,
+            },
+          },
+        });
+        return upload;
+      } catch (error) {
+        console.error('Error uploading favicon:', error);
+        return ctx.badRequest('Error uploading favicon');
+      }
+    },
   },
 };
