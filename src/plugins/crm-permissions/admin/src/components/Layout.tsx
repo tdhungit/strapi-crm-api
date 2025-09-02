@@ -5,10 +5,14 @@ import {
   SubNavLink,
   SubNavSection,
 } from '@strapi/design-system';
-import { Outlet } from 'react-router-dom';
+import { Briefcase } from '@strapi/icons';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 
 export default function Layout() {
+  const location = useLocation();
+  const navigation = useNavigate();
+
   return (
     <Main>
       <Box
@@ -25,7 +29,13 @@ export default function Layout() {
           <div style={{ display: 'flex' }}>
             <SubNav style={{ height: 'calc(100vh - 160px)' }}>
               <SubNavSection label='Global Settings'>
-                <SubNavLink href='./crm-permissions' className='active'>
+                <SubNavLink
+                  className={
+                    location.pathname === '/crm-permissions' ? 'active' : ''
+                  }
+                  onClick={() => navigation('/plugins/crm-permissions')}
+                  icon={<Briefcase />}
+                >
                   Permissions
                 </SubNavLink>
               </SubNavSection>
