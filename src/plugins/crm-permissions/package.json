@@ -1,12 +1,12 @@
 {
-  "name": "ui-settings",
+  "name": "crm-permissions",
   "version": "1.0.0",
-  "description": "UI Settings plugin for Strapi CRM",
+  "description": "CRM Permissions plugin for Strapi CRM",
   "main": "./strapi-server.js",
   "strapi": {
-    "name": "ui-settings",
+    "name": "crm-permissions",
     "displayName": "UI Settings",
-    "description": "Customize UI settings like page title and favicon",
+    "description": "Manage CRM specific permissions",
     "kind": "plugin"
   },
   "dependencies": {},

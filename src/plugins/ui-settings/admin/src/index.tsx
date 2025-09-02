@@ -1,17 +1,16 @@
-import { StrikeThrough } from '@strapi/icons';
+import { Eye } from '@strapi/icons';
 import pluginId from './pluginId';
 
 export default {
   register(app) {
     app.addMenuLink({
       to: `/plugins/${pluginId}`,
-      icon: () => <StrikeThrough />,
+      icon: () => <Eye />,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
         defaultMessage: 'UI Settings',
       },
       Component: async () => {
-        // @ts-ignore
         const component = await import('./pages');
         return component.default;
       },

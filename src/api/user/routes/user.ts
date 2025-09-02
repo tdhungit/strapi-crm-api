@@ -25,5 +25,10 @@ export default {
       path: '/users/me',
       handler: 'user.updateCurrentUser',
     },
+    {
+      method: 'GET',
+      path: '/users/members/:id',
+      handler: 'user.getUserMembers',
+    },
   ],
 };

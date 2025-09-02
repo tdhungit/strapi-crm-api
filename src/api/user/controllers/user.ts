@@ -1,3 +1,5 @@
+import type { Context } from 'koa';
+
 export default {
   async getAllUsers(ctx) {
     const filters = ctx.query.filters || {};
@@ -134,8 +136,8 @@ export default {
     }
   },
 
-  async changeUserPassword(ctx) {
-    const { id: userId } = ctx.state.user;
+  async changeUserPassword(ctx: Context) {
+    const { id: userId } = ctx.params;
     const { newPassword, confirmPassword } = ctx.request.body;
 
     // Validate new password confirmation
@@ -228,5 +230,13 @@ export default {
       });
 
     return updatedUser;
+  },
+
+  async getUserMembers(ctx: Context) {
+    const userId = ctx.params.id;
+    const members = await strapi
+      .service('api::user.user')
+      .getUserMembers(userId);
+    return ctx.send(members);
   },
 };

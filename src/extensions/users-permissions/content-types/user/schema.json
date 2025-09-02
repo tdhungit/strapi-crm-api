@@ -83,6 +83,18 @@
       "relation": "oneToMany",
       "target": "api::contact.contact",
       "mappedBy": "assigned_user"
+    },
+    "members": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "manager"
+    },
+    "manager": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "members"
     }
   }
 }

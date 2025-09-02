@@ -6,4 +6,11 @@ export default ({ env }) => ({
       // Plugin configuration
     },
   },
+  'crm-permissions': {
+    enabled: true,
+    resolve: './src/plugins/crm-permissions',
+    config: {
+      // Plugin configuration
+    },
+  },
 });
