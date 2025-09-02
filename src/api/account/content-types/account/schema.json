@@ -42,6 +42,16 @@
       "relation": "oneToMany",
       "target": "api::contact.contact",
       "mappedBy": "account"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Direct",
+        "Agency"
+      ]
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Page } from '@strapi/strapi/admin';
 import { Route, Routes } from 'react-router-dom';
 import Layout from '../components/Layout';
+import AuditLogsSettingPage from './AuditLogsSettingPage';
 import SettingsPage from './SettingsPage';
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
     <Routes>
       <Route path='/' element={<Layout />}>
         <Route path='/' element={<SettingsPage />} />
+        <Route path='/audit-logs' element={<AuditLogsSettingPage />} />
       </Route>
       <Route path='*' element={<Page.Error />} />
     </Routes>

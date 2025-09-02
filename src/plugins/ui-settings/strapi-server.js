@@ -1,4 +1,5 @@
-const { default: uiSetting } = require('./controllers/ui-setting');
+const { default: uiSetting } = require('./controllers/ui-settings');
+const { default: auditLogs } = require('./controllers/audit-logs');
 
 module.exports = () => {
   return {
@@ -8,6 +9,7 @@ module.exports = () => {
 
     // Register routes
     routes: [
+      // UI Settings
       {
         method: 'GET',
         path: '/config',
@@ -26,10 +28,24 @@ module.exports = () => {
         handler: 'ui-settings.uploadFavicon',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      // Audit Logs
+      {
+        method: 'POST',
+        path: '/audit-logs/settings',
+        handler: 'audit-logs.saveSettings',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
+        method: 'GET',
+        path: '/audit-logs/settings',
+        handler: 'audit-logs.getSettings',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
     ],
 
     controllers: {
       ...uiSetting,
+      ...auditLogs,
     },
   };
 };

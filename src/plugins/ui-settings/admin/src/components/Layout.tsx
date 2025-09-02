@@ -5,10 +5,13 @@ import {
   SubNavLink,
   SubNavSection,
 } from '@strapi/design-system';
-import { Outlet } from 'react-router-dom';
+import { Cog, Database } from '@strapi/icons';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 
 export default function Layout() {
+  const location = useLocation();
+
   return (
     <Main>
       <Box
@@ -25,8 +28,25 @@ export default function Layout() {
           <div style={{ display: 'flex' }}>
             <SubNav style={{ height: 'calc(100vh - 160px)' }}>
               <SubNavSection label='Global Settings'>
-                <SubNavLink href='./ui-settings' className='active'>
+                <SubNavLink
+                  href='/admin/plugins/ui-settings'
+                  className={
+                    location.pathname === '/plugins/ui-settings' ? 'active' : ''
+                  }
+                  icon={<Cog />}
+                >
                   System Settings
+                </SubNavLink>
+                <SubNavLink
+                  href='/admin/plugins/ui-settings/audit-logs'
+                  className={
+                    location.pathname === '/plugins/ui-settings/audit-logs'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                >
+                  Audit Logs
                 </SubNavLink>
               </SubNavSection>
             </SubNav>

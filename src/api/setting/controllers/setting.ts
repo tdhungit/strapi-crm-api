@@ -44,7 +44,17 @@ export default factories.createCoreController(
         },
       });
       if (uiConfigs?.value) {
-        settings['uiConfig'] = JSON.parse(uiConfigs.value);
+        const uiConfigObj = JSON.parse(uiConfigs.value);
+        if (uiConfigObj.favicon) {
+          if (
+            uiConfigObj.favicon.indexOf('http://') === -1 &&
+            uiConfigObj.favicon.indexOf('https://') === -1
+          ) {
+            const baseUrl = process.env.PUBLIC_URL;
+            uiConfigObj.favicon = `${baseUrl}${uiConfigObj.favicon}`;
+          }
+        }
+        settings['uiConfig'] = uiConfigObj;
       }
 
       return settings;
