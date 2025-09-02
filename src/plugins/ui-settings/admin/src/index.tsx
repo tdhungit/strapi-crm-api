@@ -37,10 +37,21 @@ export default {
     }
 
     const applyConfig = () => {
+      // update page title
       const baseTitle = document.title.replace(/\s*\|.*$/, '');
       const pageTitle = config?.pageTitle || 'Strapi CRM';
       if (pageTitle) {
         document.title = `${baseTitle} | ${pageTitle}`;
+      }
+      // update favicon
+      if (config?.favicon) {
+        let link: any = document.querySelector("link[rel~='icon']");
+        if (!link) {
+          link = document.createElement('link');
+          link.rel = 'icon';
+          document.head.appendChild(link);
+        }
+        link.href = config.favicon;
       }
     };
 
