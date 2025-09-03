@@ -1,9 +1,10 @@
 import { factories } from '@strapi/strapi';
+import { MenuType } from '../types';
 
 export default factories.createCoreService(
   'api::setting.setting',
   ({ strapi }) => ({
-    async getDefaultMenus() {
+    async getDefaultMenus(): Promise<MenuType[]> {
       // get content types
       const contentTypes = await strapi
         .service('api::metadata.metadata')
@@ -25,7 +26,7 @@ export default factories.createCoreService(
       return menus;
     },
 
-    async getAvailableMenus() {
+    async getAvailableMenus(): Promise<MenuType[]> {
       let menus = [];
       const settingMenus = await strapi.db
         .query('api::setting.setting')
@@ -48,7 +49,7 @@ export default factories.createCoreService(
       return menus;
     },
 
-    async getHiddenMenus() {
+    async getHiddenMenus(): Promise<MenuType[]> {
       const defaultMenus = await this.getDefaultMenus();
       const availableMenus = await this.getAvailableMenus();
 
@@ -60,7 +61,7 @@ export default factories.createCoreService(
       return hiddenMenus;
     },
 
-    async getSettings(category) {
+    async getSettings(category): Promise<{ [key: string]: any }> {
       const settings = await strapi.db.query('api::setting.setting').findMany({
         where: {
           category,
@@ -75,7 +76,7 @@ export default factories.createCoreService(
       return result;
     },
 
-    async updateSettings(category, body) {
+    async updateSettings(category, body): Promise<{ [key: string]: any }> {
       for (let key in body) {
         // find setting
         const setting = await strapi.db.query('api::setting.setting').findOne({

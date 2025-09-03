@@ -1,5 +1,12 @@
+import {
+  AppLogosType,
+  ContentTypeConfigurationType,
+  ContentTypeType,
+  ContentTypeUIType,
+} from '../types';
+
 export default () => ({
-  async getAllContentTypes() {
+  async getAllContentTypes(): Promise<ContentTypeUIType[]> {
     const contentTypes = Object.values(strapi.contentTypes).map((ct) => ({
       uid: ct.uid,
       ...ct.info,
@@ -15,7 +22,7 @@ export default () => ({
     return contentTypes;
   },
 
-  async getContentTypes(excludes: string[] = []) {
+  async getContentTypes(excludes: string[] = []): Promise<ContentTypeType[]> {
     const contentTypes = Object.values(strapi.contentTypes)
       .filter(
         (ct) =>
@@ -34,7 +41,9 @@ export default () => ({
     return contentTypes;
   },
 
-  async getContentTypeFromCollectionName(collectionName) {
+  async getContentTypeFromCollectionName(
+    collectionName
+  ): Promise<ContentTypeType> {
     const contentType = Object.values(strapi.contentTypes).find(
       (ct) => ct.collectionName === collectionName
     );
@@ -42,7 +51,9 @@ export default () => ({
     return contentType;
   },
 
-  async getContentTypeConfiguration(uid) {
+  async getContentTypeConfiguration(
+    uid
+  ): Promise<ContentTypeConfigurationType> {
     const config = await strapi.db.query('strapi::core-store').findOne({
       where: {
         key: `plugin_content_manager_configuration_content_types::${uid}`,
@@ -50,7 +61,14 @@ export default () => ({
     });
 
     if (!config) {
-      return {};
+      return {
+        uid,
+        collectionName: uid,
+        settings: {},
+        metadatas: {},
+        layouts: {},
+        fields: {},
+      };
     }
 
     const parsedValue = JSON.parse(config.value || '{}');
@@ -81,7 +99,7 @@ export default () => ({
     return fixedData;
   },
 
-  async getLogo() {
+  async getLogo(): Promise<AppLogosType> {
     const branding = await strapi.db.query('strapi::core-store').findOne({
       where: {
         key: `core_admin_project-settings`,
@@ -89,7 +107,28 @@ export default () => ({
     });
 
     if (!branding) {
-      return {};
+      return {
+        menuLogo: {
+          name: '',
+          hash: '',
+          url: '',
+          width: 0,
+          height: 0,
+          ext: '',
+          size: 0,
+          provider: '',
+        },
+        authLogo: {
+          name: '',
+          hash: '',
+          url: '',
+          width: 0,
+          height: 0,
+          ext: '',
+          size: 0,
+          provider: '',
+        },
+      };
     }
 
     return branding.value;
