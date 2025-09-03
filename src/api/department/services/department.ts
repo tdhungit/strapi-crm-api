@@ -1,13 +1,14 @@
 import { factories } from '@strapi/strapi';
+import { PermissionItemType, PermissionType } from '../types';
 
 export default factories.createCoreService(
   'api::department.department',
   ({ strapi }) => ({
-    getPermissionTypes() {
+    getPermissionTypes(): string[] {
       return ['org', 'me', 'all'];
     },
 
-    async getPermissions(departmentId: number) {
+    async getPermissions(departmentId?: number): Promise<PermissionType> {
       const contentTypes = await strapi
         .service('api::metadata.metadata')
         .getContentTypes();
@@ -16,7 +17,7 @@ export default factories.createCoreService(
         (item) => item.attributes.assigned_user !== undefined
       );
 
-      let permissions = {};
+      let permissions: PermissionType = {};
       permissionContentTypes.forEach((item) => {
         if (!permissions[item.uid]) {
           permissions[item.uid] = {
@@ -44,6 +45,10 @@ export default factories.createCoreService(
         };
       });
 
+      if (!departmentId) {
+        return permissions;
+      }
+
       const department = await strapi.db
         .query('api::department.department')
         .findOne({
@@ -65,6 +70,14 @@ export default factories.createCoreService(
       }
 
       return permissions;
+    },
+
+    async getPermissionsForUser(
+      user: any,
+      uid: string
+    ): Promise<PermissionItemType> {
+      const permissions = await this.getPermissions(user?.department?.id);
+      return permissions[uid];
     },
   })
 );

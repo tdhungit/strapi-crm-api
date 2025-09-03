@@ -1,27 +1,48 @@
+import { PermissionItemType } from '../../department/types';
+import { UserMembersType } from '../types';
+
 export default () => ({
-  async assignFilter(userId, collectionName) {
+  async assignFilter(userId, collectionName, action: string = 'read') {
     // get content type information
     const model = Object.values(strapi.contentTypes).find(
       (ct) => ct.collectionName === collectionName
     );
     // check assigned_user field exist
     if (model && model.attributes.assigned_user) {
-      return await this.generateAssignFilter(userId);
+      return await this.generateAssignFilter(userId, model, action);
     }
 
     return {};
   },
 
-  async generateAssignFilter(userId) {
+  async generateAssignFilter(userId, model: any, action: string = 'read') {
     // get all members
-    const members = await this.getUserMembers(userId);
-    const memberIds = members.map((member) => member.id);
-    return {
-      assigned_user: { id: { $in: memberIds } },
-    };
+    const { members, manager } = await this.getUserMembers(userId);
+    // get permissions
+    const permissions: PermissionItemType = await strapi
+      .service('api::department.department')
+      .getPermissionsForUser(manager, model.uid);
+    // get permission type
+    const permission: PermissionItemType = permissions[model.uid];
+    const permissionType = permission?.permissions?.[action]?.type || 'org';
+    // filter assign user
+    if (permissionType === 'me') {
+      return {
+        assigned_user: { id: manager.id },
+      };
+    }
+
+    if (permissionType === 'org') {
+      const memberIds = members.map((member) => member.id);
+      return {
+        assigned_user: { id: { $in: memberIds } },
+      };
+    }
+
+    return {};
   },
 
-  async getUserMembers(userId) {
+  async getUserMembers(userId): Promise<UserMembersType> {
     // get user
     const user = await strapi.db
       .query('plugin::users-permissions.user')
@@ -30,10 +51,14 @@ export default () => ({
           id: userId,
         },
         select: ['id', 'username', 'email'],
+        populate: ['department'],
       });
 
     if (!user) {
-      return [];
+      return {
+        manager: null,
+        members: [],
+      };
     }
 
     // Recursively get users whose manager is userId
@@ -55,6 +80,9 @@ export default () => ({
 
     const members = await getRecursiveMembers(userId);
 
-    return [user, ...members];
+    return {
+      manager: user,
+      members: [user, ...members],
+    };
   },
 });

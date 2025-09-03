@@ -28,7 +28,7 @@ export default (config, { strapi }) => {
               if (ctx.method === 'GET') {
                 const assignFilter = await strapi
                   .service('api::user.user')
-                  .generateAssignFilter(id);
+                  .generateAssignFilter(id, model, 'read');
                 // merge with existing filters
                 ctx.query = {
                   ...ctx.query,
@@ -49,7 +49,7 @@ export default (config, { strapi }) => {
             }
           }
         } catch (error) {
-          // console.log('Error assign filter', error);
+          console.log('Error assign filter', error);
         }
       }
     }
