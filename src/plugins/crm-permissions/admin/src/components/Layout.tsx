@@ -36,7 +36,7 @@ export default function Layout() {
                   onClick={() => navigation('/plugins/crm-permissions')}
                   icon={<Briefcase />}
                 >
-                  Permissions
+                  Departments
                 </SubNavLink>
               </SubNavSection>
             </SubNav>

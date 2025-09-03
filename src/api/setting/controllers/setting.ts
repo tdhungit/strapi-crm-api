@@ -126,6 +126,16 @@ export default factories.createCoreController(
       return settings;
     },
 
+    async getPaginateSettings(ctx) {
+      const { category } = ctx.params;
+      const settings = await strapi.service('api::setting.setting').find({
+        where: {
+          category,
+        },
+      });
+      return settings;
+    },
+
     async updateSettings(ctx) {
       const { category } = ctx.params;
       const { body } = ctx.request;

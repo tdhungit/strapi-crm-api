@@ -35,5 +35,10 @@ export default {
       path: '/settings/:category',
       handler: 'setting.updateSettings',
     },
+    {
+      method: 'GET',
+      path: '/settings/:category/paginate',
+      handler: 'setting.getPaginateSettings',
+    },
   ],
 };

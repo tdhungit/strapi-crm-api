@@ -33,7 +33,7 @@ export default {
     async getSettings(ctx) {
       const contentTypes = await strapi
         .service('api::metadata.metadata')
-        .getContentTypes();
+        .getContentTypes(['api::audit-log.audit-log', 'api::setting.setting']);
       const data = {
         availableContentTypes: contentTypes,
         auditContentTypes: [],
@@ -52,21 +52,6 @@ export default {
           config.availableContentTypes || contentTypes;
         data.auditContentTypes = config.auditContentTypes || [];
       }
-
-      // remove audit from data
-      data.availableContentTypes = data.availableContentTypes.filter(
-        (item) =>
-          !['api::audit-log.audit-log', 'api::setting.setting'].includes(
-            item.uid
-          )
-      );
-
-      data.auditContentTypes = data.auditContentTypes.filter(
-        (item) =>
-          !['api::audit-log.audit-log', 'api::setting.setting'].includes(
-            item.uid
-          )
-      );
 
       return data;
     },
