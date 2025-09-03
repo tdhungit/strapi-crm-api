@@ -1,4 +1,4 @@
-import { PermissionItemType } from '../../department/types';
+import { PermissionItemType, PermissionType } from '../../department/types';
 import { UserMembersType } from '../types';
 
 export default () => ({
@@ -84,5 +84,51 @@ export default () => ({
       manager: user,
       members: [user, ...members],
     };
+  },
+
+  async getPermissions(user, uid): Promise<PermissionType> {
+    return await strapi
+      .service('api::department.department')
+      .getPermissionsForUser(user, uid);
+  },
+
+  async isAccessRecord(
+    userId,
+    uid,
+    record: any,
+    action: string = 'read',
+    user: any = null
+  ): Promise<boolean> {
+    if (action === 'read' && record.assigned_user?.id === userId) {
+      return true;
+    }
+
+    if (!user) {
+      user = await strapi.db.query('plugin::users-permissions.user').findOne({
+        where: {
+          id: userId,
+        },
+        populate: ['department'],
+      });
+    }
+
+    const permissions = await this.getPermissions(user, uid);
+    const permission = permissions[uid]?.permissions?.[action]?.type || 'org';
+
+    if (permission === 'all') {
+      return true;
+    }
+
+    if (permission === 'me') {
+      return userId === user.id;
+    }
+
+    if (permission === 'org') {
+      const members = await this.getUserMembers(userId);
+      const member = members.members.find((member) => member.id === userId);
+      return !!member;
+    }
+
+    return true;
   },
 });

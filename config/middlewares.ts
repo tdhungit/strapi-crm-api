@@ -10,4 +10,5 @@ export default [
   'strapi::favicon',
   'strapi::public',
   'global::assign-filter',
+  'global::is-access',
 ];
