@@ -1,5 +1,6 @@
 const { default: uiSetting } = require('./controllers/ui-settings');
 const { default: auditLogs } = require('./controllers/audit-logs');
+const { default: addresses } = require('./controllers/addresses');
 
 module.exports = () => {
   return {
@@ -41,11 +42,25 @@ module.exports = () => {
         handler: 'audit-logs.getSettings',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      // Addresses
+      {
+        method: 'GET',
+        path: '/addresses/statistics',
+        handler: 'addresses.getAddressStatistics',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
+        method: 'POST',
+        path: '/addresses/import-address-data',
+        handler: 'addresses.importAddressData',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
     ],
 
     controllers: {
       ...uiSetting,
       ...auditLogs,
+      ...addresses,
     },
   };
 };

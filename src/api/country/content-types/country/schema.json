@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "countries",
+  "info": {
+    "singularName": "country",
+    "pluralName": "countries",
+    "displayName": "Country"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "iso2": {
+      "type": "string",
+      "maxLength": 2,
+      "required": true,
+      "unique": true
+    },
+    "states": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::state.state",
+      "mappedBy": "country"
+    },
+    "iso3": {
+      "type": "string",
+      "maxLength": 3,
+      "required": true,
+      "unique": true
+    },
+    "phonecode": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "timezones": {
+      "type": "json"
+    },
+    "latitude": {
+      "type": "float"
+    },
+    "longitude": {
+      "type": "float"
+    },
+    "capital": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "currency_symbol": {
+      "type": "string"
+    },
+    "currency_name": {
+      "type": "string"
+    }
+  }
+}

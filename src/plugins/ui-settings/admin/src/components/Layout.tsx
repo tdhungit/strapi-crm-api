@@ -49,6 +49,20 @@ export default function Layout() {
                 >
                   Audit Logs
                 </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname ===
+                    '/plugins/ui-settings/import-address-data'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/import-address-data')
+                  }
+                >
+                  Address Data
+                </SubNavLink>
               </SubNavSection>
             </SubNav>
             <Box marginLeft={4} width='100%'>
