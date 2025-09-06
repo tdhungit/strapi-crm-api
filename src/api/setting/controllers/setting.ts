@@ -17,7 +17,14 @@ export default factories.createCoreController(
           showContentTypes.push(item);
         }
       });
+      // get public content types
       settings['content-types'] = showContentTypes;
+
+      // get components
+      const components = await strapi
+        .service('api::metadata.metadata')
+        .getComponentsConfiguration();
+      settings['components'] = components;
 
       // get main menus
       const availableMenus = await strapi

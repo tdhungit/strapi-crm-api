@@ -12,5 +12,11 @@ export default {
       handler: 'metadata.getContentTypeConfiguration',
       config: {},
     },
+    {
+      method: 'GET',
+      path: '/metadata/components',
+      handler: 'metadata.getAllComponents',
+      config: {},
+    },
   ],
 };

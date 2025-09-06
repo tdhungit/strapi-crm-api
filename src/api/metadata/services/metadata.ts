@@ -1,5 +1,6 @@
 import {
   AppLogosType,
+  ComponentConfigurationType,
   ContentTypeConfigurationType,
   ContentTypeType,
   ContentTypeUIType,
@@ -7,7 +8,9 @@ import {
 
 export default () => ({
   async getAllContentTypes(): Promise<ContentTypeUIType[]> {
-    const contentTypes = Object.values(strapi.contentTypes).map((ct) => ({
+    const contentTypes: ContentTypeUIType[] = Object.values(
+      strapi.contentTypes
+    ).map((ct) => ({
       uid: ct.uid,
       ...ct.info,
       collectionName: ct.collectionName,
@@ -52,11 +55,12 @@ export default () => ({
   },
 
   async getContentTypeConfiguration(
-    uid
+    uid: any,
+    type: string = 'content_types'
   ): Promise<ContentTypeConfigurationType> {
     const config = await strapi.db.query('strapi::core-store').findOne({
       where: {
-        key: `plugin_content_manager_configuration_content_types::${uid}`,
+        key: `plugin_content_manager_configuration_${type}::${uid}`,
       },
     });
 
@@ -74,15 +78,20 @@ export default () => ({
     const parsedValue = JSON.parse(config.value || '{}');
 
     // get schema
-    const schema = await strapi.contentType(uid);
+    let schema;
+    if (type === 'content_types') {
+      schema = strapi.contentType(uid);
+    } else {
+      schema = strapi.components[uid];
+    }
 
     return {
       uid,
-      collectionName: schema.collectionName,
+      collectionName: schema?.collectionName || '',
       settings: parsedValue.settings || {},
       metadatas: parsedValue.metadatas || {},
       layouts: parsedValue.layouts || {},
-      attributes: schema.attributes || {},
+      attributes: schema?.attributes || {},
     };
   },
 
@@ -132,5 +141,20 @@ export default () => ({
     }
 
     return branding.value;
+  },
+
+  async getComponentsConfiguration(): Promise<ComponentConfigurationType[]> {
+    const components = Object.values(strapi.components).map((component) => ({
+      uid: component.uid,
+      collectionName: component.collectionName,
+      info: component.info,
+      attributes: component.attributes,
+      options: component.options,
+      category: component.category,
+      modelType: component.modelType,
+      modelName: component.modelName,
+      globalId: component.globalId,
+    }));
+    return components;
   },
 });

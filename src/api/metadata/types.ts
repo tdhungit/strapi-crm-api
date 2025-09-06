@@ -1,7 +1,16 @@
+export interface AttributeType {
+  type: string;
+  [key: string]: any;
+}
+
+export interface AttributesType {
+  [key: string]: AttributeType;
+}
+
 export interface ContentTypeUIType {
   uid: string;
   collectionName: string;
-  fields: any;
+  attributes: AttributesType;
   singularName: string;
   pluralName: string;
   displayName: string;
@@ -22,7 +31,7 @@ export interface ContentTypeType {
   name: string;
   singularName: string;
   pluralName: string;
-  attributes: any;
+  attributes: AttributesType;
 }
 
 export interface ContentTypeConfigurationType {
@@ -31,7 +40,7 @@ export interface ContentTypeConfigurationType {
   settings: any;
   metadatas: any;
   layouts: any;
-  attributes: any;
+  attributes: AttributesType;
 }
 
 export interface AppLogoType {
@@ -48,4 +57,19 @@ export interface AppLogoType {
 export interface AppLogosType {
   menuLogo: AppLogoType;
   authLogo: AppLogoType;
+}
+
+export interface ComponentConfigurationType {
+  uid: string;
+  collectionName: string;
+  info: {
+    displayName: string;
+    icon: string;
+  };
+  attributes: AttributesType;
+  options: any;
+  category: string;
+  modelType: string;
+  modelName: string;
+  globalId: string;
 }
