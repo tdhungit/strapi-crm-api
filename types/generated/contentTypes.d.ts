@@ -384,7 +384,7 @@ export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    address: Schema.Attribute.String;
+    address: Schema.Attribute.Component<'common.address', false>;
     assigned_user: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'

@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_common_addresses",
+  "info": {
+    "displayName": "Address",
+    "icon": "user"
+  },
+  "options": {},
+  "attributes": {
+    "address": {
+      "type": "string"
+    },
+    "zipcode": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

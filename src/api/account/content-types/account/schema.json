@@ -28,9 +28,6 @@
     "fax": {
       "type": "string"
     },
-    "address": {
-      "type": "string"
-    },
     "assigned_user": {
       "type": "relation",
       "relation": "manyToOne",
@@ -52,6 +49,11 @@
     },
     "description": {
       "type": "richtext"
+    },
+    "address": {
+      "type": "component",
+      "component": "common.address",
+      "repeatable": false
     }
   }
 }

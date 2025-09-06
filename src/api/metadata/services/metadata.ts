@@ -11,7 +11,7 @@ export default () => ({
       uid: ct.uid,
       ...ct.info,
       collectionName: ct.collectionName,
-      fields: ct.attributes,
+      attributes: ct.attributes,
     }));
 
     for await (const contentType of contentTypes) {
@@ -67,7 +67,7 @@ export default () => ({
         settings: {},
         metadatas: {},
         layouts: {},
-        fields: {},
+        attributes: {},
       };
     }
 
@@ -82,7 +82,7 @@ export default () => ({
       settings: parsedValue.settings || {},
       metadatas: parsedValue.metadatas || {},
       layouts: parsedValue.layouts || {},
-      fields: schema.attributes || {},
+      attributes: schema.attributes || {},
     };
   },
 

@@ -13,4 +13,11 @@ export default ({ env }) => ({
       // Plugin configuration
     },
   },
+  'crm-fields': {
+    enabled: true,
+    resolve: './src/plugins/crm-fields',
+    config: {
+      // Plugin configuration
+    },
+  },
 });

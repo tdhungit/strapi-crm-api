@@ -31,7 +31,7 @@ export interface ContentTypeConfigurationType {
   settings: any;
   metadatas: any;
   layouts: any;
-  fields: any;
+  attributes: any;
 }
 
 export interface AppLogoType {
