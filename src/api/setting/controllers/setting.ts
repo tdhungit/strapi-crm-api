@@ -7,9 +7,17 @@ export default factories.createCoreController(
       let settings = {};
 
       // get all content types
-      settings['content-types'] = await strapi
+      const allContentTypes = await strapi
         .service('api::metadata.metadata')
         .getAllContentTypes();
+
+      let showContentTypes = [];
+      allContentTypes.forEach((item) => {
+        if (!item.uid.startsWith('admin::')) {
+          showContentTypes.push(item);
+        }
+      });
+      settings['content-types'] = showContentTypes;
 
       // get main menus
       const availableMenus = await strapi
