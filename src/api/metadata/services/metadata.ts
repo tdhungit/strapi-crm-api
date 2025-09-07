@@ -144,17 +144,25 @@ export default () => ({
   },
 
   async getComponentsConfiguration(): Promise<ComponentConfigurationType[]> {
-    const components = Object.values(strapi.components).map((component) => ({
-      uid: component.uid,
-      collectionName: component.collectionName,
-      info: component.info,
-      attributes: component.attributes,
-      options: component.options,
-      category: component.category,
-      modelType: component.modelType,
-      modelName: component.modelName,
-      globalId: component.globalId,
-    }));
+    let components: ComponentConfigurationType[] = [];
+    for await (const component of Object.values(strapi.components)) {
+      const config = await this.getContentTypeConfiguration(
+        component.uid,
+        'components'
+      );
+      components.push({
+        uid: component.uid,
+        collectionName: component.collectionName,
+        info: component.info,
+        attributes: component.attributes,
+        options: component.options,
+        category: component.category,
+        modelType: component.modelType,
+        modelName: component.modelName,
+        globalId: component.globalId,
+        settings: config.settings,
+      });
+    }
     return components;
   },
 });

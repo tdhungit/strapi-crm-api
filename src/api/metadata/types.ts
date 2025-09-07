@@ -7,6 +7,16 @@ export interface AttributesType {
   [key: string]: AttributeType;
 }
 
+export interface ContentTypeSettingsType {
+  bulkable?: boolean;
+  filterable?: boolean;
+  searchable?: boolean;
+  pageSize?: number;
+  mainField?: string;
+  defaultSortBy?: string;
+  defaultSortOrder?: string;
+}
+
 export interface ContentTypeUIType {
   uid: string;
   collectionName: string;
@@ -15,15 +25,7 @@ export interface ContentTypeUIType {
   pluralName: string;
   displayName: string;
   description: string;
-  settings: {
-    bulkable: boolean;
-    filterable: boolean;
-    searchable: boolean;
-    pageSize: number;
-    mainField: string;
-    defaultSortBy: string;
-    defaultSortOrder: string;
-  };
+  settings: ContentTypeSettingsType;
 }
 
 export interface ContentTypeType {
@@ -37,7 +39,7 @@ export interface ContentTypeType {
 export interface ContentTypeConfigurationType {
   uid: string;
   collectionName: string;
-  settings: any;
+  settings: ContentTypeSettingsType;
   metadatas: any;
   layouts: any;
   attributes: AttributesType;
@@ -72,4 +74,5 @@ export interface ComponentConfigurationType {
   modelType: string;
   modelName: string;
   globalId: string;
+  settings?: ContentTypeSettingsType;
 }
