@@ -15,7 +15,12 @@ export default () => ({
     return {};
   },
 
-  async generateAssignFilter(userId, model: any, action: string = 'read') {
+  async generateAssignFilter(
+    userId,
+    model: any,
+    action: string = 'read',
+    filters: any = {}
+  ) {
     // get all members
     const { members, manager } = await this.getUserMembers(userId);
     // get permissions
@@ -25,21 +30,32 @@ export default () => ({
     // get permission type
     const permission: PermissionItemType = permissions[model.uid];
     const permissionType = permission?.permissions?.[action]?.type || 'org';
+
     // filter assign user
-    if (permissionType === 'me') {
-      return {
-        assigned_user: { id: manager.id },
-      };
+    let assignedFilter = {};
+    switch (permissionType) {
+      case 'me':
+        assignedFilter = {
+          assigned_user: { id: manager.id },
+        };
+        break;
+      case 'org':
+        const memberIds = members.map((member) => member.id);
+        assignedFilter = {
+          assigned_user: { id: { $in: memberIds } },
+        };
+        break;
+      default:
+        break;
     }
 
-    if (permissionType === 'org') {
-      const memberIds = members.map((member) => member.id);
-      return {
-        assigned_user: { id: { $in: memberIds } },
-      };
+    if (!filters?.assigned_user) {
+      return assignedFilter;
     }
 
-    return {};
+    return {
+      $and: [filters, assignedFilter],
+    };
   },
 
   async getUserMembers(userId): Promise<UserMembersType> {

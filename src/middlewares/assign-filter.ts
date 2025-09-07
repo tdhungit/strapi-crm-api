@@ -24,16 +24,18 @@ export default (config, { strapi }) => {
             );
             // check assigned_user field exist
             if (model && model.attributes?.assigned_user) {
+              // request filter
+              const filters = ctx.query.filters || {};
               // add assigned_user filter
               if (ctx.method === 'GET') {
                 const assignFilter = await strapi
                   .service('api::user.user')
-                  .generateAssignFilter(id, model, 'read');
+                  .generateAssignFilter(id, model, 'read', filters);
                 // merge with existing filters
                 ctx.query = {
                   ...ctx.query,
                   filters: {
-                    ...(ctx.query.filters || {}),
+                    ...filters,
                     ...assignFilter,
                   },
                 };
