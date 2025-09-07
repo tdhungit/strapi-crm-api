@@ -75,6 +75,9 @@ export default {
         'Auth.form.welcome.title': 'Welcome to Strapi CRM!',
       },
     },
+
+    tutorials: false,
+    notifications: { releases: false },
   },
 
   bootstrap(app: StrapiApp) {
