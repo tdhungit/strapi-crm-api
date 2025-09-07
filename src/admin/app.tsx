@@ -1,4 +1,8 @@
 import type { StrapiApp } from '@strapi/strapi/admin';
+import {
+  default as AuthLogo,
+  default as MenuLogo,
+} from './extensions/logo.svg';
 
 export default {
   config: {
@@ -30,6 +34,14 @@ export default {
       // 'zh-Hans',
       // 'zh',
     ],
+
+    auth: {
+      logo: AuthLogo,
+    },
+
+    menu: {
+      logo: MenuLogo,
+    },
   },
 
   bootstrap(app: StrapiApp) {
