@@ -44,18 +44,28 @@ export default {
     },
 
     theme: {
-      dark: {
+      light: {
         colors: {
-          alternative100: '#f6ecfc',
-          alternative200: '#e0c1f4',
-          alternative500: '#ac73e6',
-          alternative600: '#9736e8',
-          alternative700: '#8312d1',
-          buttonNeutral0: '#ffffff',
-          buttonPrimary500: '#7b79ff',
+          primary100: '#FFEDD5',
+          primary200: '#FDBA74',
+          primary500: '#F97316', // màu chính
+          primary600: '#FB923C', // hover/active
+          primary700: '#EA580C', // nhấn đậm
+          buttonPrimary500: '#F97316',
+          buttonPrimary600: '#FB923C',
         },
       },
-      light: {},
+      dark: {
+        colors: {
+          primary100: '#5C2E0F', // thay cho 431407, sáng hơn
+          primary200: '#7C3A0A',
+          primary500: '#F97316',
+          primary600: '#FB923C',
+          primary700: '#EA580C',
+          buttonPrimary500: '#F97316',
+          buttonPrimary600: '#FB923C',
+        },
+      },
     },
 
     translations: {
