@@ -1,4 +1,5 @@
 import { Page } from '@strapi/strapi/admin';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Layout from '../components/Layout';
 import AuditLogsSettingPage from './AuditLogsSettingPage';

@@ -1,4 +1,5 @@
 import { Box, Typography } from '@strapi/design-system';
+import React from 'react';
 
 export const Header = () => {
   return (

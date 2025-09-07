@@ -1,6 +1,6 @@
 import { Box, Button, Status, Typography } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function ImportAddressData() {
   const { post, get } = useFetchClient();

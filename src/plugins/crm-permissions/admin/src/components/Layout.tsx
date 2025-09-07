@@ -6,6 +6,7 @@ import {
   SubNavSection,
 } from '@strapi/design-system';
 import { Briefcase } from '@strapi/icons';
+import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 
@@ -31,7 +32,9 @@ export default function Layout() {
               <SubNavSection label='Global Settings'>
                 <SubNavLink
                   className={
-                    location.pathname === '/crm-permissions' ? 'active' : ''
+                    location.pathname === '/plugins/crm-permissions'
+                      ? 'active'
+                      : ''
                   }
                   onClick={() => navigation('/plugins/crm-permissions')}
                   icon={<Briefcase />}

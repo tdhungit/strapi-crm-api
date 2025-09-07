@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Status, Typography } from '@strapi/design-system';
 import { ArrowLeft, ArrowRight } from '@strapi/icons';
 import { useFetchClient } from '@strapi/strapi/admin';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function AuditLogsSettingPage() {
   const fetchClient = useFetchClient();

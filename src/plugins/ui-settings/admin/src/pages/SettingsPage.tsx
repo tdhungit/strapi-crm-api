@@ -1,11 +1,11 @@
-// @ts-nocheck
 import { useFetchClient } from '@strapi/admin/strapi-admin';
 import { Box, Button, Field, Flex, TextInput } from '@strapi/design-system';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const defaultSettings = {
   pageTitle: '',
   pageSubtitle: '',
+  favicon: '',
 };
 
 const SettingsPage = () => {
@@ -52,7 +52,7 @@ const SettingsPage = () => {
 
   // Validate form
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: any = {};
 
     if (!settings.pageTitle.trim()) {
       newErrors.pageTitle = 'Page title is required';
@@ -84,7 +84,7 @@ const SettingsPage = () => {
         <Field.Label>Page Title</Field.Label>
         <TextInput
           name='pageTitle'
-          label='Page Title'
+          placeholder='Page Title'
           value={settings.pageTitle}
           onChange={(e) => handleInputChange('pageTitle', e.target.value)}
           style={{ width: '100%', marginRight: 10 }}
@@ -95,7 +95,7 @@ const SettingsPage = () => {
         <Field.Label>Page Subtitle</Field.Label>
         <TextInput
           name='pageSubtitle'
-          label='Page Subtitle'
+          placeholder='Page Subtitle'
           value={settings.pageSubtitle}
           onChange={(e) => handleInputChange('pageSubtitle', e.target.value)}
           style={{ width: '100%', marginRight: 10 }}
@@ -106,8 +106,7 @@ const SettingsPage = () => {
         <Field.Label>Favicon</Field.Label>
         <TextInput
           name='favicon'
-          label='Favicon URL'
-          value={settings.favicon || ''}
+          value={settings?.favicon || ''}
           onChange={(e) => handleInputChange('favicon', e.target.value)}
           placeholder='Paste favicon URL or upload below'
           style={{ width: '100%', marginBottom: 8 }}

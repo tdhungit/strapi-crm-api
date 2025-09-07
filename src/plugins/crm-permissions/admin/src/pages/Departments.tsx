@@ -11,7 +11,7 @@ import {
 } from '@strapi/design-system';
 import { Pencil } from '@strapi/icons';
 import { useFetchClient } from '@strapi/strapi/admin';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Departments() {

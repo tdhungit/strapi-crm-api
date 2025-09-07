@@ -1,4 +1,5 @@
 import { Eye } from '@strapi/icons';
+import React from 'react';
 import pluginId from './pluginId';
 
 export default {

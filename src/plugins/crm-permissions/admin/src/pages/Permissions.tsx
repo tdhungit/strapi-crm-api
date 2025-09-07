@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 export default function Permissions() {
   const { id } = useParams();
