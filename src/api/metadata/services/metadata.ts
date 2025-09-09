@@ -54,6 +54,14 @@ export default () => ({
     return contentType;
   },
 
+  async getContentTypeFromUid(uid): Promise<ContentTypeType> {
+    const contentType = Object.values(strapi.contentTypes).find(
+      (ct) => ct.uid === uid
+    );
+
+    return contentType;
+  },
+
   async getContentTypeConfiguration(
     uid: any,
     type: string = 'content_types'
