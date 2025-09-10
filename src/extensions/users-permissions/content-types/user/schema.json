@@ -107,6 +107,12 @@
       "relation": "manyToOne",
       "target": "api::department.department",
       "inversedBy": "users"
+    },
+    "settings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::setting.setting",
+      "mappedBy": "user"
     }
   }
 }

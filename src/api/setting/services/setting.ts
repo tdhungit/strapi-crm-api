@@ -69,11 +69,27 @@ export default factories.createCoreService(
       return hiddenMenus;
     },
 
-    async getSettings(category): Promise<{ [key: string]: any }> {
+    async getSettings(
+      category: string,
+      name: string = '',
+      user: any = {}
+    ): Promise<{ [key: string]: any }> {
+      const where: { category: string; name?: string; user?: any } = {
+        category,
+      };
+
+      if (name) {
+        where.name = name;
+      }
+
+      if (user?.id && category !== 'system') {
+        where.user = {
+          id: user.id,
+        };
+      }
+
       const settings = await strapi.db.query('api::setting.setting').findMany({
-        where: {
-          category,
-        },
+        where,
       });
 
       const result = {};
@@ -84,22 +100,31 @@ export default factories.createCoreService(
       return result;
     },
 
-    async updateSettings(category, body): Promise<{ [key: string]: any }> {
+    async updateSettings(
+      category: string,
+      body: { [key: string]: any },
+      user?: any
+    ): Promise<{ [key: string]: any }> {
       for (let key in body) {
+        const where: { category: string; name: string; user?: any } = {
+          category,
+          name: key,
+        };
+
+        if (user?.id && category !== 'system') {
+          where.user = {
+            id: user.id,
+          };
+        }
+
         // find setting
         const setting = await strapi.db.query('api::setting.setting').findOne({
-          where: {
-            category,
-            name: key,
-          },
+          where,
         });
 
         if (setting) {
           await strapi.db.query('api::setting.setting').update({
-            where: {
-              category,
-              name: key,
-            },
+            where,
             data: {
               category,
               name: key,
@@ -112,10 +137,12 @@ export default factories.createCoreService(
               category,
               name: key,
               values: body[key],
+              user: user?.id || null,
             },
           });
         }
       }
+
       return this.getSettings(category);
     },
   })

@@ -135,17 +135,23 @@ export default factories.createCoreController(
 
     async getSettings(ctx) {
       const { category } = ctx.params;
+      const { name = '' } = ctx.query;
+      const user = ctx.state.user;
       const settings = await strapi
         .service('api::setting.setting')
-        .getSettings(category);
+        .getSettings(category, name, user);
       return settings;
     },
 
     async getPaginateSettings(ctx) {
       const { category } = ctx.params;
+      const user = ctx.state.user;
       const settings = await strapi.service('api::setting.setting').find({
         where: {
           category,
+          user: {
+            id: user.id,
+          },
         },
       });
       return settings;
@@ -154,9 +160,10 @@ export default factories.createCoreController(
     async updateSettings(ctx) {
       const { category } = ctx.params;
       const { body } = ctx.request;
+      const user = ctx.state.user;
       const settings = await strapi
         .service('api::setting.setting')
-        .updateSettings(category, body);
+        .updateSettings(category, body, user);
       return settings;
     },
 
