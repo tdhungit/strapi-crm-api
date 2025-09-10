@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi';
+import { ContentTypeType } from '../../metadata/types';
 import { MenuType } from '../types';
 
 export default factories.createCoreService(
@@ -6,21 +7,28 @@ export default factories.createCoreService(
   ({ strapi }) => ({
     async getDefaultMenus(): Promise<MenuType[]> {
       // get content types
-      const contentTypes = await strapi
+      const contentTypes: ContentTypeType[] = await strapi
         .service('api::metadata.metadata')
         .getContentTypes();
 
       let menus = [];
       let weight = 1;
       contentTypes.forEach((item) => {
-        menus.push({
-          ...item,
-          key: '_' + item.pluralName,
-          label: item.name,
-          collection: item.pluralName,
-          weight,
-        });
-        weight++;
+        if (
+          !strapi
+            .service('api::metadata.metadata')
+            .systemContentTypes()
+            .includes(item.uid)
+        ) {
+          menus.push({
+            ...item,
+            key: '_' + item.pluralName,
+            label: item.name,
+            collection: item.pluralName,
+            weight,
+          });
+          weight++;
+        }
       });
 
       return menus;

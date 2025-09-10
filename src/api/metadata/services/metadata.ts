@@ -7,7 +7,19 @@ import {
 } from '../types';
 
 export default () => ({
+  systemContentTypes(): string[] {
+    return [
+      'api::department.department',
+      'api::country.country',
+      'api::city.city',
+      'api::state.state',
+      'api::audit-log.audit-log',
+      'api::import.import',
+    ];
+  },
+
   async getAllContentTypes(): Promise<ContentTypeUIType[]> {
+    const systemContentTypes = this.systemContentTypes();
     const contentTypes: ContentTypeUIType[] = Object.values(
       strapi.contentTypes
     ).map((ct) => ({
@@ -15,6 +27,7 @@ export default () => ({
       ...ct.info,
       collectionName: ct.collectionName,
       attributes: ct.attributes,
+      isCRM: ct.uid.startsWith('api::') && !systemContentTypes.includes(ct.uid),
     }));
 
     for await (const contentType of contentTypes) {
@@ -26,6 +39,7 @@ export default () => ({
   },
 
   async getContentTypes(excludes: string[] = []): Promise<ContentTypeType[]> {
+    const systemContentTypes = this.systemContentTypes();
     const contentTypes = Object.values(strapi.contentTypes)
       .filter(
         (ct) =>
@@ -39,9 +53,17 @@ export default () => ({
         singularName: ct.info.singularName,
         pluralName: ct.info.pluralName,
         attributes: ct.attributes,
+        isCRM: !systemContentTypes.includes(ct.uid),
       }));
 
     return contentTypes;
+  },
+
+  async getCRMContentTypes(): Promise<ContentTypeType[]> {
+    const contentType = await this.getContentTypes();
+    return contentType.filter(
+      (ct) => !this.systemContentTypes().includes(ct.uid)
+    );
   },
 
   async getContentTypeFromCollectionName(

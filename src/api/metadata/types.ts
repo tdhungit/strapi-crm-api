@@ -26,6 +26,7 @@ export interface ContentTypeUIType {
   displayName: string;
   description: string;
   settings: ContentTypeSettingsType;
+  isCRM?: boolean;
 }
 
 export interface ContentTypeType {
@@ -34,6 +35,7 @@ export interface ContentTypeType {
   singularName: string;
   pluralName: string;
   attributes: AttributesType;
+  isCRM?: boolean;
 }
 
 export interface ContentTypeConfigurationType {
