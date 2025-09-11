@@ -679,6 +679,46 @@ export interface ApiImportImport extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiLeadLead extends Struct.CollectionTypeSchema {
+  collectionName: 'leads';
+  info: {
+    displayName: 'Lead';
+    pluralName: 'leads';
+    singularName: 'lead';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Schema.Attribute.Component<'common.address', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    department: Schema.Attribute.String;
+    description: Schema.Attribute.RichText;
+    email: Schema.Attribute.String;
+    firstName: Schema.Attribute.String;
+    jobTitle: Schema.Attribute.String;
+    lastName: Schema.Attribute.String & Schema.Attribute.Required;
+    leadSource: Schema.Attribute.Enumeration<['Campaign', 'Website']>;
+    leadStatus: Schema.Attribute.Enumeration<
+      ['New', 'Assigned', 'In Process', 'Converted']
+    > &
+      Schema.Attribute.DefaultTo<'New'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::lead.lead'> &
+      Schema.Attribute.Private;
+    mobile: Schema.Attribute.String;
+    phone: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    salutation: Schema.Attribute.Enumeration<['Ms.', 'Mr.', 'Miss']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    website: Schema.Attribute.String;
+  };
+}
+
 export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
   collectionName: 'opportunities';
   info: {
@@ -1341,6 +1381,7 @@ declare module '@strapi/strapi' {
       'api::country.country': ApiCountryCountry;
       'api::department.department': ApiDepartmentDepartment;
       'api::import.import': ApiImportImport;
+      'api::lead.lead': ApiLeadLead;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;

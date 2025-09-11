@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "leads",
+  "info": {
+    "singularName": "lead",
+    "pluralName": "leads",
+    "displayName": "Lead"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "salutation": {
+      "type": "enumeration",
+      "enum": [
+        "Ms.",
+        "Mr.",
+        "Miss"
+      ]
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "mobile": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "leadStatus": {
+      "type": "enumeration",
+      "default": "New",
+      "enum": [
+        "New",
+        "Assigned",
+        "In Process",
+        "Converted"
+      ]
+    },
+    "leadSource": {
+      "type": "enumeration",
+      "enum": [
+        "Campaign",
+        "Website"
+      ]
+    },
+    "jobTitle": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "address": {
+      "type": "component",
+      "component": "common.address",
+      "repeatable": false
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}
