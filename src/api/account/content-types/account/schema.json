@@ -19,14 +19,57 @@
     "shortName": {
       "type": "string"
     },
-    "website": {
-      "type": "string"
+    "email": {
+      "type": "email"
     },
     "phone": {
       "type": "string"
     },
     "fax": {
       "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Direct",
+        "Agency"
+      ]
+    },
+    "industry": {
+      "type": "enumeration",
+      "enum": [
+        "Technology",
+        "Telecommunications",
+        "Financial Services",
+        "Insurance",
+        "Healthcare",
+        "Pharmaceuticals / Biotechnology",
+        "Manufacturing",
+        "Automotive",
+        "Energy / Utilities",
+        "Construction",
+        "Real Estate",
+        "Retail",
+        "Consumer Goods",
+        "Food & Beverages",
+        "Transportation & Logistics",
+        "Education",
+        "Media & Entertainment",
+        "Hospitality / Travel / Tourism",
+        "Government",
+        "Nonprofit / NGO"
+      ]
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "address": {
+      "type": "component",
+      "component": "common.address",
+      "repeatable": false
     },
     "assigned_user": {
       "type": "relation",
@@ -40,20 +83,11 @@
       "target": "api::contact.contact",
       "mappedBy": "account"
     },
-    "type": {
-      "type": "enumeration",
-      "enum": [
-        "Direct",
-        "Agency"
-      ]
-    },
-    "description": {
-      "type": "richtext"
-    },
-    "address": {
-      "type": "component",
-      "component": "common.address",
-      "repeatable": false
+    "opportunities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "account"
     }
   }
 }

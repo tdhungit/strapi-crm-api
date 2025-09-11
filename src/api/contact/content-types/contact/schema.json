@@ -11,6 +11,16 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "salutation": {
+      "type": "enumeration",
+      "enum": [
+        "Ms.",
+        "Mr.",
+        "Mrs.",
+        "Miss",
+        "Dr."
+      ]
+    },
     "firstName": {
       "type": "string"
     },
@@ -24,11 +34,30 @@
     "phone": {
       "type": "string"
     },
-    "address": {
+    "mobile": {
       "type": "string"
     },
     "bod": {
       "type": "date"
+    },
+    "jobTitle": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "leadSource": {
+      "type": "enumeration",
+      "enum": [
+        "Campaign",
+        "Website"
+      ]
+    },
+    "address": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
     },
     "assigned_user": {
       "type": "relation",

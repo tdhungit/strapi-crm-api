@@ -113,6 +113,12 @@
       "relation": "oneToMany",
       "target": "api::setting.setting",
       "mappedBy": "user"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "assigned_user"
     }
   }
 }

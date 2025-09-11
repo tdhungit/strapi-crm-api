@@ -1,0 +1,78 @@
+{
+  "kind": "collectionType",
+  "collectionName": "opportunities",
+  "info": {
+    "singularName": "opportunity",
+    "pluralName": "opportunities",
+    "displayName": "Opportunity"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "amount": {
+      "type": "decimal"
+    },
+    "closeDate": {
+      "type": "date"
+    },
+    "stage": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Prospecting",
+      "enum": [
+        "Prospecting",
+        "Qualification",
+        "Needs Analysis",
+        "Value Proposition",
+        "Identifying Decision Makers",
+        "Perception Analysis",
+        "Proposal/Price Quote",
+        "Negotiation/Review",
+        "Closed Won",
+        "Closed Lost"
+      ]
+    },
+    "probability": {
+      "type": "string"
+    },
+    "nextStep": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "default": "Exist Business",
+      "enum": [
+        "Exist Business",
+        "New Business"
+      ]
+    },
+    "leadSource": {
+      "type": "enumeration",
+      "enum": [
+        "Campaign",
+        "Website"
+      ]
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "account": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::account.account",
+      "inversedBy": "opportunities"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "opportunities"
+    }
+  }
+}

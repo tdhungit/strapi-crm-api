@@ -394,7 +394,32 @@ export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.RichText;
+    email: Schema.Attribute.Email;
     fax: Schema.Attribute.String;
+    industry: Schema.Attribute.Enumeration<
+      [
+        'Technology',
+        'Telecommunications',
+        'Financial Services',
+        'Insurance',
+        'Healthcare',
+        'Pharmaceuticals / Biotechnology',
+        'Manufacturing',
+        'Automotive',
+        'Energy / Utilities',
+        'Construction',
+        'Real Estate',
+        'Retail',
+        'Consumer Goods',
+        'Food & Beverages',
+        'Transportation & Logistics',
+        'Education',
+        'Media & Entertainment',
+        'Hospitality / Travel / Tourism',
+        'Government',
+        'Nonprofit / NGO',
+      ]
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -404,6 +429,10 @@ export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    opportunities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::opportunity.opportunity'
+    >;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     shortName: Schema.Attribute.String;
@@ -501,17 +530,25 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    department: Schema.Attribute.String;
+    description: Schema.Attribute.RichText;
     email: Schema.Attribute.String;
     firstName: Schema.Attribute.String;
+    jobTitle: Schema.Attribute.String;
     lastName: Schema.Attribute.String & Schema.Attribute.Required;
+    leadSource: Schema.Attribute.Enumeration<['Campaign', 'Website']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::contact.contact'
     > &
       Schema.Attribute.Private;
+    mobile: Schema.Attribute.String;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    salutation: Schema.Attribute.Enumeration<
+      ['Ms.', 'Mr.', 'Mrs.', 'Miss', 'Dr.']
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -636,6 +673,63 @@ export interface ApiImportImport extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     success: Schema.Attribute.Integer;
     total: Schema.Attribute.Integer;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
+  collectionName: 'opportunities';
+  info: {
+    displayName: 'Opportunity';
+    pluralName: 'opportunities';
+    singularName: 'opportunity';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
+    amount: Schema.Attribute.Decimal;
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    closeDate: Schema.Attribute.Date;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    leadSource: Schema.Attribute.Enumeration<['Campaign', 'Website']>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::opportunity.opportunity'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    nextStep: Schema.Attribute.String;
+    probability: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    stage: Schema.Attribute.Enumeration<
+      [
+        'Prospecting',
+        'Qualification',
+        'Needs Analysis',
+        'Value Proposition',
+        'Identifying Decision Makers',
+        'Perception Analysis',
+        'Proposal/Price Quote',
+        'Negotiation/Review',
+        'Closed Won',
+        'Closed Lost',
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Prospecting'>;
+    type: Schema.Attribute.Enumeration<['Exist Business', 'New Business']> &
+      Schema.Attribute.DefaultTo<'Exist Business'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1201,6 +1295,10 @@ export interface PluginUsersPermissionsUser
       'oneToMany',
       'plugin::users-permissions.user'
     >;
+    opportunities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::opportunity.opportunity'
+    >;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1243,6 +1341,7 @@ declare module '@strapi/strapi' {
       'api::country.country': ApiCountryCountry;
       'api::department.department': ApiDepartmentDepartment;
       'api::import.import': ApiImportImport;
+      'api::opportunity.opportunity': ApiOpportunityOpportunity;
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;
       'plugin::content-releases.release': PluginContentReleasesRelease;
