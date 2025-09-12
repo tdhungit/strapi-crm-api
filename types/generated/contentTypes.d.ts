@@ -760,8 +760,8 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
         'Value Proposition',
         'Identifying Decision Makers',
         'Perception Analysis',
-        'Proposal/Price Quote',
-        'Negotiation/Review',
+        'Proposal',
+        'Negotiation',
         'Closed Won',
         'Closed Lost',
       ]
