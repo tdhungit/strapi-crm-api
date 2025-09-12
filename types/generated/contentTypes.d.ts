@@ -752,6 +752,8 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
     nextStep: Schema.Attribute.String;
     probability: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    ranking: Schema.Attribute.Integer &
+      Schema.Attribute.CustomField<'plugin::crm-fields.ranking'>;
     stage: Schema.Attribute.Enumeration<
       [
         'Prospecting',

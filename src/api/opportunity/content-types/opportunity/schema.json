@@ -59,6 +59,10 @@
         "Website"
       ]
     },
+    "ranking": {
+      "type": "customField",
+      "customField": "plugin::crm-fields.ranking"
+    },
     "description": {
       "type": "richtext"
     },
