@@ -6,6 +6,11 @@ export default {
       handler: 'user.getAllUsers',
     },
     {
+      method: 'GET',
+      path: '/users/me',
+      handler: 'user.getCurrentUser',
+    },
+    {
       method: 'PUT',
       path: '/users/me',
       handler: 'user.updateCurrentUser',

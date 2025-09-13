@@ -65,7 +65,24 @@ export default {
       return ctx.unauthorized('Authentication required');
     }
 
-    const safeFields = ['id', 'email', 'username'];
+    // Get all fields except password and sensitive tokens
+    const allFields = strapi.getModel(
+      'plugin::users-permissions.user'
+    ).attributes;
+    const safeFields = [];
+    for (const fieldName in allFields) {
+      const field = allFields[fieldName];
+      if (
+        !['password', 'resetPasswordToken', 'confirmationToken'].includes(
+          fieldName
+        ) &&
+        !['password', 'relation'].includes(field.type)
+      ) {
+        safeFields.push(fieldName);
+      }
+    }
+    console.log(safeFields);
+
     const currentUser = await strapi.db
       .query('plugin::users-permissions.user')
       .findOne({
@@ -73,7 +90,7 @@ export default {
           id: user.id,
         },
         select: safeFields,
-        populate: ['role'],
+        populate: ['role', 'department'],
       });
 
     return ctx.send(currentUser);
