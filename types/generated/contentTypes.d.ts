@@ -719,6 +719,39 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiNoteNote extends Struct.CollectionTypeSchema {
+  collectionName: 'notes';
+  info: {
+    displayName: 'Note';
+    pluralName: 'notes';
+    singularName: 'note';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    document: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::note.note'> &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    note: Schema.Attribute.RichText;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<['Document', 'Note']> &
+      Schema.Attribute.DefaultTo<'Document'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
   collectionName: 'opportunities';
   info: {
@@ -1337,6 +1370,7 @@ export interface PluginUsersPermissionsUser
       'oneToMany',
       'plugin::users-permissions.user'
     >;
+    notes: Schema.Attribute.Relation<'oneToMany', 'api::note.note'>;
     opportunities: Schema.Attribute.Relation<
       'oneToMany',
       'api::opportunity.opportunity'
@@ -1384,6 +1418,7 @@ declare module '@strapi/strapi' {
       'api::department.department': ApiDepartmentDepartment;
       'api::import.import': ApiImportImport;
       'api::lead.lead': ApiLeadLead;
+      'api::note.note': ApiNoteNote;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;

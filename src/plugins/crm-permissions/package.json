@@ -5,7 +5,7 @@
   "main": "./strapi-server.js",
   "strapi": {
     "name": "crm-permissions",
-    "displayName": "UI Settings",
+    "displayName": "CRM Permissions",
     "description": "Manage CRM specific permissions",
     "kind": "plugin"
   },
