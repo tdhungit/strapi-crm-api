@@ -125,6 +125,12 @@
       "relation": "oneToMany",
       "target": "api::note.note",
       "mappedBy": "assigned_user"
+    },
+    "email_templates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::email-template.email-template",
+      "mappedBy": "assigned_user"
     }
   }
 }
