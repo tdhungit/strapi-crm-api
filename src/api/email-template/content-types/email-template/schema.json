@@ -26,6 +26,9 @@
         "Text"
       ]
     },
+    "rawContent": {
+      "type": "json"
+    },
     "assigned_user": {
       "type": "relation",
       "relation": "manyToOne",

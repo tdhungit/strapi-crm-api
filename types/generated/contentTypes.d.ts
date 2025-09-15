@@ -668,6 +668,7 @@ export interface ApiEmailTemplateEmailTemplate
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    rawContent: Schema.Attribute.JSON;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     type: Schema.Attribute.Enumeration<['HTML', 'Text']> &
       Schema.Attribute.DefaultTo<'HTML'>;
