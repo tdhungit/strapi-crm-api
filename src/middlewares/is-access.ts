@@ -35,6 +35,7 @@ export default (config, { strapi }) => {
           const model: any = Object.values(strapi.contentTypes).find(
             (ct: any) => ct.collectionName === apiName
           );
+          console.log('[is-access] model', model);
           // check assigned_user field exist
           if (!model?.attributes?.assigned_user) {
             await next();
