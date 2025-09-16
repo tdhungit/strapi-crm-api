@@ -70,6 +70,12 @@
       "relation": "manyToOne",
       "target": "api::account.account",
       "inversedBy": "contacts"
+    },
+    "campaigns": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::campaign.campaign",
+      "mappedBy": "contacts"
     }
   }
 }

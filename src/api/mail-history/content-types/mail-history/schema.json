@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mail_histories",
+  "info": {
+    "singularName": "mail-history",
+    "pluralName": "mail-histories",
+    "displayName": "Mail History"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "from_email": {
+      "type": "string",
+      "required": true
+    },
+    "to_email": {
+      "type": "string",
+      "required": true
+    },
+    "mail_status": {
+      "type": "string"
+    },
+    "delivered": {
+      "type": "boolean",
+      "default": false
+    },
+    "opened": {
+      "type": "integer",
+      "default": 0
+    },
+    "clicked": {
+      "type": "integer",
+      "default": 0
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "mail_histories"
+    }
+  }
+}

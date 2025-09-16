@@ -131,6 +131,18 @@
       "relation": "oneToMany",
       "target": "api::email-template.email-template",
       "mappedBy": "assigned_user"
+    },
+    "mail_histories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::mail-history.mail-history",
+      "mappedBy": "assigned_user"
+    },
+    "campaigns": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::campaign.campaign",
+      "mappedBy": "assigned_user"
     }
   }
 }

@@ -480,6 +480,45 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCampaignCampaign extends Struct.CollectionTypeSchema {
+  collectionName: 'campaigns';
+  info: {
+    displayName: 'Campaign';
+    pluralName: 'campaigns';
+    singularName: 'campaign';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    campaign_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
+    campaign_type: Schema.Attribute.Enumeration<['Email']> &
+      Schema.Attribute.DefaultTo<'Email'>;
+    contacts: Schema.Attribute.Relation<'manyToMany', 'api::contact.contact'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    leads: Schema.Attribute.Relation<'manyToMany', 'api::lead.lead'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::campaign.campaign'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCityCity extends Struct.CollectionTypeSchema {
   collectionName: 'cities';
   info: {
@@ -527,6 +566,10 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
       'plugin::users-permissions.user'
     >;
     bod: Schema.Attribute.Date;
+    campaigns: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::campaign.campaign'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -728,6 +771,10 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.Component<'common.address', false>;
+    campaigns: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::campaign.campaign'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -753,6 +800,46 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     website: Schema.Attribute.String;
+  };
+}
+
+export interface ApiMailHistoryMailHistory extends Struct.CollectionTypeSchema {
+  collectionName: 'mail_histories';
+  info: {
+    displayName: 'Mail History';
+    pluralName: 'mail-histories';
+    singularName: 'mail-history';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    clicked: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    delivered: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    from_email: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mail-history.mail-history'
+    > &
+      Schema.Attribute.Private;
+    mail_status: Schema.Attribute.String;
+    metadata: Schema.Attribute.JSON;
+    opened: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    to_email: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1377,6 +1464,7 @@ export interface PluginUsersPermissionsUser
       'api::audit-log.audit-log'
     >;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    campaigns: Schema.Attribute.Relation<'oneToMany', 'api::campaign.campaign'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     contacts: Schema.Attribute.Relation<'oneToMany', 'api::contact.contact'>;
@@ -1403,6 +1491,10 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    mail_histories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mail-history.mail-history'
+    >;
     manager: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
@@ -1453,6 +1545,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::account.account': ApiAccountAccount;
       'api::audit-log.audit-log': ApiAuditLogAuditLog;
+      'api::campaign.campaign': ApiCampaignCampaign;
       'api::city.city': ApiCityCity;
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
@@ -1460,6 +1553,7 @@ declare module '@strapi/strapi' {
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
       'api::import.import': ApiImportImport;
       'api::lead.lead': ApiLeadLead;
+      'api::mail-history.mail-history': ApiMailHistoryMailHistory;
       'api::note.note': ApiNoteNote;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
       'api::setting.setting': ApiSettingSetting;
