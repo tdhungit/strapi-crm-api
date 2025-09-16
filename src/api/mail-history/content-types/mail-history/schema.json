@@ -50,6 +50,27 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "mail_histories"
+    },
+    "source": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "integer"
+    },
+    "email_template": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::email-template.email-template",
+      "inversedBy": "mail_histories"
+    },
+    "model": {
+      "type": "string"
+    },
+    "record_id": {
+      "type": "integer"
+    },
+    "service_sid": {
+      "type": "string"
     }
   }
 }

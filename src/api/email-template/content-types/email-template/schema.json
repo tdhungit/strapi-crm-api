@@ -34,6 +34,12 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "email_templates"
+    },
+    "mail_histories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::mail-history.mail-history",
+      "mappedBy": "email_template"
     }
   }
 }

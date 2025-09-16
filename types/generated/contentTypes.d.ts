@@ -710,6 +710,10 @@ export interface ApiEmailTemplateEmailTemplate
       'api::email-template.email-template'
     > &
       Schema.Attribute.Private;
+    mail_histories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mail-history.mail-history'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     rawContent: Schema.Attribute.JSON;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -824,6 +828,10 @@ export interface ApiMailHistoryMailHistory extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     delivered: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    email_template: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::email-template.email-template'
+    >;
     from_email: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -833,8 +841,13 @@ export interface ApiMailHistoryMailHistory extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     mail_status: Schema.Attribute.String;
     metadata: Schema.Attribute.JSON;
+    model: Schema.Attribute.String;
     opened: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
+    record_id: Schema.Attribute.Integer;
+    service_sid: Schema.Attribute.String;
+    source: Schema.Attribute.String;
+    source_id: Schema.Attribute.Integer;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     to_email: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
