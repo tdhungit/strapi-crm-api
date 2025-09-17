@@ -97,7 +97,8 @@ export default () => ({
     if (!config) {
       return {
         uid,
-        collectionName: uid,
+        collectionName: '',
+        pluralName: '',
         settings: {},
         metadatas: {},
         layouts: {},
@@ -118,6 +119,7 @@ export default () => ({
     return {
       uid,
       collectionName: schema?.collectionName || '',
+      pluralName: schema?.info.pluralName || '',
       settings: parsedValue.settings || {},
       metadatas: parsedValue.metadatas || {},
       layouts: parsedValue.layouts || {},

@@ -41,6 +41,7 @@ export interface ContentTypeType {
 export interface ContentTypeConfigurationType {
   uid: string;
   collectionName: string;
+  pluralName: string;
   settings: ContentTypeSettingsType;
   metadatas: any;
   layouts: any;
