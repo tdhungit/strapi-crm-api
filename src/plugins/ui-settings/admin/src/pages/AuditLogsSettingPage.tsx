@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Status, Typography } from '@strapi/design-system';
 import { ArrowLeft, ArrowRight } from '@strapi/icons';
 import { useFetchClient } from '@strapi/strapi/admin';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AuditLogsSettingPage() {
   const fetchClient = useFetchClient();
@@ -16,13 +16,7 @@ export default function AuditLogsSettingPage() {
   const loadAuditLogsSettings = async () => {
     try {
       const res: any = await get('/ui-settings/audit-logs/settings');
-      console.log('Audit logs settings:', res);
       const { availableContentTypes, auditContentTypes } = res.data || {};
-      console.log(
-        'Audit logs settings:',
-        availableContentTypes,
-        auditContentTypes
-      );
       setAvailableContentTypes(availableContentTypes || []);
       setAuditContentTypes(auditContentTypes || []);
     } catch (error) {

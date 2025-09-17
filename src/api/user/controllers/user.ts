@@ -81,7 +81,6 @@ export default {
         safeFields.push(fieldName);
       }
     }
-    console.log(safeFields);
 
     const currentUser = await strapi.db
       .query('plugin::users-permissions.user')
