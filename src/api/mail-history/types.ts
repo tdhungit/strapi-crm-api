@@ -1,3 +1,20 @@
+export interface MailHistoryType {
+  id?: number;
+  documentId?: string;
+  title: string;
+  body: string;
+  from_email?: string;
+  to_email: string;
+  mail_status: string;
+  metadata?: any;
+  assigned_user?: any;
+  source?: string;
+  source_id?: number;
+  model?: string;
+  record_id?: number;
+  service_sid?: string;
+}
+
 export interface MailAttachmentType {
   filename: string;
   content?: any;

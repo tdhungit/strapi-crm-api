@@ -480,6 +480,52 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCampaignActionCampaignAction
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'campaign_actions';
+  info: {
+    displayName: 'Campaign Action';
+    pluralName: 'campaign-actions';
+    singularName: 'campaign-action';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    action_status: Schema.Attribute.Enumeration<
+      ['Ready', 'Running', 'Pending', 'Completed', 'Suspended']
+    > &
+      Schema.Attribute.DefaultTo<'Ready'>;
+    campaign: Schema.Attribute.Relation<'manyToOne', 'api::campaign.campaign'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    error: Schema.Attribute.Integer;
+    field_name: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::campaign-action.campaign-action'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    run_at: Schema.Attribute.DateTime;
+    schedule: Schema.Attribute.JSON;
+    success: Schema.Attribute.Integer;
+    target_field_name: Schema.Attribute.String;
+    total: Schema.Attribute.Integer;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiCampaignCampaign extends Struct.CollectionTypeSchema {
   collectionName: 'campaigns';
   info: {
@@ -494,6 +540,10 @@ export interface ApiCampaignCampaign extends Struct.CollectionTypeSchema {
     assigned_user: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
+    >;
+    campaign_actions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::campaign-action.campaign-action'
     >;
     campaign_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
       Schema.Attribute.DefaultTo<'Active'>;
@@ -1477,6 +1527,10 @@ export interface PluginUsersPermissionsUser
       'api::audit-log.audit-log'
     >;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    campaign_actions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::campaign-action.campaign-action'
+    >;
     campaigns: Schema.Attribute.Relation<'oneToMany', 'api::campaign.campaign'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1558,6 +1612,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::account.account': ApiAccountAccount;
       'api::audit-log.audit-log': ApiAuditLogAuditLog;
+      'api::campaign-action.campaign-action': ApiCampaignActionCampaignAction;
       'api::campaign.campaign': ApiCampaignCampaign;
       'api::city.city': ApiCityCity;
       'api::contact.contact': ApiContactContact;

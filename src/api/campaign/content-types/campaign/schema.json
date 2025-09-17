@@ -50,6 +50,12 @@
       "relation": "manyToMany",
       "target": "api::contact.contact",
       "inversedBy": "campaigns"
+    },
+    "campaign_actions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::campaign-action.campaign-action",
+      "mappedBy": "campaign"
     }
   }
 }

@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "campaign_actions",
+  "info": {
+    "singularName": "campaign-action",
+    "pluralName": "campaign-actions",
+    "displayName": "Campaign Action"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "campaign_actions"
+    },
+    "campaign": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::campaign.campaign",
+      "inversedBy": "campaign_actions"
+    },
+    "field_name": {
+      "type": "string"
+    },
+    "target_field_name": {
+      "type": "string"
+    },
+    "action_status": {
+      "type": "enumeration",
+      "default": "Ready",
+      "enum": [
+        "Ready",
+        "Running",
+        "Pending",
+        "Completed",
+        "Suspended"
+      ]
+    },
+    "run_at": {
+      "type": "datetime"
+    },
+    "schedule": {
+      "type": "json"
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "total": {
+      "type": "integer"
+    },
+    "success": {
+      "type": "integer"
+    },
+    "error": {
+      "type": "integer"
+    }
+  }
+}

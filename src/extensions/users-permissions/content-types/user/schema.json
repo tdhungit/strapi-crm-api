@@ -143,6 +143,12 @@
       "relation": "oneToMany",
       "target": "api::campaign.campaign",
       "mappedBy": "assigned_user"
+    },
+    "campaign_actions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::campaign-action.campaign-action",
+      "mappedBy": "user"
     }
   }
 }

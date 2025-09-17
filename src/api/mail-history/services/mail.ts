@@ -1,4 +1,4 @@
-import { MailSendOptions, MailSendType } from '../types';
+import { MailHistoryType, MailSendOptions, MailSendType } from '../types';
 
 export default () => ({
   async send({
@@ -51,21 +51,23 @@ export default () => ({
     const emailConfig: any = strapi.config.get('plugin.email');
     const from_email = emailConfig.settings.defaultFrom;
 
+    const dataSave: MailHistoryType = {
+      title: data.subject,
+      body: data.html || data.text || '',
+      from_email: data.from || from_email,
+      to_email: data.to,
+      mail_status: 'sent',
+      metadata: mail || {},
+      assigned_user: options?.userId || null,
+      source: options?.source || null,
+      source_id: options?.sourceId || null,
+      model: collectionName,
+      record_id: record.id,
+      service_sid: mail?.messageId || mail?.message_id || null,
+    };
+
     return await strapi.db.query('api::mail-history.mail-history').create({
-      data: {
-        title: data.subject,
-        body: data.html || data.text || '',
-        from_email: data.from || from_email,
-        to_email: data.to,
-        mail_status: 'sent',
-        metadata: mail || {},
-        assigned_user: options?.userId || null,
-        source: options?.source || null,
-        source_id: options?.sourceId || null,
-        model: collectionName,
-        record_id: record.id,
-        service_sid: mail?.messageId || mail?.message_id || null,
-      },
+      data: dataSave,
     });
   },
 
