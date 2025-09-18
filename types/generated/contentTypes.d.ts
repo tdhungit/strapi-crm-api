@@ -1060,6 +1060,7 @@ export interface ApiProductAttributeProductAttribute
       'api::product-attribute.product-attribute'
     > &
       Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     product_variant_attributes: Schema.Attribute.Relation<
       'oneToMany',

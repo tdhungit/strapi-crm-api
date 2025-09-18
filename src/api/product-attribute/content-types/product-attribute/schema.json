@@ -15,6 +15,9 @@
       "type": "string",
       "required": true
     },
+    "metadata": {
+      "type": "json"
+    },
     "product_variant_attributes": {
       "type": "relation",
       "relation": "oneToMany",
