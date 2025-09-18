@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sales_order_details",
+  "info": {
+    "singularName": "sales-order-detail",
+    "pluralName": "sales-order-details",
+    "displayName": "Sales Order Detail"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sales_order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sales-order.sales-order",
+      "inversedBy": "sales_order_details"
+    },
+    "product_variant": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-variant.product-variant",
+      "inversedBy": "sales_order_details"
+    },
+    "warehouse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::warehouse.warehouse",
+      "inversedBy": "sales_order_details"
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true
+    },
+    "unit_price": {
+      "type": "decimal",
+      "required": true
+    },
+    "discount_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "tax_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "subtotal": {
+      "type": "decimal",
+      "default": 0
+    }
+  }
+}

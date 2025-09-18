@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_attributes",
+  "info": {
+    "singularName": "product-attribute",
+    "pluralName": "product-attributes",
+    "displayName": "Product Attribute"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "product_variant_attributes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-variant-attribute.product-variant-attribute",
+      "mappedBy": "product_attribute"
+    }
+  }
+}

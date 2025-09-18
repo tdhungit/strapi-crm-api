@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_variant_attributes",
+  "info": {
+    "singularName": "product-variant-attribute",
+    "pluralName": "product-variant-attributes",
+    "displayName": "Product Variant Attribute"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "product_variant": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-variant.product-variant",
+      "inversedBy": "product_variant_attributes"
+    },
+    "product_attribute": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-attribute.product-attribute",
+      "inversedBy": "product_variant_attributes"
+    },
+    "attribute_value": {
+      "type": "string",
+      "required": true
+    },
+    "attribute_status": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Active",
+      "enum": [
+        "Active",
+        "Inactive"
+      ]
+    }
+  }
+}

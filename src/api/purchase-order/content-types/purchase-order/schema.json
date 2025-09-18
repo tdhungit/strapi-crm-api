@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "purchase_orders",
+  "info": {
+    "singularName": "purchase-order",
+    "pluralName": "purchase-orders",
+    "displayName": "Purchase Order"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "purchase_date": {
+      "type": "date"
+    },
+    "order_status": {
+      "type": "enumeration",
+      "required": true,
+      "default": "New",
+      "enum": [
+        "New",
+        "Completed"
+      ]
+    },
+    "supplier": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::supplier.supplier",
+      "inversedBy": "purchase_orders"
+    },
+    "subtotal": {
+      "type": "decimal",
+      "default": 0
+    },
+    "discount_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "tax_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "total_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "purchase_order_details": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::purchase-order-detail.purchase-order-detail",
+      "mappedBy": "purchase_order"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "purchase_orders"
+    }
+  }
+}

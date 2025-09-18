@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sales_orders",
+  "info": {
+    "singularName": "sales-order",
+    "pluralName": "sales-orders",
+    "displayName": "Sales Order"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "sales_date": {
+      "type": "date",
+      "required": true
+    },
+    "contact": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contact.contact",
+      "inversedBy": "sales_orders"
+    },
+    "order_status": {
+      "type": "enumeration",
+      "required": true,
+      "default": "New",
+      "enum": [
+        "New",
+        "Completed"
+      ]
+    },
+    "subtotal": {
+      "type": "decimal",
+      "default": 0
+    },
+    "discount_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "tax_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "total_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "sales_order_details": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sales-order-detail.sales-order-detail",
+      "mappedBy": "sales_order"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "sales_orders"
+    }
+  }
+}

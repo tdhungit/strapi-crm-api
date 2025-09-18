@@ -610,7 +610,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
   };
   attributes: {
     account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
-    address: Schema.Attribute.String;
+    address: Schema.Attribute.Component<'common.address', false>;
     assigned_user: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
@@ -639,6 +639,10 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     mobile: Schema.Attribute.String;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    sales_orders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order.sales-order'
+    >;
     salutation: Schema.Attribute.Enumeration<
       ['Ms.', 'Mr.', 'Mrs.', 'Miss', 'Dr.']
     >;
@@ -810,6 +814,43 @@ export interface ApiImportImport extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiInventoryInventory extends Struct.CollectionTypeSchema {
+  collectionName: 'inventories';
+  info: {
+    displayName: 'Inventory';
+    pluralName: 'inventories';
+    singularName: 'inventory';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    last_updated: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory.inventory'
+    > &
+      Schema.Attribute.Private;
+    product_variant: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    stock_quantity: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    warehouse: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::warehouse.warehouse'
+    >;
   };
 }
 
@@ -998,6 +1039,393 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiProductAttributeProductAttribute
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_attributes';
+  info: {
+    displayName: 'Product Attribute';
+    pluralName: 'product-attributes';
+    singularName: 'product-attribute';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-attribute.product-attribute'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    product_variant_attributes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-variant-attribute.product-variant-attribute'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProductPriceProductPrice
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_prices';
+  info: {
+    displayName: 'Product Price';
+    pluralName: 'product-prices';
+    singularName: 'product-price';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    end_date: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-price.product-price'
+    > &
+      Schema.Attribute.Private;
+    price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    price_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Active'>;
+    price_type: Schema.Attribute.Enumeration<['Cost', 'Price']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Cost'>;
+    product_variant: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    start_date: Schema.Attribute.Date;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProductVariantAttributeProductVariantAttribute
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_variant_attributes';
+  info: {
+    displayName: 'Product Variant Attribute';
+    pluralName: 'product-variant-attributes';
+    singularName: 'product-variant-attribute';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    attribute_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Active'>;
+    attribute_value: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-variant-attribute.product-variant-attribute'
+    > &
+      Schema.Attribute.Private;
+    product_attribute: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-attribute.product-attribute'
+    >;
+    product_variant: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProductVariantProductVariant
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_variants';
+  info: {
+    displayName: 'Product Variant';
+    pluralName: 'product-variants';
+    singularName: 'product-variant';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    inventories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory.inventory'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-variant.product-variant'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    product_prices: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-price.product-price'
+    >;
+    product_variant_attributes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-variant-attribute.product-variant-attribute'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    purchase_order_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order-detail.purchase-order-detail'
+    >;
+    sales_order_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order-detail.sales-order-detail'
+    >;
+    sku: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    variant_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Active'>;
+  };
+}
+
+export interface ApiProductProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'products';
+  info: {
+    displayName: 'Product';
+    pluralName: 'products';
+    singularName: 'product';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product.product'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    photos: Schema.Attribute.JSON;
+    product_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Active'>;
+    product_variants: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    unit: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPurchaseOrderDetailPurchaseOrderDetail
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'purchase_order_details';
+  info: {
+    displayName: 'Purchase Order Detail';
+    pluralName: 'purchase-order-details';
+    singularName: 'purchase-order-detail';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order-detail.purchase-order-detail'
+    > &
+      Schema.Attribute.Private;
+    product_variant: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    purchase_order: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::purchase-order.purchase-order'
+    >;
+    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    unit_price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    warehouse: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::warehouse.warehouse'
+    >;
+  };
+}
+
+export interface ApiPurchaseOrderPurchaseOrder
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'purchase_orders';
+  info: {
+    displayName: 'Purchase Order';
+    pluralName: 'purchase-orders';
+    singularName: 'purchase-order';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order.purchase-order'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    order_status: Schema.Attribute.Enumeration<['New', 'Completed']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'New'>;
+    publishedAt: Schema.Attribute.DateTime;
+    purchase_date: Schema.Attribute.Date;
+    purchase_order_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order-detail.purchase-order-detail'
+    >;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    supplier: Schema.Attribute.Relation<'manyToOne', 'api::supplier.supplier'>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSalesOrderDetailSalesOrderDetail
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'sales_order_details';
+  info: {
+    displayName: 'Sales Order Detail';
+    pluralName: 'sales-order-details';
+    singularName: 'sales-order-detail';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order-detail.sales-order-detail'
+    > &
+      Schema.Attribute.Private;
+    product_variant: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
+    sales_order: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::sales-order.sales-order'
+    >;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    unit_price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    warehouse: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::warehouse.warehouse'
+    >;
+  };
+}
+
+export interface ApiSalesOrderSalesOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'sales_orders';
+  info: {
+    displayName: 'Sales Order';
+    pluralName: 'sales-orders';
+    singularName: 'sales-order';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    contact: Schema.Attribute.Relation<'manyToOne', 'api::contact.contact'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order.sales-order'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    order_status: Schema.Attribute.Enumeration<['New', 'Completed']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'New'>;
+    publishedAt: Schema.Attribute.DateTime;
+    sales_date: Schema.Attribute.Date & Schema.Attribute.Required;
+    sales_order_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order-detail.sales-order-detail'
+    >;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSettingSetting extends Struct.CollectionTypeSchema {
   collectionName: 'settings';
   info: {
@@ -1058,6 +1486,81 @@ export interface ApiStateState extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     timezone: Schema.Attribute.String;
     type: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSupplierSupplier extends Struct.CollectionTypeSchema {
+  collectionName: 'suppliers';
+  info: {
+    displayName: 'Supplier';
+    pluralName: 'suppliers';
+    singularName: 'supplier';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    account: Schema.Attribute.Relation<'oneToOne', 'api::account.account'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::supplier.supplier'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    purchase_orders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order.purchase-order'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiWarehouseWarehouse extends Struct.CollectionTypeSchema {
+  collectionName: 'warehouses';
+  info: {
+    displayName: 'Warehouse';
+    pluralName: 'warehouses';
+    singularName: 'warehouse';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Schema.Attribute.Component<'common.address', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    inventories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory.inventory'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::warehouse.warehouse'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    purchase_order_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order-detail.purchase-order-detail'
+    >;
+    sales_order_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order-detail.sales-order-detail'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1582,10 +2085,18 @@ export interface PluginUsersPermissionsUser
       }>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    purchase_orders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purchase-order.purchase-order'
+    >;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    sales_orders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sales-order.sales-order'
     >;
     settings: Schema.Attribute.Relation<'oneToMany', 'api::setting.setting'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -1620,12 +2131,24 @@ declare module '@strapi/strapi' {
       'api::department.department': ApiDepartmentDepartment;
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
       'api::import.import': ApiImportImport;
+      'api::inventory.inventory': ApiInventoryInventory;
       'api::lead.lead': ApiLeadLead;
       'api::mail-history.mail-history': ApiMailHistoryMailHistory;
       'api::note.note': ApiNoteNote;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
+      'api::product-attribute.product-attribute': ApiProductAttributeProductAttribute;
+      'api::product-price.product-price': ApiProductPriceProductPrice;
+      'api::product-variant-attribute.product-variant-attribute': ApiProductVariantAttributeProductVariantAttribute;
+      'api::product-variant.product-variant': ApiProductVariantProductVariant;
+      'api::product.product': ApiProductProduct;
+      'api::purchase-order-detail.purchase-order-detail': ApiPurchaseOrderDetailPurchaseOrderDetail;
+      'api::purchase-order.purchase-order': ApiPurchaseOrderPurchaseOrder;
+      'api::sales-order-detail.sales-order-detail': ApiSalesOrderDetailSalesOrderDetail;
+      'api::sales-order.sales-order': ApiSalesOrderSalesOrder;
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;
+      'api::supplier.supplier': ApiSupplierSupplier;
+      'api::warehouse.warehouse': ApiWarehouseWarehouse;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

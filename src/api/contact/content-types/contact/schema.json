@@ -54,7 +54,9 @@
       ]
     },
     "address": {
-      "type": "string"
+      "type": "component",
+      "component": "common.address",
+      "repeatable": false
     },
     "description": {
       "type": "richtext"
@@ -76,6 +78,12 @@
       "relation": "manyToMany",
       "target": "api::campaign.campaign",
       "mappedBy": "contacts"
+    },
+    "sales_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sales-order.sales-order",
+      "mappedBy": "contact"
     }
   }
 }

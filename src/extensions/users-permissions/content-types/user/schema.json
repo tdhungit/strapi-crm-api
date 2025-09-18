@@ -149,6 +149,18 @@
       "relation": "oneToMany",
       "target": "api::campaign-action.campaign-action",
       "mappedBy": "user"
+    },
+    "purchase_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::purchase-order.purchase-order",
+      "mappedBy": "assigned_user"
+    },
+    "sales_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sales-order.sales-order",
+      "mappedBy": "assigned_user"
     }
   }
 }

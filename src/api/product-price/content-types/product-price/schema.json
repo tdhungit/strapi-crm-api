@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_prices",
+  "info": {
+    "singularName": "product-price",
+    "pluralName": "product-prices",
+    "displayName": "Product Price"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "price_type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Cost",
+      "enum": [
+        "Cost",
+        "Price"
+      ]
+    },
+    "price": {
+      "type": "decimal",
+      "default": 0
+    },
+    "price_status": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Active",
+      "enum": [
+        "Active",
+        "Inactive"
+      ]
+    },
+    "product_variant": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-variant.product-variant",
+      "inversedBy": "product_prices"
+    },
+    "start_date": {
+      "type": "date"
+    },
+    "end_date": {
+      "type": "date"
+    }
+  }
+}
