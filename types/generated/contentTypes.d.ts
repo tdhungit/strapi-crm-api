@@ -1180,6 +1180,7 @@ export interface ApiProductVariantProductVariant
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    photos: Schema.Attribute.JSON;
     product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
     product_prices: Schema.Attribute.Relation<
       'oneToMany',

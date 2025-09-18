@@ -19,6 +19,9 @@
       "type": "string",
       "required": true
     },
+    "photos": {
+      "type": "json"
+    },
     "variant_status": {
       "type": "enumeration",
       "required": true,
