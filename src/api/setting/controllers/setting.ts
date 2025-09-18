@@ -35,9 +35,7 @@ export default factories.createCoreController(
         settings['menus'] = availableMenus;
       } else {
         // get default menus
-        const defaultMenus = await strapi
-          .service('api::setting.setting')
-          .getDefaultMenus();
+        const defaultMenus = [];
         settings['init'] = true;
         settings['menus'] = defaultMenus;
       }

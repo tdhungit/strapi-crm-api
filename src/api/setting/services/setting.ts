@@ -22,7 +22,7 @@ export default factories.createCoreService(
         ) {
           menus.push({
             ...item,
-            key: '_' + item.pluralName,
+            key: '/collections/' + item.pluralName,
             label: item.name,
             collection: item.pluralName,
             weight,
@@ -45,7 +45,11 @@ export default factories.createCoreService(
           },
         });
 
-      if (settingMenus) {
+      if (
+        settingMenus &&
+        settingMenus.values &&
+        settingMenus.values.length > 0
+      ) {
         settingMenus.values.forEach((item) => {
           menus.push(item);
         });
