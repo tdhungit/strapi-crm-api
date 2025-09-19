@@ -17,7 +17,7 @@
       "default": "Cost",
       "enum": [
         "Cost",
-        "Price"
+        "Sale"
       ]
     },
     "price": {

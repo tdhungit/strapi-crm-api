@@ -1099,7 +1099,7 @@ export interface ApiProductPriceProductPrice
     price_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Active'>;
-    price_type: Schema.Attribute.Enumeration<['Cost', 'Price']> &
+    price_type: Schema.Attribute.Enumeration<['Cost', 'Sale']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Cost'>;
     product_variant: Schema.Attribute.Relation<
