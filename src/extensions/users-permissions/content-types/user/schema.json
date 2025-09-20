@@ -161,6 +161,12 @@
       "relation": "oneToMany",
       "target": "api::sales-order.sales-order",
       "mappedBy": "assigned_user"
+    },
+    "product_price_lists": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-price-list.product-price-list",
+      "mappedBy": "user"
     }
   }
 }

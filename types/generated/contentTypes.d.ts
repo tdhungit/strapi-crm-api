@@ -1073,6 +1073,47 @@ export interface ApiProductAttributeProductAttribute
   };
 }
 
+export interface ApiProductPriceListProductPriceList
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_price_lists';
+  info: {
+    displayName: 'Product Price List';
+    pluralName: 'product-price-lists';
+    singularName: 'product-price-list';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    end_date: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-price-list.product-price-list'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    price_list_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
+    product_prices: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-price.product-price'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    start_date: Schema.Attribute.Date;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiProductPriceProductPrice
   extends Struct.CollectionTypeSchema {
   collectionName: 'product_prices';
@@ -1102,6 +1143,10 @@ export interface ApiProductPriceProductPrice
     price_type: Schema.Attribute.Enumeration<['Cost', 'Sale']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Cost'>;
+    product_price_list: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-price-list.product-price-list'
+    >;
     product_variant: Schema.Attribute.Relation<
       'manyToOne',
       'api::product-variant.product-variant'
@@ -2085,6 +2130,10 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    product_price_lists: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-price-list.product-price-list'
+    >;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     purchase_orders: Schema.Attribute.Relation<
@@ -2139,6 +2188,7 @@ declare module '@strapi/strapi' {
       'api::note.note': ApiNoteNote;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
       'api::product-attribute.product-attribute': ApiProductAttributeProductAttribute;
+      'api::product-price-list.product-price-list': ApiProductPriceListProductPriceList;
       'api::product-price.product-price': ApiProductPriceProductPrice;
       'api::product-variant-attribute.product-variant-attribute': ApiProductVariantAttributeProductVariantAttribute;
       'api::product-variant.product-variant': ApiProductVariantProductVariant;

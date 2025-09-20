@@ -44,6 +44,12 @@
     },
     "end_date": {
       "type": "date"
+    },
+    "product_price_list": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-price-list.product-price-list",
+      "inversedBy": "product_prices"
     }
   }
 }
