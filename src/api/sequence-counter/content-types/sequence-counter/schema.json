@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sequence_counters",
+  "info": {
+    "singularName": "sequence-counter",
+    "pluralName": "sequence-counters",
+    "displayName": "Sequence Counter"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "purchase_order",
+        "sale_order",
+        "invoice"
+      ]
+    },
+    "last_number": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

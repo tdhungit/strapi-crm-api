@@ -1473,6 +1473,39 @@ export interface ApiSalesOrderSalesOrder extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiSequenceCounterSequenceCounter
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'sequence_counters';
+  info: {
+    displayName: 'Sequence Counter';
+    pluralName: 'sequence-counters';
+    singularName: 'sequence-counter';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    last_number: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sequence-counter.sequence-counter'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<
+      ['purchase_order', 'sale_order', 'invoice']
+    > &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSettingSetting extends Struct.CollectionTypeSchema {
   collectionName: 'settings';
   info: {
@@ -2197,6 +2230,7 @@ declare module '@strapi/strapi' {
       'api::purchase-order.purchase-order': ApiPurchaseOrderPurchaseOrder;
       'api::sales-order-detail.sales-order-detail': ApiSalesOrderDetailSalesOrderDetail;
       'api::sales-order.sales-order': ApiSalesOrderSalesOrder;
+      'api::sequence-counter.sequence-counter': ApiSequenceCounterSequenceCounter;
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;
       'api::supplier.supplier': ApiSupplierSupplier;
