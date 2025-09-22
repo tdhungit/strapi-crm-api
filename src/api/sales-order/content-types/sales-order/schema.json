@@ -38,9 +38,25 @@
       "type": "decimal",
       "default": 0
     },
+    "discount_type": {
+      "type": "enumeration",
+      "default": "amount",
+      "enum": [
+        "amount",
+        "percentage"
+      ]
+    },
     "discount_amount": {
       "type": "decimal",
       "default": 0
+    },
+    "tax_type": {
+      "type": "enumeration",
+      "default": "amount",
+      "enum": [
+        "amount",
+        "percentage"
+      ]
     },
     "tax_amount": {
       "type": "decimal",

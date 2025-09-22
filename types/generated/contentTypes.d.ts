@@ -1308,6 +1308,8 @@ export interface ApiPurchaseOrderDetailPurchaseOrderDetail
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    discount_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1326,6 +1328,8 @@ export interface ApiPurchaseOrderDetailPurchaseOrderDetail
     quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     unit_price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1357,6 +1361,8 @@ export interface ApiPurchaseOrderPurchaseOrder
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    discount_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1376,7 +1382,11 @@ export interface ApiPurchaseOrderPurchaseOrder
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     supplier: Schema.Attribute.Relation<'manyToOne', 'api::supplier.supplier'>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    total_discount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    total_tax: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1399,6 +1409,8 @@ export interface ApiSalesOrderDetailSalesOrderDetail
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    discount_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1417,6 +1429,8 @@ export interface ApiSalesOrderDetailSalesOrderDetail
     >;
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     unit_price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1448,6 +1462,8 @@ export interface ApiSalesOrderSalesOrder extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    discount_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1466,6 +1482,8 @@ export interface ApiSalesOrderSalesOrder extends Struct.CollectionTypeSchema {
     >;
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
+      Schema.Attribute.DefaultTo<'amount'>;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
