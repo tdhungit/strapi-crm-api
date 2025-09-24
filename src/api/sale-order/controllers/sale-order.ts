@@ -1,23 +1,21 @@
 import { factories } from '@strapi/strapi';
 
 export default factories.createCoreController(
-  'api::purchase-order.purchase-order',
+  'api::sale-order.sale-order',
   ({ strapi }) => ({
     async create(ctx) {
       const { data, meta } = ctx.request.body;
 
       const orderNo = await strapi
-        .service('api::purchase-order.purchase-order')
-        .getOrderNo();
+        .service('api::sale-order.sale-order')
+        .getSalesOrderNo();
 
       data.name = orderNo;
       data.order_status = 'New';
 
-      const contentType = strapi.contentType(
-        'api::purchase-order.purchase-order'
-      );
-      const contentTypePODetail = strapi.contentType(
-        'api::purchase-order-detail.purchase-order-detail'
+      const contentType = strapi.contentType('api::sale-order.sale-order');
+      const contentTypeSODetail = strapi.contentType(
+        'api::sale-order-detail.sale-order-detail'
       );
 
       const sanitizedData: any = await strapi.contentAPI.sanitize.input(
@@ -28,28 +26,26 @@ export default factories.createCoreController(
         }
       );
 
-      const entry = await strapi.db
-        .query('api::purchase-order.purchase-order')
-        .create({
-          data: sanitizedData,
-        });
+      const entry = await strapi.db.query('api::sale-order.sale-order').create({
+        data: sanitizedData,
+      });
 
       if (data.items && Array.isArray(data.items)) {
         for (const item of data.items) {
           const itemSanitizedData: any = await strapi.contentAPI.sanitize.input(
             item,
-            contentTypePODetail,
+            contentTypeSODetail,
             {
               auth: ctx.state.auth,
             }
           );
 
           await strapi.db
-            .query('api::purchase-order-detail.purchase-order-detail')
+            .query('api::sale-order-detail.sale-order-detail')
             .create({
               data: {
                 ...itemSanitizedData,
-                purchase_order: entry.id,
+                sale_order: entry.id,
               },
             });
         }
@@ -63,18 +59,16 @@ export default factories.createCoreController(
       const { data, meta } = ctx.request.body;
 
       const existingEntry = await strapi.db
-        .query('api::purchase-order.purchase-order')
+        .query('api::sale-order.sale-order')
         .findOne({ where: { documentId: id } });
 
       if (!existingEntry) {
-        return ctx.notFound('Purchase Order not found');
+        return ctx.notFound('Sale Order not found');
       }
 
-      const contentType = strapi.contentType(
-        'api::purchase-order.purchase-order'
-      );
-      const contentTypePODetail = strapi.contentType(
-        'api::purchase-order-detail.purchase-order-detail'
+      const contentType = strapi.contentType('api::sale-order.sale-order');
+      const contentTypeSODetail = strapi.contentType(
+        'api::sale-order-detail.sale-order-detail'
       );
 
       const sanitizedData: any = await strapi.contentAPI.sanitize.input(
@@ -89,18 +83,18 @@ export default factories.createCoreController(
         delete sanitizedData.order_status;
       }
 
-      const entry = await strapi.db
-        .query('api::purchase-order.purchase-order')
-        .update({
-          where: { id: existingEntry.id },
-          data: sanitizedData,
-        });
+      const entry = await strapi.db.query('api::sale-order.sale-order').update({
+        where: { id: existingEntry.id },
+        data: sanitizedData,
+      });
 
       if (data.items && Array.isArray(data.items)) {
         // Fetch existing items from DB
         const existingItems = await strapi.db
-          .query('api::purchase-order-detail.purchase-order-detail')
-          .findMany({ where: { purchase_order: existingEntry.id } });
+          .query('api::sale-order-detail.sale-order-detail')
+          .findMany({
+            where: { sale_order: existingEntry.id },
+          });
 
         const existingItemIds = existingItems.map((item) => item.id);
         const requestItemIds = data.items.filter((i) => i.id).map((i) => i.id);
@@ -111,7 +105,7 @@ export default factories.createCoreController(
         );
         for (const item of itemsToDelete) {
           await strapi.db
-            .query('api::purchase-order-detail.purchase-order-detail')
+            .query('api::sale-order-detail.sale-order-detail')
             .delete({ where: { id: item.id } });
         }
 
@@ -119,31 +113,28 @@ export default factories.createCoreController(
         for (const item of data.items) {
           const itemSanitizedData: any = await strapi.contentAPI.sanitize.input(
             item,
-            contentTypePODetail,
+            contentTypeSODetail,
             {
               auth: ctx.state.auth,
             }
           );
 
           if (item.id && existingItemIds.includes(item.id)) {
-            // Update
+            // Update existing item
             await strapi.db
-              .query('api::purchase-order-detail.purchase-order-detail')
+              .query('api::sale-order-detail.sale-order-detail')
               .update({
                 where: { id: item.id },
-                data: {
-                  ...itemSanitizedData,
-                  purchase_order: entry.id,
-                },
+                data: itemSanitizedData,
               });
           } else {
-            // Insert
+            // Create new item
             await strapi.db
-              .query('api::purchase-order-detail.purchase-order-detail')
+              .query('api::sale-order-detail.sale-order-detail')
               .create({
                 data: {
                   ...itemSanitizedData,
-                  purchase_order: entry.id,
+                  sale_order: entry.id,
                 },
               });
           }
@@ -157,28 +148,26 @@ export default factories.createCoreController(
       const { id } = ctx.params;
 
       const existingEntry = await strapi.db
-        .query('api::purchase-order.purchase-order')
+        .query('api::sale-order.sale-order')
         .findOne({ where: { documentId: id } });
 
       if (!existingEntry) {
-        return ctx.notFound('Purchase Order not found');
+        return ctx.notFound('Sale Order not found');
       }
 
       if (existingEntry.order_status === 'Completed') {
-        return ctx.badRequest('Purchase Order is already completed');
+        return ctx.badRequest('Sale Order is already completed');
       }
 
-      const entry = await strapi.db
-        .query('api::purchase-order.purchase-order')
-        .update({
-          where: { id: existingEntry.id },
-          data: { order_status: 'Completed' },
-        });
+      const entry = await strapi.db.query('api::sale-order.sale-order').update({
+        where: { id: existingEntry.id },
+        data: { order_status: 'Completed' },
+      });
 
       // Update inventory
       await strapi
-        .service('api::purchase-order.purchase-order')
-        .inventoryUpdate(entry);
+        .service('api::sale-order.sale-order')
+        .inventoryUpdate(existingEntry);
 
       return this.transformResponse(entry);
     },

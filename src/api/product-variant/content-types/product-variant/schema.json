@@ -61,10 +61,10 @@
       "target": "api::purchase-order-detail.purchase-order-detail",
       "mappedBy": "product_variant"
     },
-    "sales_order_details": {
+    "sale_order_details": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::sales-order-detail.sales-order-detail",
+      "target": "api::sale-order-detail.sale-order-detail",
       "mappedBy": "product_variant"
     }
   }

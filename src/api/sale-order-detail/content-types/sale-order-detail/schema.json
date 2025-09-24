@@ -1,61 +1,62 @@
 {
   "kind": "collectionType",
-  "collectionName": "sales_order_details",
+  "collectionName": "sale_order_details",
   "info": {
-    "singularName": "sales-order-detail",
-    "pluralName": "sales-order-details",
-    "displayName": "Sales Order Detail"
+    "singularName": "sale-order-detail",
+    "pluralName": "sale-order-details",
+    "displayName": "Sale Order Detail"
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "sales_order": {
+    "sale_order": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::sales-order.sales-order",
-      "inversedBy": "sales_order_details"
+      "target": "api::sale-order.sale-order",
+      "inversedBy": "sale_order_details"
     },
     "product_variant": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::product-variant.product-variant",
-      "inversedBy": "sales_order_details"
+      "inversedBy": "sale_order_details"
     },
     "warehouse": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::warehouse.warehouse",
-      "inversedBy": "sales_order_details"
-    },
-    "quantity": {
-      "type": "integer",
-      "required": true
+      "inversedBy": "sale_order_details"
     },
     "unit_price": {
       "type": "decimal",
-      "required": true
+      "default": 0
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "default": 0
     },
     "discount_type": {
       "type": "enumeration",
-      "default": "amount",
+      "default": "percentage",
       "enum": [
-        "amount",
-        "percentage"
+        "percentage",
+        "amount"
+      ]
+    },
+    "tax_type": {
+      "type": "enumeration",
+      "default": "percentage",
+      "enum": [
+        "percentage",
+        "amount"
       ]
     },
     "discount_amount": {
       "type": "decimal",
       "default": 0
-    },
-    "tax_type": {
-      "type": "enumeration",
-      "default": "amount",
-      "enum": [
-        "amount",
-        "percentage"
-      ]
     },
     "tax_amount": {
       "type": "decimal",
@@ -63,6 +64,7 @@
     },
     "subtotal": {
       "type": "decimal",
+      "required": false,
       "default": 0
     }
   }

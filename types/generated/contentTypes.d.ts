@@ -435,6 +435,10 @@ export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
     >;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    sale_orders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sale-order.sale-order'
+    >;
     shortName: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<['Direct', 'Agency']>;
     updatedAt: Schema.Attribute.DateTime;
@@ -639,9 +643,9 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     mobile: Schema.Attribute.String;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    sales_orders: Schema.Attribute.Relation<
+    sale_orders: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order.sales-order'
+      'api::sale-order.sale-order'
     >;
     salutation: Schema.Attribute.Enumeration<
       ['Ms.', 'Mr.', 'Mrs.', 'Miss', 'Dr.']
@@ -1240,9 +1244,9 @@ export interface ApiProductVariantProductVariant
       'oneToMany',
       'api::purchase-order-detail.purchase-order-detail'
     >;
-    sales_order_details: Schema.Attribute.Relation<
+    sale_order_details: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order-detail.sales-order-detail'
+      'api::sale-order-detail.sale-order-detail'
     >;
     sku: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -1393,13 +1397,13 @@ export interface ApiPurchaseOrderPurchaseOrder
   };
 }
 
-export interface ApiSalesOrderDetailSalesOrderDetail
+export interface ApiSaleOrderDetailSaleOrderDetail
   extends Struct.CollectionTypeSchema {
-  collectionName: 'sales_order_details';
+  collectionName: 'sale_order_details';
   info: {
-    displayName: 'Sales Order Detail';
-    pluralName: 'sales-order-details';
-    singularName: 'sales-order-detail';
+    displayName: 'Sale Order Detail';
+    pluralName: 'sale-order-details';
+    singularName: 'sale-order-detail';
   };
   options: {
     draftAndPublish: false;
@@ -1409,12 +1413,12 @@ export interface ApiSalesOrderDetailSalesOrderDetail
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
-    discount_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
-      Schema.Attribute.DefaultTo<'amount'>;
+    discount_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order-detail.sales-order-detail'
+      'api::sale-order-detail.sale-order-detail'
     > &
       Schema.Attribute.Private;
     product_variant: Schema.Attribute.Relation<
@@ -1422,16 +1426,18 @@ export interface ApiSalesOrderDetailSalesOrderDetail
       'api::product-variant.product-variant'
     >;
     publishedAt: Schema.Attribute.DateTime;
-    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
-    sales_order: Schema.Attribute.Relation<
+    quantity: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    sale_order: Schema.Attribute.Relation<
       'manyToOne',
-      'api::sales-order.sales-order'
+      'api::sale-order.sale-order'
     >;
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
-    tax_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
-      Schema.Attribute.DefaultTo<'amount'>;
-    unit_price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    tax_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
+    unit_price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1442,17 +1448,18 @@ export interface ApiSalesOrderDetailSalesOrderDetail
   };
 }
 
-export interface ApiSalesOrderSalesOrder extends Struct.CollectionTypeSchema {
-  collectionName: 'sales_orders';
+export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'sale_orders';
   info: {
-    displayName: 'Sales Order';
-    pluralName: 'sales-orders';
-    singularName: 'sales-order';
+    displayName: 'Sale Order';
+    pluralName: 'sale-orders';
+    singularName: 'sale-order';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
+    account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
     assigned_user: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
@@ -1462,28 +1469,27 @@ export interface ApiSalesOrderSalesOrder extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
-    discount_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
-      Schema.Attribute.DefaultTo<'amount'>;
+    discount_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order.sales-order'
+      'api::sale-order.sale-order'
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     order_status: Schema.Attribute.Enumeration<['New', 'Completed']> &
-      Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'New'>;
     publishedAt: Schema.Attribute.DateTime;
-    sales_date: Schema.Attribute.Date & Schema.Attribute.Required;
-    sales_order_details: Schema.Attribute.Relation<
+    sale_date: Schema.Attribute.Date & Schema.Attribute.Required;
+    sale_order_details: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order-detail.sales-order-detail'
+      'api::sale-order-detail.sale-order-detail'
     >;
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
-    tax_type: Schema.Attribute.Enumeration<['amount', 'percentage']> &
-      Schema.Attribute.DefaultTo<'amount'>;
+    tax_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1655,9 +1661,9 @@ export interface ApiWarehouseWarehouse extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::purchase-order-detail.purchase-order-detail'
     >;
-    sales_order_details: Schema.Attribute.Relation<
+    sale_order_details: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order-detail.sales-order-detail'
+      'api::sale-order-detail.sale-order-detail'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -2196,9 +2202,9 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    sales_orders: Schema.Attribute.Relation<
+    sale_orders: Schema.Attribute.Relation<
       'oneToMany',
-      'api::sales-order.sales-order'
+      'api::sale-order.sale-order'
     >;
     settings: Schema.Attribute.Relation<'oneToMany', 'api::setting.setting'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -2246,8 +2252,8 @@ declare module '@strapi/strapi' {
       'api::product.product': ApiProductProduct;
       'api::purchase-order-detail.purchase-order-detail': ApiPurchaseOrderDetailPurchaseOrderDetail;
       'api::purchase-order.purchase-order': ApiPurchaseOrderPurchaseOrder;
-      'api::sales-order-detail.sales-order-detail': ApiSalesOrderDetailSalesOrderDetail;
-      'api::sales-order.sales-order': ApiSalesOrderSalesOrder;
+      'api::sale-order-detail.sale-order-detail': ApiSaleOrderDetailSaleOrderDetail;
+      'api::sale-order.sale-order': ApiSaleOrderSaleOrder;
       'api::sequence-counter.sequence-counter': ApiSequenceCounterSequenceCounter;
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;

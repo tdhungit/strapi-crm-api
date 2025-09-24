@@ -79,10 +79,10 @@
       "target": "api::campaign.campaign",
       "mappedBy": "contacts"
     },
-    "sales_orders": {
+    "sale_orders": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::sales-order.sales-order",
+      "target": "api::sale-order.sale-order",
       "mappedBy": "contact"
     }
   }

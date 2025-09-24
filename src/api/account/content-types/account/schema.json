@@ -88,6 +88,12 @@
       "relation": "oneToMany",
       "target": "api::opportunity.opportunity",
       "mappedBy": "account"
+    },
+    "sale_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sale-order.sale-order",
+      "mappedBy": "account"
     }
   }
 }

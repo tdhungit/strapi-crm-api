@@ -1,24 +1,23 @@
 import { factories } from '@strapi/strapi';
 
 export default factories.createCoreService(
-  'api::purchase-order.purchase-order',
+  'api::sale-order.sale-order',
   ({ strapi }) => ({
-    async getOrderNo(): Promise<string> {
+    async getSalesOrderNo(): Promise<string> {
       const sequenceService = strapi.service(
         'api::sequence-counter.sequence-counter'
       );
-      const nextSequence =
-        await sequenceService.getNextSequence('purchase_order');
-      const orderNo = `PO-${String(nextSequence).padStart(6, '0')}`;
+      const nextSequence = await sequenceService.getNextSequence('sales_order');
+      const orderNo = `SO-${String(nextSequence).padStart(6, '0')}`;
       return orderNo;
     },
 
-    async inventoryUpdate(purchaseOrder: any) {
-      // Fetch all purchase order details
+    async inventoryUpdate(saleOrder: any) {
+      // Fetch all sale order details
       const details = await strapi.db
-        .query('api::purchase-order-detail.purchase-order-detail')
+        .query('api::sale-order-detail.sale-order-detail')
         .findMany({
-          where: { purchase_order: purchaseOrder.id },
+          where: { sale_order: saleOrder.id },
           populate: ['product_variant', 'warehouse'],
         });
 
@@ -42,7 +41,7 @@ export default factories.createCoreService(
           await strapi.db.query('api::inventory.inventory').update({
             where: { id: inventory.id },
             data: {
-              stock_quantity: inventory.stock_quantity + detail.quantity,
+              stock_quantity: inventory.stock_quantity - detail.quantity,
               last_updated: new Date(),
             },
           });
@@ -52,7 +51,7 @@ export default factories.createCoreService(
             data: {
               product_variant: detail.product_variant,
               warehouse: detail.warehouse,
-              stock_quantity: detail.quantity,
+              stock_quantity: -detail.quantity,
               last_updated: new Date(),
             },
           });
