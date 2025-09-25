@@ -1,7 +1,18 @@
-/**
- * sale-order-detail controller
- */
+import { factories } from '@strapi/strapi';
 
-import { factories } from '@strapi/strapi'
+export default factories.createCoreController(
+  'api::sale-order-detail.sale-order-detail',
+  ({ strapi }) => ({
+    async create(ctx) {
+      return ctx.badRequest('Not allowed to create SO detail directly');
+    },
 
-export default factories.createCoreController('api::sale-order-detail.sale-order-detail');
+    async update(ctx) {
+      return ctx.badRequest('Not allowed to update SO detail directly');
+    },
+
+    async delete(ctx) {
+      return ctx.badRequest('Not allowed to delete SO detail directly');
+    },
+  })
+);
