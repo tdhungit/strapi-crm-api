@@ -165,6 +165,12 @@ export default factories.createCoreController(
       const { id } = ctx.params;
       const { status } = ctx.request.body;
 
+      const validStatuses = ['New', 'Approved', 'Rejected', 'Pending'];
+
+      if (!validStatuses.includes(status)) {
+        return ctx.badRequest('Invalid status value');
+      }
+
       const existingEntry = await strapi.db
         .query('api::purchase-order.purchase-order')
         .findOne({ where: { documentId: id } });

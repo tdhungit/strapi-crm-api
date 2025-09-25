@@ -152,6 +152,40 @@ export default factories.createCoreController(
       return this.transformResponse(entry);
     },
 
+    async changeStatus(ctx) {
+      const { id } = ctx.params;
+      const { status } = ctx.request.body;
+
+      const validStatuses = ['New', 'Approved', 'Rejected', 'Pending'];
+
+      if (!validStatuses.includes(status)) {
+        return ctx.badRequest('Invalid status value');
+      }
+
+      const existingEntry = await strapi.db
+        .query('api::sale-order.sale-order')
+        .findOne({ where: { documentId: id } });
+
+      if (!existingEntry) {
+        return ctx.notFound('Sale Order not found');
+      }
+
+      if (
+        ['Completed', 'Approved', 'Rejected'].includes(
+          existingEntry.order_status
+        )
+      ) {
+        return ctx.badRequest('Cannot update a completed Sale Order');
+      }
+
+      const entry = await strapi.db.query('api::sale-order.sale-order').update({
+        where: { id: existingEntry.id },
+        data: { order_status: status },
+      });
+
+      return this.transformResponse(entry);
+    },
+
     async completeOrder(ctx) {
       const { id } = ctx.params;
 
