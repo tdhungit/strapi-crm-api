@@ -66,6 +66,14 @@ export default factories.createCoreController(
         return ctx.notFound('Sale Order not found');
       }
 
+      if (
+        ['Completed', 'Approved', 'Rejected'].includes(
+          existingEntry.order_status
+        )
+      ) {
+        return ctx.badRequest('Cannot update a completed Sale Order');
+      }
+
       const contentType = strapi.contentType('api::sale-order.sale-order');
       const contentTypeSODetail = strapi.contentType(
         'api::sale-order-detail.sale-order-detail'

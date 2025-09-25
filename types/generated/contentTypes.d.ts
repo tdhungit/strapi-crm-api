@@ -1374,7 +1374,9 @@ export interface ApiPurchaseOrderPurchaseOrder
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    order_status: Schema.Attribute.Enumeration<['New', 'Completed']> &
+    order_status: Schema.Attribute.Enumeration<
+      ['New', 'In Progress', 'Pending', 'Approved', 'Rejected', 'Completed']
+    > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'New'>;
     publishedAt: Schema.Attribute.DateTime;
@@ -1478,7 +1480,10 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    order_status: Schema.Attribute.Enumeration<['New', 'Completed']> &
+    order_status: Schema.Attribute.Enumeration<
+      ['New', 'In Progress', 'Pending', 'Approved', 'Rejected', 'Completed']
+    > &
+      Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'New'>;
     publishedAt: Schema.Attribute.DateTime;
     sale_date: Schema.Attribute.Date & Schema.Attribute.Required;

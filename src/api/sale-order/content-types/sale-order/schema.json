@@ -33,9 +33,14 @@
     },
     "order_status": {
       "type": "enumeration",
+      "required": true,
       "default": "New",
       "enum": [
         "New",
+        "In Progress",
+        "Pending",
+        "Approved",
+        "Rejected",
         "Completed"
       ]
     },

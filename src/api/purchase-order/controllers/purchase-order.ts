@@ -70,6 +70,14 @@ export default factories.createCoreController(
         return ctx.notFound('Purchase Order not found');
       }
 
+      if (
+        ['Completed', 'Approved', 'Rejected'].includes(
+          existingEntry.order_status
+        )
+      ) {
+        return ctx.badRequest('Cannot update a completed Purchase Order');
+      }
+
       const contentType = strapi.contentType(
         'api::purchase-order.purchase-order'
       );
@@ -149,6 +157,36 @@ export default factories.createCoreController(
           }
         }
       }
+
+      return this.transformResponse(entry);
+    },
+
+    async changeStatus(ctx) {
+      const { id } = ctx.params;
+      const { status } = ctx.request.body;
+
+      const existingEntry = await strapi.db
+        .query('api::purchase-order.purchase-order')
+        .findOne({ where: { documentId: id } });
+
+      if (!existingEntry) {
+        return ctx.notFound('Purchase Order not found');
+      }
+
+      if (
+        ['Completed', 'Approved', 'Rejected'].includes(
+          existingEntry.order_status
+        )
+      ) {
+        return ctx.badRequest('Cannot update a completed Purchase Order');
+      }
+
+      const entry = await strapi.db
+        .query('api::purchase-order.purchase-order')
+        .update({
+          where: { id: existingEntry.id },
+          data: { order_status: status },
+        });
 
       return this.transformResponse(entry);
     },
