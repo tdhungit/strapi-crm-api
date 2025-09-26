@@ -1499,6 +1499,10 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    warehouse: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::warehouse.warehouse'
+    >;
   };
 }
 
@@ -1704,6 +1708,10 @@ export interface ApiWarehouseWarehouse extends Struct.CollectionTypeSchema {
     sale_order_details: Schema.Attribute.Relation<
       'oneToMany',
       'api::sale-order-detail.sale-order-detail'
+    >;
+    sale_orders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sale-order.sale-order'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

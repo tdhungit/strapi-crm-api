@@ -87,6 +87,12 @@
       "relation": "oneToMany",
       "target": "api::sale-order-detail.sale-order-detail",
       "mappedBy": "sale_order"
+    },
+    "warehouse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::warehouse.warehouse",
+      "inversedBy": "sale_orders"
     }
   }
 }

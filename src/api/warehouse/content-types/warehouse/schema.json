@@ -41,6 +41,12 @@
       "relation": "oneToMany",
       "target": "api::sale-order-detail.sale-order-detail",
       "mappedBy": "warehouse"
+    },
+    "sale_orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sale-order.sale-order",
+      "mappedBy": "warehouse"
     }
   }
 }
