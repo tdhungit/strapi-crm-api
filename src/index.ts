@@ -6,8 +6,12 @@ export default {
     strapi.db.lifecycles.subscribe((event) => {
       // check and auto install app
       strapi.service('api::setting.install').autoInstall(event);
+
       // Call the audit log service to log the action
       strapi.service('api::audit-log.audit-log').logAction(event);
+
+      // Call the inventory service to trigger timeline entries
+      strapi.service('api::inventory.inventory').triggerTimeline(event);
     });
   },
 

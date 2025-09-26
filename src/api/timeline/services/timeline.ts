@@ -14,6 +14,7 @@ export default factories.createCoreService(
           createdBy: data.user?.id || null,
           updatedBy: data.user?.id || null,
           user: data.user?.id || null,
+          metadata: data.metadata || {},
         },
       });
       return timeline;

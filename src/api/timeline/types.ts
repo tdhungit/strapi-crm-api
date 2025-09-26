@@ -4,4 +4,5 @@ export interface TimelineSaveType {
   model: string;
   recordId?: number;
   user?: any;
+  metadata?: any;
 }

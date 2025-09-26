@@ -1659,6 +1659,7 @@ export interface ApiTimelineTimeline extends Struct.CollectionTypeSchema {
       'api::timeline.timeline'
     > &
       Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
     model: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     record_id: Schema.Attribute.Integer;
