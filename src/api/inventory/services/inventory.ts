@@ -17,8 +17,6 @@ export default factories.createCoreService(
         return;
       }
 
-      console.log(result, params);
-
       const inventoryId = params?.where?.id || result?.id;
       const stock_quantity =
         params?.data?.stock_quantity || result?.stock_quantity;
@@ -29,15 +27,15 @@ export default factories.createCoreService(
         .query('api::inventory.inventory')
         .findOne({
           where: { id: inventoryId },
-          populate: ['product_variant'],
+          populate: ['product_variant', 'warehouse'],
         });
 
       let desc = `Added ${inventory?.stock_quantity} of ${
         inventory?.product_variant?.name || 'a product'
-      } to inventory.`;
+      } to ${inventory?.warehouse?.name || 'a warehouse'}.`;
 
       if (action === 'beforeUpdate') {
-        desc = `Updated inventory for ${
+        desc = `Updated ${inventory?.warehouse?.name || 'a warehouse'} for ${
           inventory?.product_variant?.name || 'a product'
         } from ${inventory?.stock_quantity} to ${stock_quantity}.`;
       }
@@ -52,6 +50,7 @@ export default factories.createCoreService(
         recordId: inventoryId,
         user: user,
         metadata: {
+          // inventory,
           action,
           params,
           result,
