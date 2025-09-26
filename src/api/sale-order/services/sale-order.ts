@@ -58,5 +58,61 @@ export default factories.createCoreService(
         }
       }
     },
+
+    async invalidateInventory(saleOrder: any): Promise<boolean> {
+      let isValid = true;
+      // Fetch all sale order details
+      const details = await strapi.db
+        .query('api::sale-order-detail.sale-order-detail')
+        .findMany({
+          where: { sale_order: saleOrder.id },
+          populate: ['product_variant', 'warehouse'],
+        });
+
+      let inventories: any[] = [];
+      for await (const detail of details) {
+        const findIndex = inventories.findIndex(
+          (inv) =>
+            inv.product_variant.id === detail.product_variant.id &&
+            inv.warehouse.id === detail.warehouse.id
+        );
+
+        if (findIndex !== -1) {
+          inventories[findIndex].quantity += detail.quantity;
+          continue;
+        }
+
+        inventories.push({
+          product_variant: detail.product_variant,
+          warehouse: detail.warehouse,
+          quantity: detail.quantity,
+        });
+      }
+
+      for await (const inventory of inventories) {
+        const existingInventory = await strapi.db
+          .query('api::inventory.inventory')
+          .findOne({
+            where: {
+              product_variant: {
+                id: inventory.product_variant.id,
+              },
+              warehouse: {
+                id: inventory.warehouse.id,
+              },
+            },
+          });
+
+        if (
+          !existingInventory ||
+          existingInventory.stock_quantity < inventory.quantity
+        ) {
+          isValid = false;
+          break;
+        }
+      }
+
+      return isValid;
+    },
   })
 );

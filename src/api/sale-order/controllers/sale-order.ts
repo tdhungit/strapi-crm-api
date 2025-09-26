@@ -178,38 +178,35 @@ export default factories.createCoreController(
         return ctx.badRequest('Cannot update a completed Sale Order');
       }
 
-      const entry = await strapi.db.query('api::sale-order.sale-order').update({
-        where: { id: existingEntry.id },
-        data: { order_status: status },
-      });
+      let entry: any;
+      if (status === 'Approved') {
+        // Ensure inventory is valid before approving
+        const isValid = await strapi
+          .service('api::sale-order.sale-order')
+          .invalidateInventory(existingEntry);
 
-      return this.transformResponse(entry);
-    },
+        if (!isValid) {
+          return ctx.badRequest(
+            'Insufficient inventory to approve this Sale Order'
+          );
+        }
 
-    async completeOrder(ctx) {
-      const { id } = ctx.params;
+        // Change status to Approved
+        entry = await strapi.db.query('api::sale-order.sale-order').update({
+          where: { id: existingEntry.id },
+          data: { order_status: 'Approved' },
+        });
 
-      const existingEntry = await strapi.db
-        .query('api::sale-order.sale-order')
-        .findOne({ where: { documentId: id } });
-
-      if (!existingEntry) {
-        return ctx.notFound('Sale Order not found');
+        // Update inventory
+        await strapi
+          .service('api::sale-order.sale-order')
+          .inventoryUpdate(existingEntry);
+      } else {
+        entry = await strapi.db.query('api::sale-order.sale-order').update({
+          where: { id: existingEntry.id },
+          data: { order_status: status },
+        });
       }
-
-      if (existingEntry.order_status === 'Completed') {
-        return ctx.badRequest('Sale Order is already completed');
-      }
-
-      const entry = await strapi.db.query('api::sale-order.sale-order').update({
-        where: { id: existingEntry.id },
-        data: { order_status: 'Completed' },
-      });
-
-      // Update inventory
-      await strapi
-        .service('api::sale-order.sale-order')
-        .inventoryUpdate(existingEntry);
 
       return this.transformResponse(entry);
     },
