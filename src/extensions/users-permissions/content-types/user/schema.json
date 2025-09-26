@@ -167,6 +167,12 @@
       "relation": "oneToMany",
       "target": "api::sale-order.sale-order",
       "mappedBy": "assigned_user"
+    },
+    "timelines": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::timeline.timeline",
+      "mappedBy": "user"
     }
   }
 }

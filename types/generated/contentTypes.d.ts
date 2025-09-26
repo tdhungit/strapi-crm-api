@@ -1634,6 +1634,41 @@ export interface ApiSupplierSupplier extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTimelineTimeline extends Struct.CollectionTypeSchema {
+  collectionName: 'timelines';
+  info: {
+    displayName: 'Timeline';
+    pluralName: 'timelines';
+    singularName: 'timeline';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::timeline.timeline'
+    > &
+      Schema.Attribute.Private;
+    model: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    record_id: Schema.Attribute.Integer;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiWarehouseWarehouse extends Struct.CollectionTypeSchema {
   collectionName: 'warehouses';
   info: {
@@ -2212,6 +2247,7 @@ export interface PluginUsersPermissionsUser
       'api::sale-order.sale-order'
     >;
     settings: Schema.Attribute.Relation<'oneToMany', 'api::setting.setting'>;
+    timelines: Schema.Attribute.Relation<'oneToMany', 'api::timeline.timeline'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2263,6 +2299,7 @@ declare module '@strapi/strapi' {
       'api::setting.setting': ApiSettingSetting;
       'api::state.state': ApiStateState;
       'api::supplier.supplier': ApiSupplierSupplier;
+      'api::timeline.timeline': ApiTimelineTimeline;
       'api::warehouse.warehouse': ApiWarehouseWarehouse;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

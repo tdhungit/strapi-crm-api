@@ -156,7 +156,13 @@ export default factories.createCoreController(
       const { id } = ctx.params;
       const { status } = ctx.request.body;
 
-      const validStatuses = ['New', 'Approved', 'Rejected', 'Pending'];
+      const validStatuses = [
+        'New',
+        'Approved',
+        'Rejected',
+        'Pending',
+        'Completed',
+      ];
 
       if (!validStatuses.includes(status)) {
         return ctx.badRequest('Invalid status value');
@@ -170,11 +176,7 @@ export default factories.createCoreController(
         return ctx.notFound('Sale Order not found');
       }
 
-      if (
-        ['Completed', 'Approved', 'Rejected'].includes(
-          existingEntry.order_status
-        )
-      ) {
+      if (['Completed', 'Rejected'].includes(existingEntry.order_status)) {
         return ctx.badRequest('Cannot update a completed Sale Order');
       }
 
@@ -207,6 +209,15 @@ export default factories.createCoreController(
           data: { order_status: status },
         });
       }
+
+      // Log timeline
+      await strapi.service('api::timeline.timeline').saveTimeline({
+        title: status,
+        description: `Sale Order change status from ${existingEntry.order_status} to ${status}`,
+        model: 'sale-orders',
+        recordId: entry.id,
+        user: ctx.state.user,
+      });
 
       return this.transformResponse(entry);
     },

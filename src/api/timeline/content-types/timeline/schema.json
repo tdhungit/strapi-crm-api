@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "timelines",
+  "info": {
+    "singularName": "timeline",
+    "pluralName": "timelines",
+    "displayName": "Timeline"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "model": {
+      "type": "string",
+      "required": true
+    },
+    "record_id": {
+      "type": "integer"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "timelines"
+    }
+  }
+}

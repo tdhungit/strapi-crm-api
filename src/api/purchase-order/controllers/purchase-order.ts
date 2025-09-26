@@ -165,7 +165,13 @@ export default factories.createCoreController(
       const { id } = ctx.params;
       const { status } = ctx.request.body;
 
-      const validStatuses = ['New', 'Approved', 'Rejected', 'Pending'];
+      const validStatuses = [
+        'New',
+        'Approved',
+        'Rejected',
+        'Pending',
+        'Completed',
+      ];
 
       if (!validStatuses.includes(status)) {
         return ctx.badRequest('Invalid status value');
@@ -179,11 +185,7 @@ export default factories.createCoreController(
         return ctx.notFound('Purchase Order not found');
       }
 
-      if (
-        ['Completed', 'Approved', 'Rejected'].includes(
-          existingEntry.order_status
-        )
-      ) {
+      if (['Completed', 'Rejected'].includes(existingEntry.order_status)) {
         return ctx.badRequest('Cannot update a completed Purchase Order');
       }
 
@@ -194,35 +196,21 @@ export default factories.createCoreController(
           data: { order_status: status },
         });
 
-      return this.transformResponse(entry);
-    },
-
-    async completeOrder(ctx) {
-      const { id } = ctx.params;
-
-      const existingEntry = await strapi.db
-        .query('api::purchase-order.purchase-order')
-        .findOne({ where: { documentId: id } });
-
-      if (!existingEntry) {
-        return ctx.notFound('Purchase Order not found');
+      if (status === 'Completed') {
+        // Update inventory
+        await strapi
+          .service('api::purchase-order.purchase-order')
+          .inventoryUpdate(entry);
       }
 
-      if (existingEntry.order_status === 'Completed') {
-        return ctx.badRequest('Purchase Order is already completed');
-      }
-
-      const entry = await strapi.db
-        .query('api::purchase-order.purchase-order')
-        .update({
-          where: { id: existingEntry.id },
-          data: { order_status: 'Completed' },
-        });
-
-      // Update inventory
-      await strapi
-        .service('api::purchase-order.purchase-order')
-        .inventoryUpdate(entry);
+      // Log timeline
+      await strapi.service('api::timeline.timeline').saveTimeline({
+        title: status,
+        description: `Purchase Order change status from ${existingEntry.order_status} to ${status}`,
+        model: 'purchase-orders',
+        recordId: entry.id,
+        user: ctx.state.user,
+      });
 
       return this.transformResponse(entry);
     },
