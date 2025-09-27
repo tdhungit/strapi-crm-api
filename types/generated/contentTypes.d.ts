@@ -458,6 +458,11 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+  };
   attributes: {
     action: Schema.Attribute.String & Schema.Attribute.Required;
     assigned_user: Schema.Attribute.Relation<
@@ -583,6 +588,11 @@ export interface ApiCityCity extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+  };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -665,6 +675,11 @@ export interface ApiCountryCountry extends Struct.CollectionTypeSchema {
   };
   options: {
     draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
   };
   attributes: {
     capital: Schema.Attribute.String;
@@ -793,6 +808,11 @@ export interface ApiImportImport extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+  };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
       'manyToOne',
@@ -911,6 +931,11 @@ export interface ApiMailHistoryMailHistory extends Struct.CollectionTypeSchema {
   };
   options: {
     draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
@@ -1549,6 +1574,11 @@ export interface ApiSettingSetting extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+  };
   attributes: {
     category: Schema.Attribute.String & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
@@ -1582,6 +1612,11 @@ export interface ApiStateState extends Struct.CollectionTypeSchema {
   };
   options: {
     draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
   };
   attributes: {
     cities: Schema.Attribute.Relation<'oneToMany', 'api::city.city'>;
@@ -1647,6 +1682,11 @@ export interface ApiTimelineTimeline extends Struct.CollectionTypeSchema {
   };
   options: {
     draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
