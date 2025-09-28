@@ -878,6 +878,93 @@ export interface ApiInventoryInventory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiInvoiceDetailInvoiceDetail
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'invoice_details';
+  info: {
+    displayName: 'Invoice Detail';
+    pluralName: 'invoice-details';
+    singularName: 'invoice-detail';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    invoice: Schema.Attribute.Relation<'manyToOne', 'api::invoice.invoice'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::invoice-detail.invoice-detail'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    product_variant: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    unit_price: Schema.Attribute.Decimal;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiInvoiceInvoice extends Struct.CollectionTypeSchema {
+  collectionName: 'invoices';
+  info: {
+    displayName: 'Invoice';
+    pluralName: 'invoices';
+    singularName: 'invoice';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    account_tax: Schema.Attribute.Relation<'oneToOne', 'api::account.account'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    due_date: Schema.Attribute.Date;
+    invoice_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::invoice-detail.invoice-detail'
+    >;
+    invoice_number: Schema.Attribute.String & Schema.Attribute.Required;
+    invoice_status: Schema.Attribute.String & Schema.Attribute.Required;
+    invoice_tax_amount: Schema.Attribute.Decimal &
+      Schema.Attribute.DefaultTo<0>;
+    issue_date: Schema.Attribute.Date & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::invoice.invoice'
+    > &
+      Schema.Attribute.Private;
+    payment: Schema.Attribute.Relation<'manyToOne', 'api::payment.payment'>;
+    publishedAt: Schema.Attribute.DateTime;
+    sale_order: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::sale-order.sale-order'
+    >;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   collectionName: 'leads';
   info: {
@@ -1062,6 +1149,43 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'Prospecting'>;
     type: Schema.Attribute.Enumeration<['Exist Business', 'New Business']> &
       Schema.Attribute.DefaultTo<'Exist Business'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
+  collectionName: 'payments';
+  info: {
+    displayName: 'Payment';
+    pluralName: 'payments';
+    singularName: 'payment';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    invoices: Schema.Attribute.Relation<'oneToMany', 'api::invoice.invoice'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment.payment'
+    > &
+      Schema.Attribute.Private;
+    payment_date: Schema.Attribute.Date & Schema.Attribute.Required;
+    payment_method: Schema.Attribute.String & Schema.Attribute.Required;
+    payment_status: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    sale_order: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::sale-order.sale-order'
+    >;
+    transaction_id: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1498,6 +1622,7 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
     discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     discount_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
       Schema.Attribute.DefaultTo<'percentage'>;
+    invoices: Schema.Attribute.Relation<'oneToMany', 'api::invoice.invoice'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1510,6 +1635,7 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'New'>;
+    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
     sale_date: Schema.Attribute.Date & Schema.Attribute.Required;
     sale_order_details: Schema.Attribute.Relation<
@@ -2330,10 +2456,13 @@ declare module '@strapi/strapi' {
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
       'api::import.import': ApiImportImport;
       'api::inventory.inventory': ApiInventoryInventory;
+      'api::invoice-detail.invoice-detail': ApiInvoiceDetailInvoiceDetail;
+      'api::invoice.invoice': ApiInvoiceInvoice;
       'api::lead.lead': ApiLeadLead;
       'api::mail-history.mail-history': ApiMailHistoryMailHistory;
       'api::note.note': ApiNoteNote;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
+      'api::payment.payment': ApiPaymentPayment;
       'api::product-attribute.product-attribute': ApiProductAttributeProductAttribute;
       'api::product-price-list.product-price-list': ApiProductPriceListProductPriceList;
       'api::product-price.product-price': ApiProductPriceProductPrice;

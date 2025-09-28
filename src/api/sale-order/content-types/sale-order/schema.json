@@ -93,6 +93,18 @@
       "relation": "manyToOne",
       "target": "api::warehouse.warehouse",
       "inversedBy": "sale_orders"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "sale_order"
+    },
+    "invoices": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::invoice.invoice",
+      "mappedBy": "sale_order"
     }
   }
 }

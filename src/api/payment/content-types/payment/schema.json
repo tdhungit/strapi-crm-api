@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "payments",
+  "info": {
+    "singularName": "payment",
+    "pluralName": "payments",
+    "displayName": "Payment"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sale_order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sale-order.sale-order",
+      "inversedBy": "payments"
+    },
+    "amount": {
+      "type": "decimal",
+      "required": true
+    },
+    "payment_method": {
+      "type": "string",
+      "required": true
+    },
+    "payment_status": {
+      "type": "string",
+      "required": true
+    },
+    "payment_date": {
+      "type": "date",
+      "required": true
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "invoices": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::invoice.invoice",
+      "mappedBy": "payment"
+    }
+  }
+}
