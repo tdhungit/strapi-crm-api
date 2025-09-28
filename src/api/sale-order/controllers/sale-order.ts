@@ -8,7 +8,11 @@ export default factories.createCoreController(
 
       const entry = await strapi
         .service('api::sale-order.sale-order')
-        .createOrder(data, { auth: ctx.state.auth, status: 'New' });
+        .createOrder(data, {
+          auth: ctx.state.auth,
+          user: ctx.state.user,
+          status: 'New',
+        });
 
       return this.transformResponse(entry);
     },
@@ -27,7 +31,10 @@ export default factories.createCoreController(
 
       const entry = await strapi
         .service('api::sale-order.sale-order')
-        .updateOrder(existingEntry, data, { auth: ctx.state.auth });
+        .updateOrder(existingEntry, data, {
+          auth: ctx.state.auth,
+          user: ctx.state.user,
+        });
 
       return this.transformResponse(entry);
     },

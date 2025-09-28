@@ -120,7 +120,7 @@ export default factories.createCoreService(
       const orderNo = await this.getSalesOrderNo();
 
       data.name = orderNo;
-      data.order_status = options?.status || 'New';
+      data.order_status = 'New';
 
       const contentType = strapi.contentType('api::sale-order.sale-order');
       const contentTypeSODetail = strapi.contentType(
@@ -160,7 +160,29 @@ export default factories.createCoreService(
         }
       }
 
-      return entry;
+      // Payment now is completed
+      if (options?.status === 'Completed') {
+        // Update order status to Completed
+        await this.changeOrderStatus(entry, 'Approved', options);
+        await this.changeOrderStatus(entry, 'Completed', options);
+        // Create payment record
+        const payment = await strapi
+          .service('api::payment.payment')
+          .createFromOrder(entry, {
+            payment_method: 'Direct',
+          });
+        // Create invoice
+        await strapi
+          .service('api::invoice.invoice')
+          .generateInvoiceForOrder(entry, payment, {
+            description: `Invoice for Sale Order ${entry.name}`,
+          });
+      }
+
+      return await strapi.db.query('api::sale-order.sale-order').findOne({
+        where: { id: entry.id },
+        populate: ['invoices', 'payments'],
+      });
     },
 
     async updateOrder(
@@ -251,6 +273,8 @@ export default factories.createCoreService(
           }
         }
       }
+
+      return entry;
     },
 
     async changeOrderStatus(
