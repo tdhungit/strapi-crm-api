@@ -23,6 +23,12 @@
       "relation": "oneToMany",
       "target": "api::product-variant-attribute.product-variant-attribute",
       "mappedBy": "product_attribute"
+    },
+    "product_category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-category.product-category",
+      "inversedBy": "product_attributes"
     }
   }
 }

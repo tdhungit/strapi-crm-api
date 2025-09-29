@@ -1215,11 +1215,55 @@ export interface ApiProductAttributeProductAttribute
       Schema.Attribute.Private;
     metadata: Schema.Attribute.JSON;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    product_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-category.product-category'
+    >;
     product_variant_attributes: Schema.Attribute.Relation<
       'oneToMany',
       'api::product-variant-attribute.product-variant-attribute'
     >;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProductCategoryProductCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_categories';
+  info: {
+    displayName: 'Product Category';
+    pluralName: 'product-categories';
+    singularName: 'product-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-category.product-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    product_attributes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-attribute.product-attribute'
+    >;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1430,6 +1474,10 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     photos: Schema.Attribute.JSON;
+    product_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-category.product-category'
+    >;
     product_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Active'>;
@@ -2464,6 +2512,7 @@ declare module '@strapi/strapi' {
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
       'api::payment.payment': ApiPaymentPayment;
       'api::product-attribute.product-attribute': ApiProductAttributeProductAttribute;
+      'api::product-category.product-category': ApiProductCategoryProductCategory;
       'api::product-price-list.product-price-list': ApiProductPriceListProductPriceList;
       'api::product-price.product-price': ApiProductPriceProductPrice;
       'api::product-variant-attribute.product-variant-attribute': ApiProductVariantAttributeProductVariantAttribute;
