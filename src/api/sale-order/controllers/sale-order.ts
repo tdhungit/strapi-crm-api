@@ -60,5 +60,22 @@ export default factories.createCoreController(
 
       return this.transformResponse(entry);
     },
+
+    async createCompletedOrder(ctx) {
+      const { data } = ctx.request.body;
+      if (!data) {
+        return ctx.badRequest('No data provided');
+      }
+
+      const entry = await strapi
+        .service('api::sale-order.sale-order')
+        .createOrder(data, {
+          auth: ctx.state.auth,
+          user: ctx.state.user,
+          status: 'Completed',
+        });
+
+      return this.transformResponse(entry);
+    },
   })
 );
