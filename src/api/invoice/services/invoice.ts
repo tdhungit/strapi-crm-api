@@ -4,14 +4,24 @@ import { PaymentType } from './../../payment/types';
 export default factories.createCoreService(
   'api::invoice.invoice',
   ({ strapi }) => ({
+    async getInvoiceNumber(): Promise<string> {
+      const sequenceService = strapi.service(
+        'api::sequence-counter.sequence-counter'
+      );
+      const nextSequence = await sequenceService.getNextSequence('invoice');
+      return `INV-${String(nextSequence).padStart(6, '0')}`;
+    },
+
     async generateInvoiceForOrder(
       order: any,
       payment: PaymentType,
       options: { [key: string]: any }
     ): Promise<any> {
+      const invoiceNo = await this.getInvoiceNumber();
       // Create a new invoice record based on the order and payment details
       const invoice = await strapi.db.query('api::invoice.invoice').create({
         data: {
+          invoice_number: invoiceNo,
           sale_order: order.id,
           payment: payment.id,
           invoice_date: payment.payment_date,
@@ -29,9 +39,9 @@ export default factories.createCoreService(
       });
 
       // Create invoice details for each item in the order
-      if (order.order_details && order.order_details.length > 0) {
-        for (const item of order.order_details) {
-          await strapi.db.query('api::invoice.invoice-detail').create({
+      if (order.sale_order_details && order.sale_order_details.length > 0) {
+        for (const item of order.sale_order_details) {
+          await strapi.db.query('api::invoice-detail.invoice-detail').create({
             data: {
               invoice: invoice.id,
               name: item.product_variant.name,

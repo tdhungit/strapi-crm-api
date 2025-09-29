@@ -162,20 +162,27 @@ export default factories.createCoreService(
 
       // Payment now is completed
       if (options?.status === 'Completed') {
+        // Get detail entry
+        const detailEntry = await strapi.db
+          .query('api::sale-order.sale-order')
+          .findOne({
+            where: { id: entry.id },
+            populate: ['sale_order_details.product_variant'],
+          });
         // Update order status to Completed
         await this.changeOrderStatus(entry, 'Approved', options);
         await this.changeOrderStatus(entry, 'Completed', options);
         // Create payment record
         const payment = await strapi
           .service('api::payment.payment')
-          .createFromOrder(entry, {
+          .createFromOrder(detailEntry, {
             payment_method: 'Direct',
           });
         // Create invoice
         await strapi
           .service('api::invoice.invoice')
-          .generateInvoiceForOrder(entry, payment, {
-            description: `Invoice for Sale Order ${entry.name}`,
+          .generateInvoiceForOrder(detailEntry, payment, {
+            description: `Invoice for Sale Order ${detailEntry.name}`,
           });
       }
 
