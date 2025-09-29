@@ -25,7 +25,8 @@ export default factories.createCoreService(
           sale_order: order.id,
           payment: payment.id,
           invoice_date: payment.payment_date,
-          due_date: options.due_date || new Date(),
+          issue_date: order.sale_date || new Date(),
+          due_date: options.due_date || null,
           invoice_status:
             payment.payment_status === 'Completed' ? 'Paid' : 'Unpaid',
           subtotal: order.subtotal,
