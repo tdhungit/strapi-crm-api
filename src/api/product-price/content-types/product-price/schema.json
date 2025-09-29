@@ -20,6 +20,9 @@
         "Sale"
       ]
     },
+    "before_price": {
+      "type": "decimal"
+    },
     "price": {
       "type": "decimal",
       "default": 0

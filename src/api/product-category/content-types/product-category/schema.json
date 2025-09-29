@@ -21,6 +21,10 @@
       "required": true,
       "unique": true
     },
+    "weight": {
+      "type": "integer",
+      "default": 0
+    },
     "description": {
       "type": "text"
     },
