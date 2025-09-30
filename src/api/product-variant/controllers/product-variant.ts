@@ -5,7 +5,7 @@ export default factories.createCoreController(
   ({ strapi }) => ({
     async getPrice(ctx) {
       const { id } = ctx.params;
-      const { date } = ctx.request.query;
+      const { date, priceType } = ctx.request.query;
 
       if (!date) {
         ctx.throw(400, 'Date query parameter is required');
@@ -21,7 +21,7 @@ export default factories.createCoreController(
 
       const price = await strapi
         .service('api::product-variant.product-variant')
-        .getPrice(id, new Date(date as string));
+        .getPrice(id, new Date(date as string), priceType as string);
 
       ctx.body = { price };
     },
