@@ -116,6 +116,26 @@ export default factories.createCoreService(
       return isValid;
     },
 
+    async getContactSaleOrders(postData: any) {
+      if (postData.contact) {
+        return postData.contact;
+      }
+
+      if (postData.lead) {
+        // Convert lead to contact
+        try {
+          const contactService = strapi.service('api::contact.contact');
+          const contact = await contactService.createFromLead(postData.lead);
+          return contact.id;
+        } catch (error) {
+          console.error('Error converting lead to contact:', error);
+          return null;
+        }
+      }
+
+      return null;
+    },
+
     async createOrder(data: SaleOrderSaveType, options?: SaleOrderSaveOptions) {
       const orderNo = await this.getSalesOrderNo();
 
@@ -134,6 +154,9 @@ export default factories.createCoreService(
           auth: options?.auth || undefined,
         }
       );
+
+      // Handle contact from lead if provided
+      sanitizedData.contact = await this.getContactSaleOrders(data);
 
       const entry = await strapi.db.query('api::sale-order.sale-order').create({
         data: sanitizedData,

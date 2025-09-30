@@ -6,11 +6,20 @@ export default factories.createCoreService(
     async createFromLead(leadId: number, account?: any, user?: any) {
       const lead = await strapi.db.query('api::lead.lead').findOne({
         where: { id: leadId },
-        populate: { account: true, address: true, assigned_user: true },
+        populate: {
+          account: true,
+          address: true,
+          assigned_user: true,
+          contact: true,
+        },
       });
 
       if (!lead) {
         throw new Error('Lead not found');
+      }
+
+      if (lead.contact) {
+        return lead.contact;
       }
 
       const contactAddress: any = lead?.address || null;
