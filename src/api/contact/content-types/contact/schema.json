@@ -84,6 +84,12 @@
       "relation": "oneToMany",
       "target": "api::sale-order.sale-order",
       "mappedBy": "contact"
+    },
+    "lead": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lead.lead",
+      "inversedBy": "contact"
     }
   }
 }

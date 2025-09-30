@@ -74,6 +74,18 @@
       "relation": "manyToMany",
       "target": "api::campaign.campaign",
       "mappedBy": "leads"
+    },
+    "contact": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::contact.contact",
+      "mappedBy": "lead"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "leads"
     }
   }
 }

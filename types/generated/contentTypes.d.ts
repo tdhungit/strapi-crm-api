@@ -643,6 +643,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     firstName: Schema.Attribute.String;
     jobTitle: Schema.Attribute.String;
     lastName: Schema.Attribute.String & Schema.Attribute.Required;
+    lead: Schema.Attribute.Relation<'oneToOne', 'api::lead.lead'>;
     leadSource: Schema.Attribute.Enumeration<['Campaign', 'Website']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -977,10 +978,15 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.Component<'common.address', false>;
+    assigned_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     campaigns: Schema.Attribute.Relation<
       'manyToMany',
       'api::campaign.campaign'
     >;
+    contact: Schema.Attribute.Relation<'oneToOne', 'api::contact.contact'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1207,6 +1213,7 @@ export interface ApiProductAttributeProductAttribute
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -2426,6 +2433,7 @@ export interface PluginUsersPermissionsUser
       'api::email-template.email-template'
     >;
     imports: Schema.Attribute.Relation<'oneToMany', 'api::import.import'>;
+    leads: Schema.Attribute.Relation<'oneToMany', 'api::lead.lead'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

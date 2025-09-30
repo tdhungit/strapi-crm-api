@@ -173,6 +173,12 @@
       "relation": "oneToMany",
       "target": "api::timeline.timeline",
       "mappedBy": "user"
+    },
+    "leads": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lead.lead",
+      "mappedBy": "assigned_user"
     }
   }
 }
