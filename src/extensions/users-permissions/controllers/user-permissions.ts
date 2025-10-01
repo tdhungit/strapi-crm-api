@@ -3,7 +3,7 @@ import userPermissionService from '../services/user-permission';
 
 export default {
   async getRoutes(ctx: Context) {
-    const { page = 1, pageSize = 50, apiName } = ctx.query;
+    const { page = 1, pageSize = 500, apiName } = ctx.query;
 
     const { routes, meta } = await userPermissionService.getRoutes({
       page: Number(page),

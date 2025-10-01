@@ -39,11 +39,11 @@ export default {
           method: route.method,
           path: urlJoin(apiPrefix, route.path),
           handler: route.handler,
-          config: route.config || {},
-          info: {
-            apiName,
-            type: 'content-api',
-          },
+          // config: route.config || {},
+          // info: {
+          //   apiName,
+          //   type: 'content-api',
+          // },
         })
       );
     });
@@ -72,11 +72,11 @@ export default {
           method: route.method,
           path: urlJoin(apiPrefix, route.path),
           handler: route.handler,
-          config: route.config || {},
-          info: {
-            apiName: pluginName,
-            type: 'content-api',
-          },
+          // config: route.config || {},
+          // info: {
+          //   apiName: pluginName,
+          //   type: 'content-api',
+          // },
         })
       );
     });

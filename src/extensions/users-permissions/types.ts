@@ -7,7 +7,7 @@ export interface Route {
       scope?: string[];
     };
   };
-  info: {
+  info?: {
     apiName: string;
     type: 'content-api';
   };
