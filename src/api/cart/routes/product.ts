@@ -5,5 +5,10 @@ export default {
       path: '/sale-products',
       handler: 'product.findAvailableProducts',
     },
+    {
+      method: 'GET',
+      path: '/sale-products/:id',
+      handler: 'product.findProduct',
+    },
   ],
 };
