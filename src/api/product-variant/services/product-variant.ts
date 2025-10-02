@@ -19,26 +19,9 @@ export default factories.createCoreService(
             },
             price_status: 'Active',
             $and: [
-              {
-                $or: [
-                  {
-                    start_date: null,
-                    end_date: null,
-                  },
-                  {
-                    start_date: { $lte: date.toISOString() },
-                    end_date: { $gte: date.toISOString() },
-                  },
-                  {
-                    start_date: { $lte: date.toISOString() },
-                    end_date: null,
-                  },
-                  {
-                    start_date: null,
-                    end_date: { $gte: date.toISOString() },
-                  },
-                ],
-              },
+              strapi
+                .service('api::product-price.product-price')
+                .filterPriceFromDate(date),
             ],
             ...andWere,
           },

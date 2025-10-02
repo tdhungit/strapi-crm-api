@@ -34,6 +34,10 @@ export default factories.createCoreController(
         return ctx.badRequest('Warehouse ID is required');
       }
 
+      const filterDate = date ? new Date(date as string) : new Date();
+      const filterPriceFromDate = strapi
+        .service('api::product-price.product-price')
+        .filterPriceFromDate(filterDate);
       const where: any = {
         warehouse: {
           id: warehouseId,
@@ -42,19 +46,20 @@ export default factories.createCoreController(
         product_variant: {
           variant_status: 'Active',
           product_prices: {
-            price_status: 'Active',
-            start_date: {
-              $lte: date ? new Date(date as string) : new Date(),
-            },
-            end_date: {
-              $gte: date ? new Date(date as string) : new Date(),
-            },
+            $and: [
+              { price_status: 'Active' },
+              {
+                ...filterPriceFromDate,
+              },
+            ],
           },
         },
       };
 
       if (price_type) {
-        where.product_variant.product_prices.price_type = price_type;
+        where.product_variant.product_prices.$and.push({
+          price_type,
+        });
       }
 
       if (search) {
@@ -80,12 +85,12 @@ export default factories.createCoreController(
                 product_prices: {
                   sort: { createdAt: 'desc' },
                   filters: {
-                    start_date: {
-                      $lte: date ? new Date(date as string) : new Date(),
-                    },
-                    end_date: {
-                      $gte: date ? new Date(date as string) : new Date(),
-                    },
+                    $and: [
+                      { price_status: 'Active' },
+                      {
+                        ...filterPriceFromDate,
+                      },
+                    ],
                   },
                 },
               },
