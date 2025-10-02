@@ -10,5 +10,10 @@ export default {
       path: '/sale-products/:id',
       handler: 'product.findProduct',
     },
+    {
+      method: 'GET',
+      path: '/sale-categories/:id',
+      handler: 'product.findCategory',
+    },
   ],
 };

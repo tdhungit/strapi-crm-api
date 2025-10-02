@@ -84,4 +84,11 @@ export default {
 
     return product;
   },
+
+  async findCategory(ctx: Context) {
+    const { id } = ctx.params;
+    return await strapi.db
+      .query('api::product-category.product-category')
+      .findOne({ where: { id } });
+  },
 };
