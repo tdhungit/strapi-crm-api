@@ -13,8 +13,10 @@ export default factories.createCoreService(
       const select = `
         products.*,
         products.photos::json as photos,
+        min(product_prices.price) as from_price,
         max(product_prices.price) as to_price,
-        min(product_prices.price) as from_price
+        min(product_prices.before_price) as min_before_price,
+        max(product_prices.before_price) as max_before_price
       `;
 
       const getQuery = (select: string, categoryId?: number): string => {
