@@ -15,6 +15,9 @@
       "type": "string",
       "required": true
     },
+    "slug": {
+      "type": "string"
+    },
     "unit": {
       "type": "string",
       "required": true
