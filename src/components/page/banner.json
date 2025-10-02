@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_page_banners",
+  "info": {
+    "displayName": "Banner",
+    "icon": "landscape"
+  },
+  "options": {},
+  "attributes": {
+    "href": {
+      "type": "string"
+    },
+    "banner_url": {
+      "type": "string"
+    },
+    "banner": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

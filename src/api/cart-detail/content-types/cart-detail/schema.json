@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cart_details",
+  "info": {
+    "singularName": "cart-detail",
+    "pluralName": "cart-details",
+    "displayName": "Cart Detail"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cart": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cart.cart",
+      "inversedBy": "cart_details"
+    },
+    "product_variant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product-variant.product-variant"
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true
+    },
+    "price": {
+      "type": "decimal",
+      "required": true
+    },
+    "discount_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "discount_type": {
+      "type": "enumeration",
+      "default": "percentage",
+      "enum": [
+        "percentage",
+        "amount"
+      ]
+    },
+    "tax_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "tax_type": {
+      "type": "enumeration",
+      "default": "percentage",
+      "enum": [
+        "percentage",
+        "amount"
+      ]
+    }
+  }
+}

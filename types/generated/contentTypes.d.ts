@@ -373,6 +373,34 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAboutUsAboutUs extends Struct.SingleTypeSchema {
+  collectionName: 'about_uses';
+  info: {
+    displayName: 'About Us';
+    pluralName: 'about-uses';
+    singularName: 'about-us';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::about-us.about-us'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
   collectionName: 'accounts';
   info: {
@@ -572,6 +600,82 @@ export interface ApiCampaignCampaign extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiCartDetailCartDetail extends Struct.CollectionTypeSchema {
+  collectionName: 'cart_details';
+  info: {
+    displayName: 'Cart Detail';
+    pluralName: 'cart-details';
+    singularName: 'cart-detail';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    cart: Schema.Attribute.Relation<'manyToOne', 'api::cart.cart'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    discount_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::cart-detail.cart-detail'
+    > &
+      Schema.Attribute.Private;
+    price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    product_variant: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiCartCart extends Struct.CollectionTypeSchema {
+  collectionName: 'carts';
+  info: {
+    displayName: 'Cart';
+    pluralName: 'carts';
+    singularName: 'cart';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    cart_details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::cart-detail.cart-detail'
+    >;
+    contact: Schema.Attribute.Relation<'oneToOne', 'api::contact.contact'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discount_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    discount_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::cart.cart'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tax_type: Schema.Attribute.Enumeration<['percentage', 'discount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -793,6 +897,74 @@ export interface ApiEmailTemplateEmailTemplate
     title: Schema.Attribute.String & Schema.Attribute.Required;
     type: Schema.Attribute.Enumeration<['HTML', 'Text']> &
       Schema.Attribute.DefaultTo<'HTML'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
+  collectionName: 'global_settings';
+  info: {
+    displayName: 'Global Setting';
+    pluralName: 'global-settings';
+    singularName: 'global-setting';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    favicon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    footer: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::global-setting.global-setting'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    slogan: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
+  collectionName: 'home_pages';
+  info: {
+    displayName: 'Home Page';
+    pluralName: 'home-pages';
+    singularName: 'home-page';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::home-page.home-page'
+    > &
+      Schema.Attribute.Private;
+    main_banners: Schema.Attribute.Component<'page.banner', true>;
+    product_categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-category.product-category'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2505,15 +2677,20 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::about-us.about-us': ApiAboutUsAboutUs;
       'api::account.account': ApiAccountAccount;
       'api::audit-log.audit-log': ApiAuditLogAuditLog;
       'api::campaign-action.campaign-action': ApiCampaignActionCampaignAction;
       'api::campaign.campaign': ApiCampaignCampaign;
+      'api::cart-detail.cart-detail': ApiCartDetailCartDetail;
+      'api::cart.cart': ApiCartCart;
       'api::city.city': ApiCityCity;
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
       'api::department.department': ApiDepartmentDepartment;
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
+      'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
+      'api::home-page.home-page': ApiHomePageHomePage;
       'api::import.import': ApiImportImport;
       'api::inventory.inventory': ApiInventoryInventory;
       'api::invoice-detail.invoice-detail': ApiInvoiceDetailInvoiceDetail;

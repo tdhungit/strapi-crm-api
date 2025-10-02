@@ -11,17 +11,6 @@ export default {
     const start = (page - 1) * pageSize;
     const limit = pageSize;
 
-    console.log(
-      'Page:',
-      page,
-      'Page Size:',
-      pageSize,
-      'Start:',
-      start,
-      'Limit:',
-      limit
-    );
-
     const { search } = ctx.query || {};
 
     const where = {};
