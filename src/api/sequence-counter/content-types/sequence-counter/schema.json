@@ -14,11 +14,12 @@
     "type": {
       "type": "enumeration",
       "required": true,
-      "enum": [
-        "purchase_order",
-        "sale_order",
-        "invoice"
-      ]
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      },
+      "enum": ["purchase_order", "sale_order", "invoice"]
     },
     "last_number": {
       "type": "integer",

@@ -13,13 +13,7 @@
   "attributes": {
     "salutation": {
       "type": "enumeration",
-      "enum": [
-        "Ms.",
-        "Mr.",
-        "Mrs.",
-        "Miss",
-        "Dr."
-      ]
+      "enum": ["Ms.", "Mr.", "Mrs.", "Miss", "Dr."]
     },
     "firstName": {
       "type": "string"
@@ -29,7 +23,16 @@
       "required": true
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
+    },
+    "password": {
+      "type": "password"
     },
     "phone": {
       "type": "string"
@@ -48,10 +51,7 @@
     },
     "leadSource": {
       "type": "enumeration",
-      "enum": [
-        "Campaign",
-        "Website"
-      ]
+      "enum": ["Campaign", "Website"]
     },
     "address": {
       "type": "component",

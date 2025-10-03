@@ -1,4 +1,5 @@
 import { Context } from 'koa';
+import { hashPassword } from '../../../helpers/utils';
 
 export default {
   async getLeadsAndContacts(ctx: Context) {
@@ -64,5 +65,79 @@ export default {
       },
       contactMeta: { page, pageSize, total: contactTotals },
     };
+  },
+
+  async checkContactEmailExist(ctx: Context) {
+    const { email } = ctx.request.body;
+
+    const contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { email },
+    });
+
+    if (contact) {
+      return ctx.badRequest('Email already exists');
+    }
+
+    return { email };
+  },
+
+  async contactRegister(ctx: Context) {
+    const {
+      email,
+      password,
+      salutation,
+      firstName,
+      lastName,
+      phone,
+      mobile,
+      address,
+      leadSource,
+    } = ctx.request.body;
+
+    if (!email || !password || !firstName || !lastName || !phone) {
+      throw new Error(
+        'Missing required fields: email, password, firstName, lastName, phone',
+      );
+    }
+
+    const contact = await strapi.db.query('api::contact.contact').create({
+      data: {
+        salutation,
+        email,
+        password: hashPassword(password),
+        firstname: firstName,
+        lastname: lastName,
+        phone,
+        mobile,
+        address,
+        leadSource: leadSource || 'Website',
+      },
+    });
+
+    return contact;
+  },
+
+  async contactLogin(ctx: Context) {
+    const { email, password } = ctx.request.body;
+
+    if (!email || !password) {
+      throw new Error('Missing required fields: email, password');
+    }
+
+    const contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { email },
+    });
+
+    if (!contact) {
+      throw new Error('Invalid email or password');
+    }
+
+    const isPasswordValid = false;
+
+    if (!isPasswordValid) {
+      throw new Error('Invalid email or password');
+    }
+
+    return contact;
   },
 };

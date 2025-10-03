@@ -13,11 +13,7 @@
   "attributes": {
     "salutation": {
       "type": "enumeration",
-      "enum": [
-        "Ms.",
-        "Mr.",
-        "Miss"
-      ]
+      "enum": ["Ms.", "Mr.", "Miss"]
     },
     "firstName": {
       "type": "string"
@@ -27,7 +23,13 @@
       "required": true
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
     },
     "phone": {
       "type": "string"
@@ -41,19 +43,11 @@
     "leadStatus": {
       "type": "enumeration",
       "default": "New",
-      "enum": [
-        "New",
-        "Assigned",
-        "In Process",
-        "Converted"
-      ]
+      "enum": ["New", "Assigned", "In Process", "Converted"]
     },
     "leadSource": {
       "type": "enumeration",
-      "enum": [
-        "Campaign",
-        "Website"
-      ]
+      "enum": ["Campaign", "Website"]
     },
     "jobTitle": {
       "type": "string"

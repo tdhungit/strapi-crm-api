@@ -13,7 +13,12 @@
   "attributes": {
     "invoice_number": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
     },
     "sale_order": {
       "type": "relation",

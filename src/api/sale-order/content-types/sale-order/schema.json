@@ -13,7 +13,12 @@
   "attributes": {
     "name": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
     },
     "sale_date": {
       "type": "date",
@@ -51,10 +56,7 @@
     "discount_type": {
       "type": "enumeration",
       "default": "percentage",
-      "enum": [
-        "percentage",
-        "amount"
-      ]
+      "enum": ["percentage", "amount"]
     },
     "discount_amount": {
       "type": "decimal",
@@ -63,10 +65,7 @@
     "tax_type": {
       "type": "enumeration",
       "default": "percentage",
-      "enum": [
-        "percentage",
-        "amount"
-      ]
+      "enum": ["percentage", "amount"]
     },
     "tax_amount": {
       "type": "decimal",

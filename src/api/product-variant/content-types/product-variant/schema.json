@@ -17,7 +17,12 @@
     },
     "sku": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
     },
     "photos": {
       "type": "json"
@@ -26,10 +31,7 @@
       "type": "enumeration",
       "required": true,
       "default": "Active",
-      "enum": [
-        "Active",
-        "Inactive"
-      ]
+      "enum": ["Active", "Inactive"]
     },
     "product": {
       "type": "relation",

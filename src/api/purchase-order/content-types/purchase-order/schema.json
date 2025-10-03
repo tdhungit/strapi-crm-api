@@ -13,7 +13,12 @@
   "attributes": {
     "name": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
     },
     "purchase_date": {
       "type": "date"
@@ -44,10 +49,7 @@
     "discount_type": {
       "type": "enumeration",
       "default": "amount",
-      "enum": [
-        "amount",
-        "percentage"
-      ]
+      "enum": ["amount", "percentage"]
     },
     "discount_amount": {
       "type": "decimal",
@@ -56,10 +58,7 @@
     "tax_type": {
       "type": "enumeration",
       "default": "amount",
-      "enum": [
-        "amount",
-        "percentage"
-      ]
+      "enum": ["amount", "percentage"]
     },
     "tax_amount": {
       "type": "decimal",

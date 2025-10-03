@@ -14,7 +14,11 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true
+      "unique": true,
+      "column": {
+        "unique": true,
+        "notNullable": true
+      }
     },
     "shortName": {
       "type": "string"
@@ -33,10 +37,7 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": [
-        "Direct",
-        "Agency"
-      ]
+      "enum": ["Direct", "Agency"]
     },
     "industry": {
       "type": "enumeration",

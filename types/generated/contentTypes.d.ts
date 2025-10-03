@@ -715,7 +715,9 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     department: Schema.Attribute.String;
     description: Schema.Attribute.RichText;
-    email: Schema.Attribute.String;
+    email: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     firstName: Schema.Attribute.String;
     jobTitle: Schema.Attribute.String;
     lastName: Schema.Attribute.String & Schema.Attribute.Required;
@@ -728,6 +730,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     mobile: Schema.Attribute.String;
+    password: Schema.Attribute.Password;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     sale_orders: Schema.Attribute.Relation<
@@ -1084,7 +1087,9 @@ export interface ApiInvoiceInvoice extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::invoice-detail.invoice-detail'
     >;
-    invoice_number: Schema.Attribute.String & Schema.Attribute.Required;
+    invoice_number: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     invoice_status: Schema.Attribute.String & Schema.Attribute.Required;
     invoice_tax_amount: Schema.Attribute.Decimal &
       Schema.Attribute.DefaultTo<0>;
@@ -1136,7 +1141,9 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     department: Schema.Attribute.String;
     description: Schema.Attribute.RichText;
-    email: Schema.Attribute.String;
+    email: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     firstName: Schema.Attribute.String;
     jobTitle: Schema.Attribute.String;
     lastName: Schema.Attribute.String & Schema.Attribute.Required;
@@ -1595,7 +1602,9 @@ export interface ApiProductVariantProductVariant
       'oneToMany',
       'api::sale-order-detail.sale-order-detail'
     >;
-    sku: Schema.Attribute.String & Schema.Attribute.Required;
+    sku: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1726,7 +1735,9 @@ export interface ApiPurchaseOrderPurchaseOrder
       'api::purchase-order.purchase-order'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     order_status: Schema.Attribute.Enumeration<
       ['New', 'In Progress', 'Pending', 'Approved', 'Rejected', 'Completed']
     > &
@@ -1833,7 +1844,9 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
       'api::sale-order.sale-order'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     order_status: Schema.Attribute.Enumeration<
       ['New', 'In Progress', 'Pending', 'Approved', 'Rejected', 'Completed']
     > &
@@ -1887,7 +1900,8 @@ export interface ApiSequenceCounterSequenceCounter
     type: Schema.Attribute.Enumeration<
       ['purchase_order', 'sale_order', 'invoice']
     > &
-      Schema.Attribute.Required;
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2105,7 +2119,9 @@ export interface ApiWarehouseWarehouse extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     location: Schema.Attribute.String & Schema.Attribute.Required;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
     purchase_order_details: Schema.Attribute.Relation<
       'oneToMany',
