@@ -9,6 +9,7 @@ export default [
   'strapi::session',
   'strapi::favicon',
   'strapi::public',
-  'global::assign-filter',
+  'global::jwt-contact-auth',
   'global::is-access',
+  'global::assign-filter',
 ];

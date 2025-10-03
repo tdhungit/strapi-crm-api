@@ -5,12 +5,12 @@ export default (config, { strapi }) => {
     // Manually decode the JWT if an Authorization header is present
     if (ctx.request.url.startsWith('/api/')) {
       const token = ctx.request.header.authorization;
-      if (token) {
+      if (token?.startsWith('Bearer ')) {
         try {
           // get user id from token
           const { id: userId } =
             await strapi.plugins['users-permissions'].services.jwt.getToken(
-              ctx
+              ctx,
             );
 
           if (!userId) {
@@ -33,7 +33,7 @@ export default (config, { strapi }) => {
 
           // get content type information
           const model: any = Object.values(strapi.contentTypes).find(
-            (ct: any) => ct.collectionName === apiName
+            (ct: any) => ct.collectionName === apiName,
           );
           // check assigned_user field exist
           if (!model?.attributes?.assigned_user) {

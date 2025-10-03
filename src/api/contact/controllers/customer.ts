@@ -1,5 +1,6 @@
+import jwt from 'jsonwebtoken';
 import { Context } from 'koa';
-import { hashPassword } from '../../../helpers/utils';
+import { comparePassword, hashPassword } from '../../../helpers/utils';
 
 export default {
   async getLeadsAndContacts(ctx: Context) {
@@ -121,7 +122,7 @@ export default {
     const { email, password } = ctx.request.body;
 
     if (!email || !password) {
-      throw new Error('Missing required fields: email, password');
+      return ctx.badRequest('Missing required fields: email, password');
     }
 
     const contact = await strapi.db.query('api::contact.contact').findOne({
@@ -129,15 +130,43 @@ export default {
     });
 
     if (!contact) {
-      throw new Error('Invalid email or password');
+      return ctx.badRequest('Invalid email or password');
     }
 
-    const isPasswordValid = false;
+    if (!contact.password) {
+      return ctx.badRequest('Password not set');
+    }
+
+    const isPasswordValid = comparePassword(password, contact.password);
 
     if (!isPasswordValid) {
-      throw new Error('Invalid email or password');
+      return ctx.badRequest('Invalid email or password');
     }
 
+    // generate token
+    const token = jwt.sign(
+      { id: contact.id, email: contact.email },
+      process.env.JWT_SECRET_CONTACT as string,
+      {
+        expiresIn: '24h',
+      },
+    );
+
+    return { jwt: token };
+  },
+
+  async contactCurrent(ctx: Context) {
+    const { id } = ctx.state.contact;
+
+    const contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { id },
+    });
+
+    if (!contact) {
+      return ctx.badRequest('Invalid user');
+    }
+
+    delete contact.password;
     return contact;
   },
 };
