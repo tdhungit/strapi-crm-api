@@ -93,6 +93,7 @@ export default {
       mobile,
       address,
       leadSource,
+      autoLogin = false,
     } = ctx.request.body;
 
     if (!email || !password || !firstName || !lastName || !phone) {
@@ -106,8 +107,8 @@ export default {
         salutation,
         email,
         password: hashPassword(password),
-        firstname: firstName,
-        lastname: lastName,
+        firstName: firstName,
+        lastName: lastName,
         phone,
         mobile,
         address,
@@ -115,7 +116,22 @@ export default {
       },
     });
 
-    return contact;
+    let token: string = '';
+    if (autoLogin) {
+      // generate token
+      token = jwt.sign(
+        { id: contact.id, email: contact.email },
+        process.env.JWT_SECRET_CONTACT as string,
+        {
+          expiresIn: '24h',
+        },
+      );
+    }
+
+    return {
+      ...contact,
+      token,
+    };
   },
 
   async contactLogin(ctx: Context) {
@@ -168,5 +184,77 @@ export default {
 
     delete contact.password;
     return contact;
+  },
+
+  async getCart(ctx: Context) {
+    const { id } = ctx.state.contact;
+
+    const cart = await strapi.db.query('api::cart.cart').findOne({
+      where: { contact: id },
+      populate: {
+        cartDetails: {
+          populate: {
+            product_variant: true,
+          },
+        },
+      },
+    });
+
+    if (!cart) {
+      return ctx.notFound('Cart not found');
+    }
+  },
+
+  async mergeCart(ctx: Context) {
+    const { id } = ctx.state.contact;
+
+    const contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { id },
+    });
+
+    if (!contact) {
+      return ctx.badRequest('Invalid user');
+    }
+
+    const { localCart } = ctx.request.body;
+    if (!localCart) {
+      return ctx.badRequest('Missing required fields: localCart');
+    }
+
+    const subtotal = localCart.reduce(
+      (acc: number, item: any) => acc + item.price * item.cartQty,
+      0,
+    );
+
+    let cart = await strapi.db.query('api::cart.cart').findOne({
+      where: { contact: id },
+    });
+
+    if (!cart) {
+      cart = await strapi.db.query('api::cart.cart').create({
+        data: { contact: id, subtotal },
+      });
+    }
+
+    // remove exist cart detail
+    await strapi.db.query('api::cart-detail.cart-detail').deleteMany({
+      where: { cart: cart.id },
+    });
+
+    // save cart item
+    await strapi.db.query('api::cart-detail.cart-detail').createMany({
+      data: localCart.map((item: any) => ({
+        cart: cart.id,
+        product_variant: item.id,
+        quantity: item.cartQty,
+        price: item.price,
+        discount_type: item.discountType || 'percentage',
+        discount_amount: item.discountAmount || 0,
+        tax_type: 'percentage',
+        tax_amount: item.taxAmount || 0,
+      })),
+    });
+
+    return { cart };
   },
 };

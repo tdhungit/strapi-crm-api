@@ -37,5 +37,21 @@ export default {
         policies: ['api::contact.is-authenticated'],
       },
     },
+    {
+      method: 'GET',
+      path: '/customers/contact/cart',
+      handler: 'customer.getCart',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
+    {
+      method: 'POST',
+      path: '/customers/contact/cart',
+      handler: 'customer.mergeCart',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
   ],
 };
