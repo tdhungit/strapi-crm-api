@@ -261,4 +261,54 @@ export default {
 
     return { cart };
   },
+
+  async createOrderFromCart(ctx: Context) {
+    const { id } = ctx.state.contact;
+    const { warehouseId } = ctx.request.body;
+
+    const cart = await strapi.db.query('api::cart.cart').findOne({
+      where: { contact: id },
+      populate: ['cart_details.product_variant'],
+    });
+
+    if (!cart || !cart.cart_details || cart.cart_details.length === 0) {
+      return ctx.badRequest('Invalid cart');
+    }
+
+    // Create order
+    const order = await strapi.db.query('api::order.order').create({
+      data: {
+        contact: id,
+        cart: cart.id,
+        warehouse: warehouseId,
+        status: 'New',
+        subtotal: cart.subtotal,
+        discount_type: cart.discount_type || 'percentage',
+        discount_amount: cart.discount_amount || 0,
+        tax_type: 'percentage',
+        tax_amount: cart.tax_amount || 0,
+        total_amount: cart.subtotal - cart.discount_amount + cart.tax_amount,
+      },
+    });
+
+    // Create order details
+    for await (const item of cart.cart_details) {
+      await strapi.db.query('api::order-detail.order-detail').create({
+        data: {
+          order: order.id,
+          warehouse: warehouseId,
+          product_variant: item.product_variant.id,
+          quantity: item.quantity,
+          price: item.price,
+          discount_type: item.discount_type || 'percentage',
+          discount_amount: item.discount_amount || 0,
+          tax_type: 'percentage',
+          tax_amount: item.tax_amount || 0,
+          total_amount: item.subtotal - item.discount_amount + item.tax_amount,
+        },
+      });
+    }
+
+    return { order };
+  },
 };
