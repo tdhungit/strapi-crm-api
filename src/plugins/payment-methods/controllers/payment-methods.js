@@ -6,7 +6,7 @@ export default {
       const paymentMethod = await db.findOne({ where: { name } });
       if (!paymentMethod) {
         return {
-          name: 'paypal',
+          name,
           description: '',
           enabled: false,
           options: {},

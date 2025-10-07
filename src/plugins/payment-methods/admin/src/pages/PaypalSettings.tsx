@@ -21,6 +21,8 @@ export default function PaypalSettings() {
       sandbox: false,
       clientId: '',
       clientSecret: '',
+      sandboxClientId: '',
+      sandboxClientSecret: '',
     },
   });
 
