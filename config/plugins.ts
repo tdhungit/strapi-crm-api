@@ -23,6 +23,14 @@ export default ({ env }) => ({
     },
   },
 
+  'payment-methods': {
+    enabled: true,
+    resolve: './src/plugins/payment-methods',
+    config: {
+      // Plugin configuration
+    },
+  },
+
   email: {
     config: {
       provider: 'nodemailer',

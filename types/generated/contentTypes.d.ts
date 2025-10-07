@@ -1312,6 +1312,40 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPaymentMethodPaymentMethod
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'payment_methods';
+  info: {
+    displayName: 'Payment Method';
+    pluralName: 'payment-methods';
+    singularName: 'payment-method';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    enabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment-method.payment-method'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    options: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   collectionName: 'payments';
   info: {
@@ -2722,6 +2756,7 @@ declare module '@strapi/strapi' {
       'api::mail-history.mail-history': ApiMailHistoryMailHistory;
       'api::note.note': ApiNoteNote;
       'api::opportunity.opportunity': ApiOpportunityOpportunity;
+      'api::payment-method.payment-method': ApiPaymentMethodPaymentMethod;
       'api::payment.payment': ApiPaymentPayment;
       'api::product-attribute.product-attribute': ApiProductAttributeProductAttribute;
       'api::product-category.product-category': ApiProductCategoryProductCategory;

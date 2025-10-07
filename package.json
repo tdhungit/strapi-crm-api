@@ -4,7 +4,8 @@
   "private": true,
   "description": "A Strapi application",
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "jsxSingleQuote": true
   },
   "scripts": {
     "build": "strapi build",
