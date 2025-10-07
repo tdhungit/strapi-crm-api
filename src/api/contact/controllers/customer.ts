@@ -311,4 +311,51 @@ export default {
 
     return { order };
   },
+
+  async getOrders(ctx: Context) {
+    const page: number = ctx.query.page
+      ? parseInt(ctx.query.page as string)
+      : 1;
+    const limit: number = ctx.query.pageSize
+      ? parseInt(ctx.query.pageSize as string)
+      : 10;
+    const offset = (page - 1) * limit;
+
+    const orders = await strapi.db.query('api::order.order').findMany({
+      where: { contact: { id: ctx.state.contact.id } },
+      populate: ['cart', 'cart_details.product_variant'],
+      limit,
+      offset,
+    });
+
+    const total = await strapi.db.query('api::order.order').count({
+      where: { contact: { id: ctx.state.contact.id } },
+    });
+
+    return {
+      data: orders,
+      meta: {
+        pagination: {
+          page,
+          pageSize: limit,
+          pageCount: Math.ceil(total / limit),
+          total,
+        },
+      },
+    };
+  },
+
+  async getOrder(ctx: Context) {
+    const { id } = ctx.params;
+    const order = await strapi.db.query('api::order.order').findOne({
+      where: { id, contact: { id: ctx.state.contact.id } },
+      populate: ['cart', 'cart_details.product_variant'],
+    });
+
+    if (!order) {
+      return ctx.notFound('Order not found');
+    }
+
+    return order;
+  },
 };

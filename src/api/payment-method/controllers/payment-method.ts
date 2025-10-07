@@ -1,7 +1,16 @@
-/**
- * payment-method controller
- */
+import { factories } from '@strapi/strapi';
 
-import { factories } from '@strapi/strapi'
+export default factories.createCoreController(
+  'api::payment-method.payment-method',
+  ({ strapi }) => ({
+    async findByName(ctx) {
+      const { name } = ctx.params;
 
-export default factories.createCoreController('api::payment-method.payment-method');
+      const entity = await strapi.db
+        .query('api::payment-method.payment-method')
+        .findOne({ where: { name } });
+
+      return entity;
+    },
+  }),
+);

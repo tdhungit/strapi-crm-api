@@ -61,5 +61,21 @@ export default {
         policies: ['api::contact.is-authenticated'],
       },
     },
+    {
+      method: 'GET',
+      path: '/customers/contact/orders',
+      handler: 'customer.getOrders',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/customers/contact/orders/:id',
+      handler: 'customer.getOrder',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
   ],
 };
