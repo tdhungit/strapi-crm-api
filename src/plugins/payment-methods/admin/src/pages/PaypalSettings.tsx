@@ -69,7 +69,7 @@ export default function PaypalSettings() {
         <Field.Root marginTop={4}>
           <Checkbox
             name='sandbox'
-            value={paypalSettings.options?.sandbox || false}
+            checked={paypalSettings.options?.sandbox || false}
             onCheckedChange={(e) =>
               setPaypalSettings({
                 ...paypalSettings,
@@ -104,17 +104,17 @@ export default function PaypalSettings() {
         </Field.Root>
 
         <Field.Root marginTop={4}>
-          <Field.Label>Secret</Field.Label>
+          <Field.Label>Client Secret</Field.Label>
           <TextInput
             placeholder='Secret'
             name='secret'
-            value={paypalSettings.options?.sandboxSecret || ''}
+            value={paypalSettings.options?.sandboxClientSecret || ''}
             onChange={(e) =>
               setPaypalSettings({
                 ...paypalSettings,
                 options: {
                   ...paypalSettings.options,
-                  sandboxSecret: e.target.value,
+                  sandboxClientSecret: e.target.value,
                 },
               })
             }
@@ -162,15 +162,18 @@ export default function PaypalSettings() {
         </Field.Root>
 
         <Field.Root marginTop={4}>
-          <Field.Label>Secret</Field.Label>
+          <Field.Label>Client Secret</Field.Label>
           <TextInput
-            placeholder='Secret'
-            name='secret'
-            value={paypalSettings.options?.secret || ''}
+            placeholder='Client Secret'
+            name='clientSecret'
+            value={paypalSettings.options?.clientSecret || ''}
             onChange={(e) =>
               setPaypalSettings({
                 ...paypalSettings,
-                options: { ...paypalSettings.options, secret: e.target.value },
+                options: {
+                  ...paypalSettings.options,
+                  clientSecret: e.target.value,
+                },
               })
             }
           />
