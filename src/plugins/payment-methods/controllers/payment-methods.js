@@ -4,6 +4,14 @@ export default {
       const { name } = ctx.params;
       const db = strapi.db.query('api::payment-method.payment-method');
       const paymentMethod = await db.findOne({ where: { name } });
+      if (!paymentMethod) {
+        return {
+          name: 'paypal',
+          description: '',
+          enabled: false,
+          options: {},
+        };
+      }
       return paymentMethod;
     },
 
