@@ -190,9 +190,9 @@ export default {
     const { id } = ctx.state.contact;
 
     const cart = await strapi.db.query('api::cart.cart').findOne({
-      where: { contact: id },
+      where: { contact: { id } },
       populate: {
-        cartDetails: {
+        cart_details: {
           populate: {
             product_variant: true,
           },
@@ -201,8 +201,10 @@ export default {
     });
 
     if (!cart) {
-      return ctx.notFound('Cart not found');
+      return {};
     }
+
+    return cart;
   },
 
   async mergeCart(ctx: Context) {
@@ -242,18 +244,20 @@ export default {
     });
 
     // save cart item
-    await strapi.db.query('api::cart-detail.cart-detail').createMany({
-      data: localCart.map((item: any) => ({
-        cart: cart.id,
-        product_variant: item.id,
-        quantity: item.cartQty,
-        price: item.price,
-        discount_type: item.discountType || 'percentage',
-        discount_amount: item.discountAmount || 0,
-        tax_type: 'percentage',
-        tax_amount: item.taxAmount || 0,
-      })),
-    });
+    for await (const item of localCart) {
+      await strapi.db.query('api::cart-detail.cart-detail').create({
+        data: {
+          cart: cart.id,
+          product_variant: item.id,
+          quantity: item.cartQty,
+          price: item.price,
+          discount_type: item.discountType || 'percentage',
+          discount_amount: item.discountAmount || 0,
+          tax_type: 'percentage',
+          tax_amount: item.taxAmount || 0,
+        },
+      });
+    }
 
     return { cart };
   },
