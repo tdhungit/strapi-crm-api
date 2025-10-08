@@ -307,7 +307,7 @@ export default {
       .query('api::sale-order.sale-order')
       .findMany({
         where: { contact: { id: ctx.state.contact.id } },
-        populate: ['cart', 'cart_details.product_variant'],
+        populate: ['sale_order_details.product_variant'],
         limit,
         offset,
       });

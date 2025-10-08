@@ -58,12 +58,12 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
           warehouse: warehouseId,
           product_variant: item.product_variant.id,
           quantity: item.quantity,
-          price: item.price,
+          unit_price: item.price,
           discount_type: item.discount_type || 'percentage',
           discount_amount: item.discount_amount || 0,
           tax_type: 'percentage',
           tax_amount: item.tax_amount || 0,
-          total_amount: item.subtotal - item.discount_amount + item.tax_amount,
+          subtotal: item.subtotal,
         },
       });
     }
