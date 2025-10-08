@@ -63,7 +63,7 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
           discount_amount: item.discount_amount || 0,
           tax_type: 'percentage',
           tax_amount: item.tax_amount || 0,
-          subtotal: item.subtotal,
+          subtotal: item.price * item.quantity,
         },
       });
     }
