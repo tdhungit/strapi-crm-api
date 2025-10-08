@@ -21,7 +21,11 @@
       }
     },
     "purchase_date": {
-      "type": "date"
+      "type": "date",
+      "required": true,
+      "column": {
+        "notNullable": true
+      }
     },
     "order_status": {
       "type": "enumeration",
@@ -34,7 +38,10 @@
         "Approved",
         "Rejected",
         "Completed"
-      ]
+      ],
+      "column": {
+        "notNullable": true
+      }
     },
     "supplier": {
       "type": "relation",

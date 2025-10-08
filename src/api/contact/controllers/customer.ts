@@ -223,18 +223,27 @@ export default {
       return ctx.badRequest('Missing required fields: localCart');
     }
 
-    const subtotal = localCart.reduce(
-      (acc: number, item: any) => acc + item.price * item.cartQty,
-      0,
-    );
+    let subtotal = 0;
+    localCart.forEach((item: any) => {
+      subtotal += item.price * item.cartQty;
+    });
 
     let cart = await strapi.db.query('api::cart.cart').findOne({
-      where: { contact: id },
+      where: {
+        contact: {
+          id: id,
+        },
+      },
     });
 
     if (!cart) {
       cart = await strapi.db.query('api::cart.cart').create({
         data: { contact: id, subtotal },
+      });
+    } else {
+      cart = await strapi.db.query('api::cart.cart').update({
+        where: { id: cart.id },
+        data: { subtotal },
       });
     }
 
@@ -268,51 +277,21 @@ export default {
 
     const cart = await strapi.db.query('api::cart.cart').findOne({
       where: { contact: id },
-      populate: ['cart_details.product_variant'],
+      populate: ['contact', 'cart_details.product_variant'],
     });
 
-    if (!cart || !cart.cart_details || cart.cart_details.length === 0) {
+    if (
+      !cart ||
+      !cart.cart_details ||
+      cart.cart_details.length === 0 ||
+      !cart.contact?.id
+    ) {
       return ctx.badRequest('Invalid cart');
     }
 
-    // Create order
-    const order = await strapi.db.query('api::order.order').create({
-      data: {
-        contact: id,
-        cart: cart.id,
-        warehouse: warehouseId,
-        status: 'New',
-        subtotal: cart.subtotal,
-        discount_type: cart.discount_type || 'percentage',
-        discount_amount: cart.discount_amount || 0,
-        tax_type: 'percentage',
-        tax_amount: cart.tax_amount || 0,
-        total_amount: cart.subtotal - cart.discount_amount + cart.tax_amount,
-      },
-    });
-
-    // Create order details
-    for await (const item of cart.cart_details) {
-      await strapi.db.query('api::order-detail.order-detail').create({
-        data: {
-          order: order.id,
-          warehouse: warehouseId,
-          product_variant: item.product_variant.id,
-          quantity: item.quantity,
-          price: item.price,
-          discount_type: item.discount_type || 'percentage',
-          discount_amount: item.discount_amount || 0,
-          tax_type: 'percentage',
-          tax_amount: item.tax_amount || 0,
-          total_amount: item.subtotal - item.discount_amount + item.tax_amount,
-        },
-      });
-    }
-
-    // clear cart
-    await strapi.service('api::cart.cart').clearCart(cart);
-
-    return order;
+    return await strapi
+      .service('api::cart.cart')
+      .convertCartToSaleOrder(cart, warehouseId);
   },
 
   async getOrders(ctx: Context) {
@@ -324,14 +303,16 @@ export default {
       : 10;
     const offset = (page - 1) * limit;
 
-    const orders = await strapi.db.query('api::order.order').findMany({
-      where: { contact: { id: ctx.state.contact.id } },
-      populate: ['cart', 'cart_details.product_variant'],
-      limit,
-      offset,
-    });
+    const orders = await strapi.db
+      .query('api::sale-order.sale-order')
+      .findMany({
+        where: { contact: { id: ctx.state.contact.id } },
+        populate: ['cart', 'cart_details.product_variant'],
+        limit,
+        offset,
+      });
 
-    const total = await strapi.db.query('api::order.order').count({
+    const total = await strapi.db.query('api::sale-order.sale-order').count({
       where: { contact: { id: ctx.state.contact.id } },
     });
 
@@ -350,7 +331,7 @@ export default {
 
   async getOrder(ctx: Context) {
     const { id } = ctx.params;
-    const order = await strapi.db.query('api::order.order').findOne({
+    const order = await strapi.db.query('api::sale-order.sale-order').findOne({
       where: { id, contact: { id: ctx.state.contact.id } },
       populate: ['cart', 'cart_details.product_variant'],
     });

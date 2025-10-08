@@ -22,7 +22,10 @@
     },
     "sale_date": {
       "type": "date",
-      "required": true
+      "required": true,
+      "column": {
+        "notNullable": true
+      }
     },
     "account": {
       "type": "relation",
@@ -47,7 +50,10 @@
         "Approved",
         "Rejected",
         "Completed"
-      ]
+      ],
+      "column": {
+        "notNullable": true
+      }
     },
     "subtotal": {
       "type": "decimal",

@@ -1778,7 +1778,7 @@ export interface ApiPurchaseOrderPurchaseOrder
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'New'>;
     publishedAt: Schema.Attribute.DateTime;
-    purchase_date: Schema.Attribute.Date;
+    purchase_date: Schema.Attribute.Date & Schema.Attribute.Required;
     purchase_order_details: Schema.Attribute.Relation<
       'oneToMany',
       'api::purchase-order-detail.purchase-order-detail'
