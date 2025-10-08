@@ -38,6 +38,14 @@ export default {
       },
     },
     {
+      method: 'POST',
+      path: '/customers/contact/change-password',
+      handler: 'customer.changePassword',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
+    {
       method: 'GET',
       path: '/customers/contact/cart',
       handler: 'customer.getCart',

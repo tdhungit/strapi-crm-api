@@ -186,6 +186,34 @@ export default {
     return contact;
   },
 
+  async changePassword(ctx: Context) {
+    const { id } = ctx.state.contact;
+    const { oldPassword, newPassword } = ctx.request.body;
+
+    const contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { id },
+    });
+
+    if (!contact) {
+      return ctx.badRequest('Invalid user');
+    }
+
+    const isPasswordValid = comparePassword(oldPassword, contact.password);
+
+    if (!isPasswordValid) {
+      return ctx.badRequest('Invalid old password');
+    }
+
+    await strapi.db.query('api::contact.contact').update({
+      where: { id },
+      data: {
+        password: hashPassword(newPassword),
+      },
+    });
+
+    return { message: 'Password changed successfully' };
+  },
+
   async getCart(ctx: Context) {
     const { id } = ctx.state.contact;
 
