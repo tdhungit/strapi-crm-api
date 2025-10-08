@@ -309,7 +309,10 @@ export default {
       });
     }
 
-    return { order };
+    // clear cart
+    await strapi.service('api::cart.cart').clearCart(cart);
+
+    return order;
   },
 
   async getOrders(ctx: Context) {

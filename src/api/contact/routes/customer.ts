@@ -55,7 +55,7 @@ export default {
     },
     {
       method: 'POST',
-      path: '/customers/contact/order',
+      path: '/customers/contact/orders',
       handler: 'customer.createOrderFromCart',
       config: {
         policies: ['api::contact.is-authenticated'],
