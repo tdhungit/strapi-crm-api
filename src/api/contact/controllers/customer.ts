@@ -333,7 +333,7 @@ export default {
     const { id } = ctx.params;
     const order = await strapi.db.query('api::sale-order.sale-order').findOne({
       where: { id, contact: { id: ctx.state.contact.id } },
-      populate: ['cart', 'cart_details.product_variant'],
+      populate: ['sale_order_details.product_variant'],
     });
 
     if (!order) {
