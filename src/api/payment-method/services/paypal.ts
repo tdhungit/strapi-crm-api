@@ -54,7 +54,7 @@ export default () => ({
           {
             amount: {
               currencyCode: 'USD',
-              value: (saleOrder.total_amount * 1000).toString(),
+              value: saleOrder.total_amount.toString(),
             },
             customId: saleOrder.contact.id.toString(),
             invoiceId: saleOrder.id.toString(),
@@ -90,10 +90,11 @@ export default () => ({
       },
     });
 
-    const { result, ...httpResponse } = await ordersController.captureOrder({
+    await ordersController.captureOrder({
       id: payment.transaction_id,
     });
 
+    // Update payment status
     await strapi.db.query('api::payment.payment').update({
       where: {
         id: payment.id,
@@ -104,6 +105,21 @@ export default () => ({
       },
     });
 
-    return result;
+    // Update sale order status
+    await strapi.db.query('api::sale-order.sale-order').update({
+      where: {
+        id: saleOrder.id,
+      },
+      data: {
+        order_status: 'Completed',
+      },
+    });
+
+    return await strapi.db.query('api::sale-order.sale-order').findOne({
+      where: {
+        id: saleOrder.id,
+      },
+      populate: ['contact', 'sale_order_details.product_variant'],
+    });
   },
 });
