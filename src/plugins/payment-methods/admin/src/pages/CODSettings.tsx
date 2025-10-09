@@ -1,4 +1,11 @@
-import { Box, Button, Checkbox, Typography } from '@strapi/design-system';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Field,
+  TextInput,
+  Typography,
+} from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +14,7 @@ export default function CODSettings() {
   const { get, post } = fetchClient;
 
   const [enabled, setEnabled] = useState(false);
+  const [description, setDescription] = useState('COD');
 
   useEffect(() => {
     const fetchPaymentMethod = async () => {
@@ -26,6 +34,7 @@ export default function CODSettings() {
       await post('/payment-methods/save', {
         name: 'COD',
         enabled,
+        description,
       });
     } catch (error) {
       console.error(error);
@@ -47,6 +56,17 @@ export default function CODSettings() {
         >
           Enable COD
         </Checkbox>
+
+        <Field.Root marginTop={4}>
+          <Field.Label>Description</Field.Label>
+          <TextInput
+            placeholder='Description'
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          />
+        </Field.Root>
       </Box>
 
       <Box marginTop={4}>

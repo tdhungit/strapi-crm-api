@@ -18,6 +18,7 @@ export default function StripeSettings() {
   const [stripeSettings, setStripeSettings] = useState<PaymentMethodType>({
     name: 'stripe',
     enabled: false,
+    description: 'Stripe',
     options: {
       testMode: false,
       apiKey: '',
@@ -88,6 +89,21 @@ export default function StripeSettings() {
           >
             Enable Test Mode
           </Checkbox>
+        </Field.Root>
+
+        <Field.Root marginTop={4}>
+          <Field.Label>Description</Field.Label>
+          <TextInput
+            placeholder='Description'
+            name='description'
+            value={stripeSettings.description || ''}
+            onChange={(e) =>
+              setStripeSettings({
+                ...stripeSettings,
+                description: e.target.value,
+              })
+            }
+          />
         </Field.Root>
       </Box>
 

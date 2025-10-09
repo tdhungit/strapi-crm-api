@@ -15,8 +15,9 @@ export default function PaypalSettings() {
   const { get, post } = fetchClient;
 
   const [paypalSettings, setPaypalSettings] = useState<PaymentMethodType>({
-    name: 'Paypal',
+    name: 'paypal',
     enabled: false,
+    description: 'Paypal',
     options: {
       sandbox: false,
       clientId: '',
@@ -79,6 +80,21 @@ export default function PaypalSettings() {
           >
             Sandbox Mode
           </Checkbox>
+        </Field.Root>
+
+        <Field.Root marginTop={4}>
+          <Field.Label>Description</Field.Label>
+          <TextInput
+            placeholder='Description'
+            name='description'
+            value={paypalSettings.description || ''}
+            onChange={(e) =>
+              setPaypalSettings({
+                ...paypalSettings,
+                description: e.target.value,
+              })
+            }
+          />
         </Field.Root>
       </Box>
 

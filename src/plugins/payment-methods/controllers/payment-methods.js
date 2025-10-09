@@ -1,13 +1,13 @@
 export default {
   'payment-methods': {
     async findByName(ctx) {
-      const { name } = ctx.params;
+      const { name, description } = ctx.params;
       const db = strapi.db.query('api::payment-method.payment-method');
       const paymentMethod = await db.findOne({ where: { name } });
       if (!paymentMethod) {
         return {
           name,
-          description: '',
+          description: description || '',
           enabled: false,
           options: {},
         };
