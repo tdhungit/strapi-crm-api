@@ -85,5 +85,13 @@ export default {
         policies: ['api::contact.is-authenticated'],
       },
     },
+    {
+      method: 'PUT',
+      path: '/customers/contact/orders/:id',
+      handler: 'customer.updateOrder',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
   ],
 };

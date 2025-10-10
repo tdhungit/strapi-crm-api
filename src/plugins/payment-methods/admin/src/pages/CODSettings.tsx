@@ -21,6 +21,7 @@ export default function CODSettings() {
       try {
         const { data } = await get('/payment-methods/find-by-name/COD');
         setEnabled(data.enabled);
+        setDescription(data.description);
       } catch (error) {
         console.error(error);
       }

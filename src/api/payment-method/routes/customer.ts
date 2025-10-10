@@ -16,5 +16,21 @@ export default {
         policies: ['api::contact.is-authenticated'],
       },
     },
+    {
+      method: 'POST',
+      path: '/customers/payment-method/stripe/create-checkout-session',
+      handler: 'stripe.createCheckoutSession',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
+    {
+      method: 'POST',
+      path: '/customers/payment-method/stripe/payment-success',
+      handler: 'stripe.handlePaymentSuccess',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
   ],
 };

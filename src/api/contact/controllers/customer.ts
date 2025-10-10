@@ -361,7 +361,7 @@ export default {
     const { id } = ctx.params;
     const order = await strapi.db.query('api::sale-order.sale-order').findOne({
       where: { id, contact: { id: ctx.state.contact.id } },
-      populate: ['sale_order_details.product_variant'],
+      populate: ['contact', 'sale_order_details.product_variant'],
     });
 
     if (!order) {
@@ -369,5 +369,33 @@ export default {
     }
 
     return order;
+  },
+
+  async updateOrder(ctx: Context) {
+    const { id } = ctx.params;
+    const { order_status, sale_date } = ctx.request.body;
+
+    const order = await strapi.db.query('api::sale-order.sale-order').findOne({
+      where: { id, contact: { id: ctx.state.contact.id } },
+    });
+
+    if (!order) {
+      return ctx.notFound('Order not found');
+    }
+
+    if (!['New'].includes(order.order_status)) {
+      return ctx.badRequest('Cannot update order');
+    }
+
+    const data: any = {};
+    if (order_status) data.order_status = order_status;
+    if (sale_date) data.order_date = new Date(sale_date);
+
+    await strapi.db.query('api::sale-order.sale-order').update({
+      where: { id: order.id },
+      data,
+    });
+
+    return { message: 'Order updated successfully' };
   },
 };

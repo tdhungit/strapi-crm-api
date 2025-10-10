@@ -130,14 +130,14 @@ export default function StripeSettings() {
         <Field.Root marginTop={4}>
           <Field.Label>Stripe Secret Key</Field.Label>
           <TextInput
-            name='stripeSecretKey'
-            value={stripeSettings.options?.testSecretKey}
+            name='testApiSecret'
+            value={stripeSettings.options?.testApiSecret}
             onChange={(e) =>
               setStripeSettings({
                 ...stripeSettings,
                 options: {
                   ...stripeSettings.options,
-                  testSecretKey: e.target.value,
+                  testApiSecret: e.target.value,
                 },
               })
             }
