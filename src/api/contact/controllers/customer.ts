@@ -338,6 +338,7 @@ export default {
         populate: ['sale_order_details.product_variant'],
         limit,
         offset,
+        orderBy: { sale_date: 'desc' },
       });
 
     const total = await strapi.db.query('api::sale-order.sale-order').count({
