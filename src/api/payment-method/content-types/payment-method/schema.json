@@ -14,11 +14,7 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "description": {
       "type": "text"
@@ -29,6 +25,12 @@
     "enabled": {
       "type": "boolean",
       "default": true
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "method"
     }
   }
 }

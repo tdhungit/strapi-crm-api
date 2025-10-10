@@ -45,9 +45,14 @@ export default () => ({
       return_url: options?.returnUrl || null,
     });
 
+    const paymentMethod = await strapi.db
+      .query('api::payment-method.payment-method')
+      .findOne({ where: { name: 'stripe' } });
+
     // Create a payment
     await strapi.service('api::payment.payment').createFromOrder(saleOrder, {
       payment_method: 'stripe',
+      paymentMethod,
       status: 'In Progress',
       amount: saleOrder.total_amount,
       currency: 'USD',

@@ -13,7 +13,13 @@
   "attributes": {
     "salutation": {
       "type": "enumeration",
-      "enum": ["Ms.", "Mr.", "Mrs.", "Miss", "Dr."]
+      "enum": [
+        "Ms.",
+        "Mr.",
+        "Mrs.",
+        "Miss",
+        "Dr."
+      ]
     },
     "firstName": {
       "type": "string"
@@ -25,11 +31,7 @@
     "email": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "password": {
       "type": "password"
@@ -51,7 +53,10 @@
     },
     "leadSource": {
       "type": "enumeration",
-      "enum": ["Campaign", "Website"]
+      "enum": [
+        "Campaign",
+        "Website"
+      ]
     },
     "address": {
       "type": "component",
@@ -90,6 +95,12 @@
       "relation": "oneToOne",
       "target": "api::lead.lead",
       "inversedBy": "contact"
+    },
+    "contact_addresses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::contact-address.contact-address",
+      "mappedBy": "contact"
     }
   }
 }

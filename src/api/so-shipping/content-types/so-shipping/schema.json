@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "so_shippings",
+  "info": {
+    "singularName": "so-shipping",
+    "pluralName": "so-shippings",
+    "displayName": "SO Shipping"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sale_order": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::sale-order.sale-order",
+      "inversedBy": "so_shipping"
+    },
+    "contact_address": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contact-address.contact-address",
+      "inversedBy": "so_shippings"
+    },
+    "date_from": {
+      "type": "date"
+    },
+    "date_to": {
+      "type": "date"
+    },
+    "shipping_status": {
+      "type": "enumeration",
+      "default": "New",
+      "enum": [
+        "New",
+        "In Progress",
+        "Completed"
+      ]
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

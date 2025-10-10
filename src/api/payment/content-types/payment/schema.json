@@ -41,6 +41,12 @@
       "relation": "oneToMany",
       "target": "api::invoice.invoice",
       "mappedBy": "payment"
+    },
+    "method": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::payment-method.payment-method",
+      "inversedBy": "payments"
     }
   }
 }

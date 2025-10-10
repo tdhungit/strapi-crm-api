@@ -68,9 +68,14 @@ export default () => ({
     const { result, ...httpResponse } =
       await ordersController.createOrder(collect);
 
+    const paymentMethod = await strapi.db
+      .query('api::payment-method.payment-method')
+      .findOne({ where: { name: 'paypal' } });
+
     // Create a payment
     await strapi.service('api::payment.payment').createFromOrder(saleOrder, {
       payment_method: 'paypal',
+      paymentMethod,
       status: 'In Progress',
       amount: saleOrder.total_amount,
       currency: 'USD',

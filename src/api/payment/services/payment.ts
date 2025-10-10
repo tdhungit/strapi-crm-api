@@ -10,6 +10,7 @@ export default factories.createCoreService(
         transaction_id?: string;
         payment_method?: string;
         status?: string;
+        paymentMethod?: any;
         [key: string]: any;
       } = {},
     ): Promise<PaymentType> {
@@ -19,18 +20,24 @@ export default factories.createCoreService(
         },
       });
 
+      const data: any = {
+        amount: order.total_amount,
+        payment_method: options.payment_method || 'Direct',
+        payment_date: new Date(),
+        payment_status: options.status || 'Completed',
+        transaction_id: options.transaction_id || '',
+      };
+
+      if (options.paymentMethod?.id) {
+        data.method = options.paymentMethod.id;
+      }
+
       if (payment) {
         return await strapi.db.query('api::payment.payment').update({
           where: {
             id: payment.id,
           },
-          data: {
-            amount: order.total_amount,
-            payment_method: options.payment_method || 'Direct',
-            payment_date: new Date(),
-            payment_status: options.status || 'Completed',
-            transaction_id: options.transaction_id || '',
-          },
+          data,
         });
       }
 
@@ -38,11 +45,7 @@ export default factories.createCoreService(
       payment = await strapi.db.query('api::payment.payment').create({
         data: {
           sale_order: order.id,
-          amount: order.total_amount,
-          payment_method: options.payment_method || 'Direct',
-          payment_date: new Date(),
-          payment_status: options.status || 'Completed',
-          transaction_id: options.transaction_id || '',
+          ...data,
         },
       });
 

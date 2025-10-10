@@ -37,7 +37,10 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": ["Direct", "Agency"]
+      "enum": [
+        "Direct",
+        "Agency"
+      ]
     },
     "industry": {
       "type": "enumeration",

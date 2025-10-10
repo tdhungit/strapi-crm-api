@@ -1,0 +1,63 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_addresses",
+  "info": {
+    "singularName": "contact-address",
+    "pluralName": "contact-addresses",
+    "displayName": "Contact Address"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "address": {
+      "type": "text",
+      "required": true
+    },
+    "city": {
+      "type": "string",
+      "required": true
+    },
+    "state": {
+      "type": "string",
+      "required": true
+    },
+    "zipcode": {
+      "type": "string",
+      "required": true
+    },
+    "country": {
+      "type": "string",
+      "required": true
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "contact": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contact.contact",
+      "inversedBy": "contact_addresses"
+    },
+    "so_shippings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::so-shipping.so-shipping",
+      "mappedBy": "contact_address"
+    }
+  }
+}

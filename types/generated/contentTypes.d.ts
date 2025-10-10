@@ -745,6 +745,48 @@ export interface ApiCityCity extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiContactAddressContactAddress
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'contact_addresses';
+  info: {
+    displayName: 'Contact Address';
+    pluralName: 'contact-addresses';
+    singularName: 'contact-address';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Schema.Attribute.Text & Schema.Attribute.Required;
+    city: Schema.Attribute.String & Schema.Attribute.Required;
+    contact: Schema.Attribute.Relation<'manyToOne', 'api::contact.contact'>;
+    country: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    is_default: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-address.contact-address'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    so_shippings: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::so-shipping.so-shipping'
+    >;
+    state: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    zipcode: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ApiContactContact extends Struct.CollectionTypeSchema {
   collectionName: 'contacts';
   info: {
@@ -766,6 +808,10 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     campaigns: Schema.Attribute.Relation<
       'manyToMany',
       'api::campaign.campaign'
+    >;
+    contact_addresses: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-address.contact-address'
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1396,6 +1442,7 @@ export interface ApiPaymentMethodPaymentMethod
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     options: Schema.Attribute.JSON;
+    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1425,6 +1472,10 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
       'api::payment.payment'
     > &
       Schema.Attribute.Private;
+    method: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::payment-method.payment-method'
+    >;
     payment_date: Schema.Attribute.Date & Schema.Attribute.Required;
     payment_method: Schema.Attribute.String & Schema.Attribute.Required;
     payment_status: Schema.Attribute.String & Schema.Attribute.Required;
@@ -1950,6 +2001,10 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::sale-order-detail.sale-order-detail'
     >;
+    so_shipping: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::so-shipping.so-shipping'
+    >;
     subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     tax_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
@@ -2035,6 +2090,82 @@ export interface ApiSettingSetting extends Struct.CollectionTypeSchema {
       'plugin::users-permissions.user'
     >;
     values: Schema.Attribute.JSON;
+  };
+}
+
+export interface ApiShippingMethodShippingMethod
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'shipping_methods';
+  info: {
+    displayName: 'Shipping Method';
+    pluralName: 'shipping-methods';
+    singularName: 'shipping-method';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    enabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::shipping-method.shipping-method'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    options: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSoShippingSoShipping extends Struct.CollectionTypeSchema {
+  collectionName: 'so_shippings';
+  info: {
+    displayName: 'SO Shipping';
+    pluralName: 'so-shippings';
+    singularName: 'so-shipping';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    contact_address: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::contact-address.contact-address'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date_from: Schema.Attribute.Date;
+    date_to: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::so-shipping.so-shipping'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    sale_order: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::sale-order.sale-order'
+    >;
+    shipping_status: Schema.Attribute.Enumeration<
+      ['New', 'In Progress', 'Completed']
+    > &
+      Schema.Attribute.DefaultTo<'New'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -2800,6 +2931,7 @@ declare module '@strapi/strapi' {
       'api::cart-detail.cart-detail': ApiCartDetailCartDetail;
       'api::cart.cart': ApiCartCart;
       'api::city.city': ApiCityCity;
+      'api::contact-address.contact-address': ApiContactAddressContactAddress;
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
       'api::department.department': ApiDepartmentDepartment;
@@ -2829,6 +2961,8 @@ declare module '@strapi/strapi' {
       'api::sale-order.sale-order': ApiSaleOrderSaleOrder;
       'api::sequence-counter.sequence-counter': ApiSequenceCounterSequenceCounter;
       'api::setting.setting': ApiSettingSetting;
+      'api::shipping-method.shipping-method': ApiShippingMethodShippingMethod;
+      'api::so-shipping.so-shipping': ApiSoShippingSoShipping;
       'api::state.state': ApiStateState;
       'api::static-page.static-page': ApiStaticPageStaticPage;
       'api::supplier.supplier': ApiSupplierSupplier;
