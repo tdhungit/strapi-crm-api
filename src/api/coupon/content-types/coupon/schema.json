@@ -16,6 +16,11 @@
       "required": true,
       "unique": true
     },
+    "code": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
     "description": {
       "type": "text"
     },
@@ -60,8 +65,13 @@
     "discount_value": {
       "type": "decimal"
     },
-    "amount": {
-      "type": "decimal"
+    "max_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "min_order_amount": {
+      "type": "decimal",
+      "default": 0
     }
   }
 }

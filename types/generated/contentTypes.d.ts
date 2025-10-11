@@ -917,7 +917,9 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    amount: Schema.Attribute.Decimal;
+    code: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     coupon_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
       Schema.Attribute.DefaultTo<'Active'>;
     coupon_type: Schema.Attribute.Enumeration<['Shipping', 'Sale Order']> &
@@ -937,6 +939,8 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
       'api::coupon.coupon'
     > &
       Schema.Attribute.Private;
+    max_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    min_order_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;

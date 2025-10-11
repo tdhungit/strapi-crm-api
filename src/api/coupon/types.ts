@@ -11,5 +11,5 @@ export interface CouponType {
   end_date?: Date;
   discount_type?: string;
   discount_value?: number;
-  amount?: number;
+  max_amount?: number;
 }
