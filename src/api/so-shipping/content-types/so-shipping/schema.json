@@ -23,6 +23,17 @@
       "target": "api::contact-address.contact-address",
       "inversedBy": "so_shippings"
     },
+    "shipping_method": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::shipping-method.shipping-method",
+      "inversedBy": "so_shippings"
+    },
+    "coupon": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::coupon.coupon"
+    },
     "date_from": {
       "type": "date"
     },
@@ -37,6 +48,21 @@
         "In Progress",
         "Completed"
       ]
+    },
+    "shipping_subtotal": {
+      "type": "decimal",
+      "default": 0
+    },
+    "shipping_discount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "shipping_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "transaction_id": {
+      "type": "string"
     },
     "metadata": {
       "type": "json"

@@ -301,7 +301,12 @@ export default {
 
   async createOrderFromCart(ctx: Context) {
     const { id } = ctx.state.contact;
-    const { warehouseId } = ctx.request.body;
+    const {
+      warehouseId,
+      contactAddressId,
+      shippingMethodId,
+      couponIds = [],
+    } = ctx.request.body;
 
     const cart = await strapi.db.query('api::cart.cart').findOne({
       where: { contact: id },
@@ -317,9 +322,52 @@ export default {
       return ctx.badRequest('Invalid cart');
     }
 
-    return await strapi
-      .service('api::cart.cart')
-      .convertCartToSaleOrder(cart, warehouseId);
+    let coupons = null;
+    if (couponIds && couponIds.length > 0) {
+      coupons = await strapi.db.query('api::coupon.coupon').findMany({
+        where: {
+          id: {
+            in: couponIds,
+          },
+        },
+      });
+
+      if (
+        !coupons ||
+        coupons.length === 0 ||
+        coupons.length !== couponIds.length
+      ) {
+        return ctx.badRequest('Invalid coupon');
+      }
+    }
+
+    const contactAddress = await strapi.db
+      .query('api::contact-address.contact-address')
+      .findOne({
+        where: { id: contactAddressId },
+      });
+    if (!contactAddress) {
+      return ctx.badRequest('Invalid shipping address');
+    }
+
+    const shippingMethod = await strapi.db
+      .query('api::shipping-method.shipping-method')
+      .findOne({
+        where: { id: shippingMethodId },
+      });
+    if (!shippingMethod) {
+      return ctx.badRequest('Invalid shipping method');
+    }
+
+    return await strapi.service('api::cart.cart').convertCartToSaleOrder(
+      cart,
+      warehouseId,
+      {
+        contactAddress,
+        shippingMethod,
+      },
+      coupons,
+    );
   },
 
   async getOrders(ctx: Context) {

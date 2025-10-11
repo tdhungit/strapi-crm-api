@@ -24,5 +24,13 @@ export default {
         auth: false,
       },
     },
+    {
+      method: 'POST',
+      path: '/customers/shipping-methods/get-amount',
+      handler: 'shipping-method.getShippingAmount',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
   ],
 };

@@ -56,4 +56,31 @@ export default {
       enabled: method.enabled,
     };
   },
+
+  async getShippingAmount(ctx: Context) {
+    const { contactAddressId, shippingMethodId } = ctx.request.body;
+    const contactAddress = await strapi.db
+      .query('api::contact-address.contact-address')
+      .findOne({
+        where: { id: contactAddressId },
+      });
+
+    if (!contactAddress) {
+      return ctx.notFound('Contact address not found');
+    }
+
+    const shippingMethod = await strapi.db
+      .query('api::shipping-method.shipping-method')
+      .findOne({
+        where: { id: shippingMethodId },
+      });
+
+    if (!shippingMethod) {
+      return ctx.notFound('Shipping method not found');
+    }
+
+    return await strapi
+      .service('api::shipping-method.shipping-method')
+      .getShippingAmount(contactAddress, shippingMethod);
+  },
 };

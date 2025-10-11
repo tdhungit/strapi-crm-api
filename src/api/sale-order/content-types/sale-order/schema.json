@@ -73,6 +73,10 @@
       "type": "decimal",
       "default": 0
     },
+    "shipping_amount": {
+      "type": "decimal",
+      "default": 0
+    },
     "total_amount": {
       "type": "decimal",
       "default": 0

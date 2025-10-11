@@ -20,7 +20,12 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
     });
   },
 
-  async convertCartToSaleOrder(cart: any, warehouseId: number) {
+  async convertCartToSaleOrder(
+    cart: any,
+    warehouseId: number,
+    shipping?: { contactAddress: any; shippingMethod: any },
+    coupons?: any[],
+  ) {
     if (!cart.contact?.id) {
       throw new Error('Contact is required');
     }
@@ -28,6 +33,11 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
     if (!cart.cart_details || cart.cart_details.length === 0) {
       throw new Error('Cart details are required');
     }
+
+    // Create SO shipping
+    const soShipping = await strapi
+      .service('api::so-shipping.so-shipping')
+      .createDraft(shipping.contactAddress, shipping.shippingMethod, coupons);
 
     // Create order
     const orderNo = await strapi
@@ -44,9 +54,14 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
         subtotal: cart.subtotal,
         discount_type: cart.discount_type || 'percentage',
         discount_amount: cart.discount_amount || 0,
+        shipping_amount: soShipping?.shipping_amount || 0,
         tax_type: 'percentage',
         tax_amount: cart.tax_amount || 0,
-        total_amount: cart.subtotal - cart.discount_amount + cart.tax_amount,
+        total_amount:
+          cart.subtotal -
+          cart.discount_amount +
+          cart.tax_amount +
+          (soShipping?.shipping_amount || 0),
       },
     });
 
@@ -67,6 +82,11 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
         },
       });
     }
+
+    // Link Sale Order to Shipping
+    await strapi
+      .service('api::so-shipping.so-shipping')
+      .linkSaleOrder(order, soShipping);
 
     // Clear cart
     await this.clearCart(cart);

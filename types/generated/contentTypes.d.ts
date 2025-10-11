@@ -906,6 +906,49 @@ export interface ApiCountryCountry extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
+  collectionName: 'coupons';
+  info: {
+    displayName: 'Coupon';
+    pluralName: 'coupons';
+    singularName: 'coupon';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal;
+    coupon_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
+    coupon_type: Schema.Attribute.Enumeration<['Shipping', 'Sale Order']> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    discount_type: Schema.Attribute.Enumeration<['percentage', 'amount']> &
+      Schema.Attribute.DefaultTo<'percentage'>;
+    discount_value: Schema.Attribute.Decimal;
+    end_date: Schema.Attribute.Date;
+    limited: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::coupon.coupon'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    start_date: Schema.Attribute.Date;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    used: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+  };
+}
+
 export interface ApiDepartmentDepartment extends Struct.CollectionTypeSchema {
   collectionName: 'departments';
   info: {
@@ -2001,6 +2044,7 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::sale-order-detail.sale-order-detail'
     >;
+    shipping_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     so_shipping: Schema.Attribute.Relation<
       'oneToOne',
       'api::so-shipping.so-shipping'
@@ -2121,6 +2165,10 @@ export interface ApiShippingMethodShippingMethod
       Schema.Attribute.Unique;
     options: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
+    so_shippings: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::so-shipping.so-shipping'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2142,6 +2190,7 @@ export interface ApiSoShippingSoShipping extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::contact-address.contact-address'
     >;
+    coupon: Schema.Attribute.Relation<'oneToOne', 'api::coupon.coupon'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2159,10 +2208,18 @@ export interface ApiSoShippingSoShipping extends Struct.CollectionTypeSchema {
       'oneToOne',
       'api::sale-order.sale-order'
     >;
+    shipping_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    shipping_discount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    shipping_method: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::shipping-method.shipping-method'
+    >;
     shipping_status: Schema.Attribute.Enumeration<
       ['New', 'In Progress', 'Completed']
     > &
       Schema.Attribute.DefaultTo<'New'>;
+    shipping_subtotal: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    transaction_id: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2934,6 +2991,7 @@ declare module '@strapi/strapi' {
       'api::contact-address.contact-address': ApiContactAddressContactAddress;
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
+      'api::coupon.coupon': ApiCouponCoupon;
       'api::department.department': ApiDepartmentDepartment;
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
       'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;

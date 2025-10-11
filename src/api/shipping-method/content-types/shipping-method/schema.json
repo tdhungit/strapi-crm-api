@@ -14,11 +14,7 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "enabled": {
       "type": "boolean",
@@ -29,6 +25,12 @@
     },
     "options": {
       "type": "json"
+    },
+    "so_shippings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::so-shipping.so-shipping",
+      "mappedBy": "shipping_method"
     }
   }
 }
