@@ -3,7 +3,7 @@ export default {
     {
       method: 'GET',
       path: '/customers/contact-addresses',
-      handler: 'customer.getAddresses',
+      handler: 'contact-address.getAddresses',
       config: {
         policies: ['api::contact.is-authenticated'],
       },
@@ -11,7 +11,7 @@ export default {
     {
       method: 'GET',
       path: '/customers/contact-addresses/default',
-      handler: 'customer.getDefaultAddress',
+      handler: 'contact-address.getDefaultAddress',
       config: {
         policies: ['api::contact.is-authenticated'],
       },
@@ -19,7 +19,7 @@ export default {
     {
       method: 'POST',
       path: '/customers/contact-addresses',
-      handler: 'customer.createAddress',
+      handler: 'contact-address.createAddress',
       config: {
         policies: ['api::contact.is-authenticated'],
       },
@@ -27,7 +27,7 @@ export default {
     {
       method: 'PUT',
       path: '/customers/contact-addresses/update/:id',
-      handler: 'customer.updateAddress',
+      handler: 'contact-address.updateAddress',
       config: {
         policies: ['api::contact.is-authenticated'],
       },
@@ -35,7 +35,7 @@ export default {
     {
       method: 'DELETE',
       path: '/customers/contact-addresses/delete/:id',
-      handler: 'customer.deleteAddress',
+      handler: 'contact-address.deleteAddress',
       config: {
         policies: ['api::contact.is-authenticated'],
       },
@@ -43,7 +43,7 @@ export default {
     {
       method: 'PUT',
       path: '/customers/contact-addresses/set-default/:id',
-      handler: 'customer.setDefault',
+      handler: 'contact-address.setDefault',
       config: {
         policies: ['api::contact.is-authenticated'],
       },
