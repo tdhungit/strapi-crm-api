@@ -1,3 +1,4 @@
+import type { Event } from '@strapi/database/dist/lifecycles';
 import { factories } from '@strapi/strapi';
 import { PaymentType } from './../types';
 
@@ -50,6 +51,59 @@ export default factories.createCoreService(
       });
 
       return payment;
+    },
+
+    async checkAndCreateInvoice(payment: PaymentType): Promise<void> {
+      if (payment.payment_status !== 'Completed') {
+        return;
+      }
+
+      if (!payment.sale_order) {
+        payment = await strapi.db.query('api::payment.payment').findOne({
+          where: {
+            id: payment.id,
+          },
+          populate: ['sale_order', 'created_user'],
+        });
+      }
+
+      // Check if there's an existing invoice for this payment
+      const invoice = await strapi.db.query('api::invoice.invoice').findOne({
+        where: {
+          payment: payment.id,
+        },
+      });
+
+      if (invoice) {
+        return;
+      }
+
+      // Create a new invoice record based on the payment details
+      await strapi
+        .service('api::invoice.invoice')
+        .generateInvoiceForOrder(payment.sale_order, payment, {
+          due_date: payment.payment_date,
+        });
+    },
+
+    async triggerPaymentChange(event: Event) {
+      const { action, model, result, params } = event;
+
+      if (model.uid !== 'api::payment.payment') {
+        return;
+      }
+
+      if (action === 'afterCreate' || action === 'afterUpdate') {
+        const inventoryId = params?.where?.id || result?.id;
+        const payment = await strapi.db.query('api::payment.payment').findOne({
+          where: {
+            id: inventoryId,
+          },
+          populate: ['sale_order', 'created_user'],
+        });
+
+        await this.checkAndCreateInvoice(payment);
+      }
     },
   }),
 );

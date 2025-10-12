@@ -10,4 +10,5 @@ export interface PaymentType {
   createdAt?: Date;
   updatedAt?: Date;
   invoices?: any[];
+  created_user?: any;
 }

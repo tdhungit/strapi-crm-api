@@ -6,7 +6,7 @@ export default factories.createCoreService(
   ({ strapi }) => ({
     async getInvoiceNumber(): Promise<string> {
       const sequenceService = strapi.service(
-        'api::sequence-counter.sequence-counter'
+        'api::sequence-counter.sequence-counter',
       );
       const nextSequence = await sequenceService.getNextSequence('invoice');
       return `INV-${String(nextSequence).padStart(6, '0')}`;
@@ -15,7 +15,7 @@ export default factories.createCoreService(
     async generateInvoiceForOrder(
       order: any,
       payment: PaymentType,
-      options: { [key: string]: any }
+      options: { [key: string]: any },
     ): Promise<any> {
       const invoiceNo = await this.getInvoiceNumber();
       // Create a new invoice record based on the order and payment details
@@ -57,7 +57,18 @@ export default factories.createCoreService(
         }
       }
 
+      if (
+        invoice.invoice_status === 'Paid' &&
+        !['Completed', 'Rejected'].includes(order.order_status)
+      ) {
+        await strapi
+          .service('api::sale-order.sale-order')
+          .changeOrderStatus(order, 'Completed', {
+            user: payment.created_user?.id,
+          });
+      }
+
       return invoice;
     },
-  })
+  }),
 );

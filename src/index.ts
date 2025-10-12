@@ -12,6 +12,9 @@ export default {
 
       // Call the inventory service to trigger timeline entries
       strapi.service('api::inventory.inventory').triggerTimeline(event);
+
+      // Call when payment changes status
+      strapi.service('api::payment.payment').triggerPaymentChange(event);
     });
   },
 

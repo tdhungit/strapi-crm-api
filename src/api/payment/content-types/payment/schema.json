@@ -47,6 +47,11 @@
       "relation": "manyToOne",
       "target": "api::payment-method.payment-method",
       "inversedBy": "payments"
+    },
+    "created_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }
