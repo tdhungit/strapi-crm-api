@@ -1,4 +1,6 @@
 import { factories } from '@strapi/strapi';
+import { CouponType } from './../../coupon/types';
+import { CartType } from './../types';
 
 export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
   async clearCart(cart: any) {
@@ -21,7 +23,7 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
   },
 
   async convertCartToSaleOrder(
-    cart: any,
+    cart: CartType,
     warehouseId: number,
     shipping?: { contactAddress: any; shippingMethod: any },
     coupons?: any[],
@@ -38,6 +40,9 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
     const soShipping = await strapi
       .service('api::so-shipping.so-shipping')
       .createDraft(shipping.contactAddress, shipping.shippingMethod, coupons);
+
+    // Calculate coupon discount
+    this.calcCouponDiscount(cart, coupons);
 
     // Create order
     const orderNo = await strapi
@@ -95,5 +100,20 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
       where: { id: order.id },
       populate: ['contact', 'sale_order_details'],
     });
+  },
+
+  async calcCouponDiscount(cart: CartType, coupons: CouponType[]) {
+    const saleOrderCoupons: CouponType[] = coupons.filter(
+      (c) => c.coupon_type === 'Sale Order',
+    );
+    if (saleOrderCoupons.length > 0) {
+      saleOrderCoupons.forEach(async (c) => {
+        if (c.discount_type === 'percentage') {
+          cart.discount_amount += cart.subtotal * (c.discount_value / 100);
+        } else {
+          cart.discount_amount += c.discount_value;
+        }
+      });
+    }
   },
 }));

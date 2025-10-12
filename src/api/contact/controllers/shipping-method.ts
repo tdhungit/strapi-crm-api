@@ -58,7 +58,7 @@ export default {
   },
 
   async getShippingAmount(ctx: Context) {
-    const { contactAddressId, shippingMethodId } = ctx.request.body;
+    const { contactAddressId, shippingMethodId, couponIds } = ctx.request.body;
     const contactAddress = await strapi.db
       .query('api::contact-address.contact-address')
       .findOne({
@@ -79,8 +79,19 @@ export default {
       return ctx.notFound('Shipping method not found');
     }
 
+    let coupons = [];
+    if (couponIds && couponIds.length > 0) {
+      coupons = await strapi.db.query('api::coupon.coupon').findMany({
+        where: {
+          id: {
+            $in: couponIds,
+          },
+        },
+      });
+    }
+
     return await strapi
       .service('api::shipping-method.shipping-method')
-      .getShippingAmount(contactAddress, shippingMethod);
+      .getShippingAmount(contactAddress, shippingMethod, coupons);
   },
 };

@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi';
+import { CouponType } from './../types';
 
 export default factories.createCoreService(
   'api::coupon.coupon',
@@ -53,6 +54,15 @@ export default factories.createCoreService(
         },
       );
       return coupons;
+    },
+
+    calcDiscount(subtotal: number, coupon: CouponType, params?: any) {
+      params = params || {};
+      let discount = coupon.discount_value || 0;
+      if (coupon.discount_type === 'percentage') {
+        discount = subtotal * (discount / 100);
+      }
+      return discount;
     },
   }),
 );

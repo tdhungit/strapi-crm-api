@@ -11,14 +11,33 @@ export default factories.createCoreService(
       shippingMethod: ShippingMethodType,
       coupons?: CouponType[],
     ): Promise<ShippingAmountType> {
-      // @TODO
-      return {
-        subtotal: 20,
+      // @TODO: Implement real shipping calculation
+      const fixedAmount = 20;
+      const amount: ShippingAmountType = {
+        subtotal: fixedAmount,
         discount_type: 'percentage',
         discount: 0,
-        total: 20,
+        total: fixedAmount,
         couponId: null,
       };
+
+      if (coupons && coupons.length > 0) {
+        const shippingCoupon: CouponType = coupons.find(
+          (c) => c.coupon_type === 'Shipping',
+        );
+        if (shippingCoupon) {
+          amount.couponId = shippingCoupon.id;
+          if (shippingCoupon.discount_type === 'percentage') {
+            amount.discount +=
+              amount.subtotal * (shippingCoupon.discount_value / 100);
+          } else {
+            amount.discount += shippingCoupon.discount_value;
+          }
+        }
+      }
+
+      amount.total = amount.subtotal - amount.discount;
+      return amount;
     },
   }),
 );
