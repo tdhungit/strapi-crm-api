@@ -327,7 +327,7 @@ export default {
       coupons = await strapi.db.query('api::coupon.coupon').findMany({
         where: {
           id: {
-            in: couponIds,
+            $in: couponIds,
           },
         },
       });
