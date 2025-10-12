@@ -48,26 +48,34 @@ export default factories.createCoreService('api::cart.cart', ({ strapi }) => ({
     const orderNo = await strapi
       .service('api::sale-order.sale-order')
       .getSalesOrderNo();
+    const orderData: any = {
+      name: orderNo,
+      sale_date: new Date(),
+      contact: cart.contact.id,
+      cart: cart.id,
+      warehouse: warehouseId,
+      status: 'New',
+      subtotal: cart.subtotal,
+      discount_type: cart.discount_type || 'percentage',
+      discount_amount: cart.discount_amount || 0,
+      shipping_amount: soShipping?.shipping_subtotal || 0,
+      shipping_discount: soShipping?.shipping_discount || 0,
+      tax_type: 'percentage',
+      tax_amount: cart.tax_amount || 0,
+      total_amount:
+        cart.subtotal -
+        cart.discount_amount +
+        cart.tax_amount +
+        (soShipping?.shipping_amount || 0),
+    };
+    if (coupons && coupons.length > 0) {
+      const couponIds = coupons.map((c) => c.id);
+      orderData.coupons = {
+        connect: couponIds,
+      };
+    }
     const order = await strapi.db.query('api::sale-order.sale-order').create({
-      data: {
-        name: orderNo,
-        sale_date: new Date(),
-        contact: cart.contact.id,
-        cart: cart.id,
-        warehouse: warehouseId,
-        status: 'New',
-        subtotal: cart.subtotal,
-        discount_type: cart.discount_type || 'percentage',
-        discount_amount: cart.discount_amount || 0,
-        shipping_amount: soShipping?.shipping_amount || 0,
-        tax_type: 'percentage',
-        tax_amount: cart.tax_amount || 0,
-        total_amount:
-          cart.subtotal -
-          cart.discount_amount +
-          cart.tax_amount +
-          (soShipping?.shipping_amount || 0),
-      },
+      data: orderData,
     });
 
     // Create order details

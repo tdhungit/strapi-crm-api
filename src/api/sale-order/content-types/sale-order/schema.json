@@ -77,6 +77,10 @@
       "type": "decimal",
       "default": 0
     },
+    "shipping_discount": {
+      "type": "decimal",
+      "default": 0
+    },
     "total_amount": {
       "type": "decimal",
       "default": 0
@@ -116,6 +120,12 @@
       "relation": "oneToOne",
       "target": "api::so-shipping.so-shipping",
       "mappedBy": "sale_order"
+    },
+    "coupons": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::coupon.coupon",
+      "mappedBy": "sale_orders"
     }
   }
 }

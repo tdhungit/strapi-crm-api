@@ -72,6 +72,12 @@
     "min_order_amount": {
       "type": "decimal",
       "default": 0
+    },
+    "sale_orders": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sale-order.sale-order",
+      "inversedBy": "coupons"
     }
   }
 }

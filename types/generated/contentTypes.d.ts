@@ -945,6 +945,10 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
+    sale_orders: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::sale-order.sale-order'
+    >;
     start_date: Schema.Attribute.Date;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -2020,6 +2024,7 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
       'plugin::users-permissions.user'
     >;
     contact: Schema.Attribute.Relation<'manyToOne', 'api::contact.contact'>;
+    coupons: Schema.Attribute.Relation<'manyToMany', 'api::coupon.coupon'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2049,6 +2054,7 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
       'api::sale-order-detail.sale-order-detail'
     >;
     shipping_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    shipping_discount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     so_shipping: Schema.Attribute.Relation<
       'oneToOne',
       'api::so-shipping.so-shipping'
