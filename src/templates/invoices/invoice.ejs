@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= invoice.invoice_number %> - Invoice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #111827;
+      --accent: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; color: var(--text); background: var(--bg); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    .container { max-width: 900px; margin: 32px auto; padding: 0 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: linear-gradient(180deg, #fff, #fafafa); }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { width: 36px; height: 36px; border-radius: 8px; background: var(--primary); display: grid; place-items: center; color: #fff; font-weight: 700; }
+    .brand-title { font-size: 20px; font-weight: 700; letter-spacing: 0.2px; }
+    .invoice-meta { text-align: right; }
+    .invoice-no { font-size: 18px; font-weight: 700; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); }
+    .badge.paid { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+    .badge.completed { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
+    .badge.pending { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+    .badge.failed { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .muted { color: var(--muted); }
+    .kv { display: grid; grid-template-columns: 160px 1fr; gap: 10px; margin: 8px 0; }
+    .table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 10px; border: 1px solid var(--border); }
+    .table thead th { background: #fafafa; text-align: left; font-size: 12px; letter-spacing: 0.3px; color: var(--muted); padding: 12px; border-bottom: 1px solid var(--border); }
+    .table tbody td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .table tfoot td { padding: 10px 12px; }
+    .amount { text-align: right; font-variant-numeric: tabular-nums; }
+    .totals { width: 100%; max-width: 420px; margin-left: auto; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .totals .row { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .totals .row:last-child { border-bottom: 0; background: #fafafa; font-weight: 700; }
+    .footer { padding: 18px 24px; color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .note { padding: 12px 14px; background: #f9fafb; border: 1px dashed var(--border); border-radius: 10px; }
+    @media print {
+      body { background: #fff; }
+      .container { margin: 0; max-width: 100%; padding: 0; }
+      .card { border: 0; box-shadow: none; border-radius: 0; }
+      .header { border-bottom: 1px solid #ddd; }
+      .footer { color: #6b7280; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <% 
+        function money(n){ if(n===null||n===undefined||isNaN(Number(n))) return "-"; return "$" + Number(n).toFixed(2); }
+        function badgeClass(status){
+          if(!status) return 'badge';
+          const s = String(status).toLowerCase();
+          if (s.includes('paid') || s.includes('complete')) return 'badge paid';
+          if (s.includes('pend')) return 'badge pending';
+          if (s.includes('fail') || s.includes('cancel')) return 'badge failed';
+          return 'badge';
+        }
+      %>
+      <div class="header">
+        <div class="brand">
+          <div class="brand-mark">IN</div>
+          <div>
+            <div class="brand-title">Invoice</div>
+            <div class="muted" style="font-size:12px;">Document ID: <%= invoice.documentId %></div>
+          </div>
+        </div>
+        <div class="invoice-meta">
+          <div class="invoice-no"><%= invoice.invoice_number %></div>
+          <div class="<%= badgeClass(invoice.invoice_status) %>" title="Status">
+            <%= invoice.invoice_status %>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="grid">
+          <div>
+            <div class="kv"><div class="muted">Issue date</div><div><%= invoice.issue_date %></div></div>
+            <div class="kv"><div class="muted">Due date</div><div><%= invoice.due_date %></div></div>
+            <div class="kv"><div class="muted">Subtotal</div><div class="amount"><%= money(invoice.subtotal) %></div></div>
+            <div class="kv"><div class="muted">Discount</div><div class="amount">- <%= money(invoice.discount_amount) %></div></div>
+            <div class="kv"><div class="muted">Tax</div><div class="amount"><%= money(invoice.invoice_tax_amount ?? invoice.tax_amount) %></div></div>
+          </div>
+          <div>
+            <div class="kv"><div class="muted">Sale order</div><div><%= (invoice.sale_order && invoice.sale_order.name) || '-' %></div></div>
+            <div class="kv"><div class="muted">SO status</div><div><%= (invoice.sale_order && invoice.sale_order.order_status) || '-' %></div></div>
+            <div class="kv"><div class="muted">Shipping</div><div class="amount"><%= money(invoice.sale_order && invoice.sale_order.shipping_amount) %></div></div>
+            <div class="kv"><div class="muted">Shipping discount</div><div class="amount">- <%= money(invoice.sale_order && invoice.sale_order.shipping_discount) %></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 60%;">Description</th>
+              <th class="amount" style="width: 20%;">Amount</th>
+              <th class="amount" style="width: 20%;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div><strong>Invoice <%= invoice.invoice_number %></strong></div>
+                <div class="muted" style="font-size:12px;">
+                  Payment: <%= (invoice.payment && invoice.payment.payment_method) || '-' %> • 
+                  Payment status: <%= (invoice.payment && invoice.payment.payment_status) || '-' %> • 
+                  Payment date: <%= (invoice.payment && invoice.payment.payment_date) || '-' %>
+                </div>
+                <% if (invoice.description) { %>
+                  <div class="note" style="margin-top:8px;"><%= invoice.description %></div>
+                <% } %>
+              </td>
+              <td class="amount"><%= money(invoice.subtotal) %></td>
+              <td class="amount"><%= money(invoice.total_amount) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section" style="padding-top:0;">
+        <div class="totals">
+          <div class="row"><div>Subtotal</div><div class="amount"><%= money(invoice.subtotal) %></div></div>
+          <div class="row"><div>Discount</div><div class="amount">- <%= money(invoice.discount_amount) %></div></div>
+          <div class="row"><div>Tax</div><div class="amount"><%= money(invoice.invoice_tax_amount ?? invoice.tax_amount) %></div></div>
+          <div class="row"><div>Shipping</div><div class="amount"><%= money(invoice.sale_order && invoice.sale_order.shipping_amount) %></div></div>
+          <div class="row"><div>Shipping discount</div><div class="amount">- <%= money(invoice.sale_order && invoice.sale_order.shipping_discount) %></div></div>
+          <div class="row"><div>Total</div><div class="amount"><%= money(invoice.total_amount) %></div></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>Created at: <%= invoice.createdAt %></div>
+        <div>Updated at: <%= invoice.updatedAt %></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

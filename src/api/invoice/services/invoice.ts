@@ -1,5 +1,7 @@
 import { factories } from '@strapi/strapi';
+import ejs from 'ejs';
 import { PaymentType } from './../../payment/types';
+import { InvoiceType } from './../types';
 
 export default factories.createCoreService(
   'api::invoice.invoice',
@@ -69,6 +71,12 @@ export default factories.createCoreService(
       }
 
       return invoice;
+    },
+
+    async generateHtml(invoice: InvoiceType) {
+      return await ejs.renderFile('./src/templates/invoices/invoice.ejs', {
+        invoice,
+      });
     },
   }),
 );
