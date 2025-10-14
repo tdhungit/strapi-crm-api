@@ -1,11 +1,6 @@
 export default {
   routes: [
     {
-      method: 'GET',
-      path: '/customers/leads-contacts',
-      handler: 'customer.getLeadsAndContacts',
-    },
-    {
       method: 'POST',
       path: '/customers/contact/check-email',
       handler: 'customer.checkContactEmailExist',
@@ -25,6 +20,14 @@ export default {
       method: 'POST',
       path: '/customers/contact/login',
       handler: 'customer.contactLogin',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/customers/contact/firebase-config',
+      handler: 'customer.getFirebaseConfig',
       config: {
         auth: false,
       },
