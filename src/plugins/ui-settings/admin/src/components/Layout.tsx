@@ -6,7 +6,6 @@ import {
   SubNavSection,
 } from '@strapi/design-system';
 import { Cog, Database } from '@strapi/icons';
-import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 
@@ -63,6 +62,19 @@ export default function Layout() {
                   }
                 >
                   Address Data
+                </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname === '/plugins/ui-settings/firebase-config'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/firebase-config')
+                  }
+                >
+                  Firebase Config
                 </SubNavLink>
               </SubNavSection>
             </SubNav>

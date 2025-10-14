@@ -1,8 +1,8 @@
 import { Page } from '@strapi/strapi/admin';
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Layout from '../components/Layout';
 import AuditLogsSettingPage from './AuditLogsSettingPage';
+import FirebaseSettings from './FirebaseSettings';
 import ImportAddressData from './ImportAddressData';
 import SettingsPage from './SettingsPage';
 
@@ -13,6 +13,7 @@ const App = () => {
         <Route path='/' element={<SettingsPage />} />
         <Route path='/audit-logs' element={<AuditLogsSettingPage />} />
         <Route path='/import-address-data' element={<ImportAddressData />} />
+        <Route path='/firebase-config' element={<FirebaseSettings />} />
       </Route>
       <Route path='*' element={<Page.Error />} />
     </Routes>

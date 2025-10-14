@@ -1,6 +1,7 @@
 const { default: uiSetting } = require('./controllers/ui-settings');
 const { default: auditLogs } = require('./controllers/audit-logs');
 const { default: addresses } = require('./controllers/addresses');
+const { default: settings } = require('./controllers/settings');
 
 module.exports = () => {
   return {
@@ -55,12 +56,26 @@ module.exports = () => {
         handler: 'addresses.importAddressData',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      // Settings
+      {
+        method: 'GET',
+        path: '/settings/:category',
+        handler: 'settings.getCategorySettings',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
+        method: 'POST',
+        path: '/settings/:category/:key',
+        handler: 'settings.updateSetting',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
     ],
 
     controllers: {
       ...uiSetting,
       ...auditLogs,
       ...addresses,
+      ...settings,
     },
   };
 };
