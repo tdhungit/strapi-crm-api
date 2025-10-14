@@ -45,53 +45,5 @@ export default {
         policies: ['api::contact.is-authenticated'],
       },
     },
-    {
-      method: 'GET',
-      path: '/customers/contact/cart',
-      handler: 'customer.getCart',
-      config: {
-        policies: ['api::contact.is-authenticated'],
-      },
-    },
-    {
-      method: 'POST',
-      path: '/customers/contact/cart',
-      handler: 'customer.mergeCart',
-      config: {
-        policies: ['api::contact.is-authenticated'],
-      },
-    },
-    {
-      method: 'POST',
-      path: '/customers/contact/orders',
-      handler: 'customer.createOrderFromCart',
-      config: {
-        policies: ['api::contact.is-authenticated'],
-      },
-    },
-    {
-      method: 'GET',
-      path: '/customers/contact/orders',
-      handler: 'customer.getOrders',
-      config: {
-        policies: ['api::contact.is-authenticated'],
-      },
-    },
-    {
-      method: 'GET',
-      path: '/customers/contact/orders/:id',
-      handler: 'customer.getOrder',
-      config: {
-        policies: ['api::contact.is-authenticated'],
-      },
-    },
-    {
-      method: 'PUT',
-      path: '/customers/contact/orders/:id',
-      handler: 'customer.updateOrder',
-      config: {
-        policies: ['api::contact.is-authenticated'],
-      },
-    },
   ],
 };
