@@ -1,5 +1,7 @@
 import { factories } from '@strapi/strapi';
-import { initializeApp, refreshToken } from 'firebase-admin/app';
+import { cert, initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import fs from 'fs';
 import jwt from 'jsonwebtoken';
 
 export default factories.createCoreService(
@@ -60,10 +62,10 @@ export default factories.createCoreService(
       return contact;
     },
 
-    async generateLoginToken(contact: any, firebaseRefreshToken?: string) {
-      if (contact.login_provider !== 'Local') {
-        if (!firebaseRefreshToken) {
-          throw new Error('Firebase token is required');
+    async generateLoginToken(contact: any, firebaseToken?: string) {
+      if (firebaseToken) {
+        if (!(await this.checkFirebaseToken(contact, firebaseToken))) {
+          throw new Error('Invalid Firebase token');
         }
       }
 
@@ -74,23 +76,84 @@ export default factories.createCoreService(
           expiresIn: '24h',
         },
       );
+
       return token;
     },
 
-    async checkFirebaseToken(contact: any, firebaseRefreshToken: string) {
+    async checkFirebaseToken(contact: any, token: string) {
       // Get firebase settings
       const firebaseConfig = await strapi
         .service('api::setting.setting')
         .getSettings('system', 'firebase');
 
-      if (!firebaseConfig?.firebase) {
+      if (!firebaseConfig?.firebase?.serviceAccountJson) {
         throw new Error('Firebase settings not found');
       }
 
+      const serviceAccount = JSON.parse(
+        fs.readFileSync(firebaseConfig.firebase.serviceAccountJson, 'utf8'),
+      );
+
       const app = initializeApp({
-        credential: refreshToken(firebaseRefreshToken),
-        databaseURL: firebaseConfig.authDomain,
+        credential: cert(serviceAccount),
       });
+
+      const auth = getAuth();
+      const decoded = await auth.verifyIdToken(token);
+      const { uid } = decoded;
+      if (uid === contact.login_provider_id) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    async mergeSocial2Local(
+      login_provider: string,
+      login_provider_id: string,
+      firebaseToken: string,
+    ) {
+      // Get firebase settings
+      const firebaseConfig = await strapi
+        .service('api::setting.setting')
+        .getSettings('system', 'firebase');
+
+      if (!firebaseConfig?.firebase?.serviceAccountJson) {
+        throw new Error('Firebase settings not found');
+      }
+
+      const serviceAccount = JSON.parse(
+        fs.readFileSync(firebaseConfig.firebase.serviceAccountJson, 'utf8'),
+      );
+
+      const app = initializeApp({
+        credential: cert(serviceAccount),
+      });
+
+      const auth = getAuth();
+      const decoded = await auth.verifyIdToken(firebaseToken);
+      const { uid, email } = decoded;
+
+      if (!uid || !email) {
+        throw new Error('Invalid Firebase token');
+      }
+
+      const contact = await strapi.db.query('api::contact.contact').findOne({
+        where: { email },
+      });
+
+      if (!contact) {
+        throw new Error('Contact not found');
+      }
+
+      const updateContact = await strapi.db
+        .query('api::contact.contact')
+        .update({
+          where: { id: contact.id },
+          data: { login_provider, login_provider_id },
+        });
+
+      return await this.generateLoginToken(updateContact);
     },
   }),
 );

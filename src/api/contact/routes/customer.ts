@@ -33,6 +33,14 @@ export default {
       },
     },
     {
+      method: 'POST',
+      path: '/customers/contact/social-merge-to-local',
+      handler: 'customer.contactMergeSocial2Local',
+      config: {
+        auth: false,
+      },
+    },
+    {
       method: 'GET',
       path: '/customers/contact/me',
       handler: 'customer.contactCurrent',

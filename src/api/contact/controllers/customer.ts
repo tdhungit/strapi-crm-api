@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { Context } from 'koa';
 import { comparePassword, hashPassword } from '../../../helpers/utils';
 
@@ -32,9 +31,10 @@ export default {
       login_provider,
       login_provider_id,
       avatar,
+      firebaseToken,
     } = ctx.request.body;
 
-    if (!email || !password || !firstName || !lastName || !phone) {
+    if (!email || !firstName || !lastName) {
       throw new Error(
         'Missing required fields: email, password, firstName, lastName, phone',
       );
@@ -48,6 +48,7 @@ export default {
     if (contactExist) {
       if (autoLogin) {
         if (
+          firebaseToken &&
           login_provider === contactExist.login_provider &&
           login_provider_id === contactExist.login_provider_id
         ) {
@@ -55,7 +56,16 @@ export default {
             contact: contactExist,
             token: strapi
               .service('api::contact.contact')
-              .generateLoginToken(contactExist),
+              .generateLoginToken(contactExist, firebaseToken),
+          };
+        }
+
+        if (firebaseToken && login_provider && login_provider_id) {
+          return {
+            code: 'confirm_merge',
+            login_provider,
+            login_provider_id,
+            firebaseToken,
           };
         }
       }
@@ -66,7 +76,7 @@ export default {
     const contactData: any = {
       salutation,
       email,
-      password: hashPassword(password),
+      password: password ? hashPassword(password) : '',
       firstName: firstName,
       lastName: lastName,
       phone,
@@ -109,6 +119,26 @@ export default {
     };
   },
 
+  async contactMergeSocial2Local(ctx: Context) {
+    const { login_provider, login_provider_id, firebaseToken } =
+      ctx.request.body;
+    if (!login_provider || !login_provider_id || !firebaseToken) {
+      return ctx.badRequest(
+        'Missing required fields: login_provider, login_provider_id, firebaseToken',
+      );
+    }
+
+    const token = await strapi
+      .service('api::contact.contact')
+      .mergeSocial2Local(login_provider, login_provider_id, firebaseToken);
+
+    if (token) {
+      return { token };
+    } else {
+      return ctx.badRequest('Invalid Firebase token');
+    }
+  },
+
   async contactLogin(ctx: Context) {
     const { email, password } = ctx.request.body;
 
@@ -135,13 +165,9 @@ export default {
     }
 
     // generate token
-    const token = jwt.sign(
-      { id: contact.id, email: contact.email },
-      process.env.JWT_SECRET_CONTACT as string,
-      {
-        expiresIn: '24h',
-      },
-    );
+    const token = await strapi
+      .service('api::contact.contact')
+      .generateLoginToken(contact);
 
     return { jwt: token };
   },
