@@ -804,6 +804,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    avatar: Schema.Attribute.String;
     bod: Schema.Attribute.Date;
     campaigns: Schema.Attribute.Relation<
       'manyToMany',
@@ -832,6 +833,11 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
       'api::contact.contact'
     > &
       Schema.Attribute.Private;
+    login_provider: Schema.Attribute.Enumeration<
+      ['Local', 'Google', 'Facebook', 'X']
+    > &
+      Schema.Attribute.DefaultTo<'Local'>;
+    login_provider_sid: Schema.Attribute.String;
     mobile: Schema.Attribute.String;
     password: Schema.Attribute.Password;
     phone: Schema.Attribute.String;

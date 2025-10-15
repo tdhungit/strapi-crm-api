@@ -112,6 +112,40 @@ export default function FirebaseSettings() {
             onChange={handleInputChange}
           />
         </Field.Root>
+        <Field.Root>
+          <Field.Label>Service Account Json</Field.Label>
+          <TextInput
+            placeholder='Your service account json'
+            name='serviceAccountJson'
+            value={settings.serviceAccountJson || ''}
+            readOnly
+          />
+          <input
+            type='file'
+            accept='.json'
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const formData = new FormData();
+              formData.append('file', file);
+              try {
+                const uploadRes: any = await fetchClient.post(
+                  '/ui-settings/settings/upload',
+                  formData,
+                  {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                  },
+                );
+                setSettings((prev) => ({
+                  ...prev,
+                  serviceAccountJson: uploadRes.data.path,
+                }));
+              } catch (error) {
+                console.error('Error uploading favicon:', error);
+              }
+            }}
+          />
+        </Field.Root>
         <Button onClick={handleSave} marginTop={4}>
           Save
         </Button>

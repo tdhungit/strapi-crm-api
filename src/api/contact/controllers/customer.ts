@@ -29,6 +29,9 @@ export default {
       address,
       leadSource,
       autoLogin = false,
+      login_provider,
+      login_provider_id,
+      avatar,
     } = ctx.request.body;
 
     if (!email || !password || !firstName || !lastName || !phone) {
@@ -37,30 +40,67 @@ export default {
       );
     }
 
+    // Check if email already exists
+    const contactExist = await strapi.db.query('api::contact.contact').findOne({
+      where: { email },
+    });
+
+    if (contactExist) {
+      if (autoLogin) {
+        if (
+          login_provider === contactExist.login_provider &&
+          login_provider_id === contactExist.login_provider_id
+        ) {
+          return {
+            contact: contactExist,
+            token: strapi
+              .service('api::contact.contact')
+              .generateLoginToken(contactExist),
+          };
+        }
+      }
+
+      return ctx.badRequest('Email already exists');
+    }
+
+    const contactData: any = {
+      salutation,
+      email,
+      password: hashPassword(password),
+      firstName: firstName,
+      lastName: lastName,
+      phone,
+      mobile,
+      address,
+      leadSource: leadSource || 'Website',
+      login_provider: login_provider || 'Local',
+      login_provider_id,
+      avatar,
+    };
+
+    // Get lead from email
+    const lead = await strapi.db.query('api::lead.lead').findOne({
+      where: { email },
+    });
+    if (lead?.id) {
+      contactData.lead = lead.id;
+      // Update status lead to converted
+      await strapi.db.query('api::lead.lead').update({
+        where: { id: lead.id },
+        data: { status: 'Converted' },
+      });
+    }
+
     const contact = await strapi.db.query('api::contact.contact').create({
-      data: {
-        salutation,
-        email,
-        password: hashPassword(password),
-        firstName: firstName,
-        lastName: lastName,
-        phone,
-        mobile,
-        address,
-        leadSource: leadSource || 'Website',
-      },
+      data: contactData,
     });
 
     let token: string = '';
     if (autoLogin) {
       // generate token
-      token = jwt.sign(
-        { id: contact.id, email: contact.email },
-        process.env.JWT_SECRET_CONTACT as string,
-        {
-          expiresIn: '24h',
-        },
-      );
+      token = strapi
+        .service('api::contact.contact')
+        .generateLoginToken(contact);
     }
 
     return {
@@ -153,6 +193,8 @@ export default {
     const firebaseConfig = await strapi
       .service('api::setting.setting')
       .getSettings('system', 'firebase');
-    return firebaseConfig.firebase || {};
+    const config = firebaseConfig.firebase || {};
+    delete config.serviceAccountJson;
+    return config;
   },
 };

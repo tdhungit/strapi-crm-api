@@ -69,6 +69,12 @@ module.exports = () => {
         handler: 'settings.updateSetting',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      {
+        method: 'POST',
+        path: '/settings/upload',
+        handler: 'settings.uploadFile',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
     ],
 
     controllers: {

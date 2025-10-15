@@ -36,6 +36,22 @@
     "password": {
       "type": "password"
     },
+    "login_provider": {
+      "type": "enumeration",
+      "default": "Local",
+      "enum": [
+        "Local",
+        "Google",
+        "Facebook",
+        "X"
+      ]
+    },
+    "login_provider_sid": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "string"
+    },
     "phone": {
       "type": "string"
     },

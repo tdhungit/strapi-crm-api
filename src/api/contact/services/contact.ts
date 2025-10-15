@@ -1,4 +1,6 @@
 import { factories } from '@strapi/strapi';
+import { initializeApp, refreshToken } from 'firebase-admin/app';
+import jwt from 'jsonwebtoken';
 
 export default factories.createCoreService(
   'api::contact.contact',
@@ -57,5 +59,38 @@ export default factories.createCoreService(
 
       return contact;
     },
-  })
+
+    async generateLoginToken(contact: any, firebaseRefreshToken?: string) {
+      if (contact.login_provider !== 'Local') {
+        if (!firebaseRefreshToken) {
+          throw new Error('Firebase token is required');
+        }
+      }
+
+      const token = jwt.sign(
+        { id: contact.id, email: contact.email },
+        process.env.JWT_SECRET_CONTACT as string,
+        {
+          expiresIn: '24h',
+        },
+      );
+      return token;
+    },
+
+    async checkFirebaseToken(contact: any, firebaseRefreshToken: string) {
+      // Get firebase settings
+      const firebaseConfig = await strapi
+        .service('api::setting.setting')
+        .getSettings('system', 'firebase');
+
+      if (!firebaseConfig?.firebase) {
+        throw new Error('Firebase settings not found');
+      }
+
+      const app = initializeApp({
+        credential: refreshToken(firebaseRefreshToken),
+        databaseURL: firebaseConfig.authDomain,
+      });
+    },
+  }),
 );

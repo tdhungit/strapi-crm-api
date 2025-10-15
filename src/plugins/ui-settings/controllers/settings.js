@@ -20,5 +20,18 @@ export default {
 
       return settings;
     },
+
+    async uploadFile(ctx) {
+      const { files } = ctx.request;
+      if (!files) {
+        return ctx.badRequest('No file uploaded');
+      }
+
+      const data = await strapi
+        .service('api::metadata.upload')
+        .privateUpload(files);
+
+      return data;
+    },
   },
 };
