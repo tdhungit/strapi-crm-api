@@ -19,6 +19,8 @@ export default factories.createCoreController(
         for (const variant of product_variants) {
           const variantData = { ...variant };
           delete variantData.product_variant_attributes;
+
+          // Handle product variant data
           const productVariant = await strapi.db
             .query('api::product-variant.product-variant')
             .create({
@@ -28,6 +30,33 @@ export default factories.createCoreController(
               },
             });
 
+          // Handle product variant price
+          // Sale price
+          if (variant.sale_price_type && variant.sale_price) {
+            await strapi.db.query('api::product-price.product-price').create({
+              data: {
+                price_type: 'Sale',
+                before_price: variant.sale_before_price || variant.sale_price,
+                price: variant.sale_price,
+                price_status: 'Active',
+                product_variant: productVariant.id,
+              },
+            });
+          }
+          // Cost price
+          if (variant.cost_price_type && variant.cost_price) {
+            await strapi.db.query('api::product-price.product-price').create({
+              data: {
+                price_type: 'Cost',
+                before_price: variant.cost_before_price || variant.cost_price,
+                price: variant.cost_price,
+                price_status: 'Active',
+                product_variant: productVariant.id,
+              },
+            });
+          }
+
+          // Handle product variant attributes
           const { product_variant_attributes } = variant;
           if (
             product_variant_attributes &&
@@ -36,7 +65,7 @@ export default factories.createCoreController(
             for (const attribute of product_variant_attributes) {
               await strapi.db
                 .query(
-                  'api::product-variant-attribute.product-variant-attribute'
+                  'api::product-variant-attribute.product-variant-attribute',
                 )
                 .create({
                   data: {
@@ -89,7 +118,7 @@ export default factories.createCoreController(
           const existingVariant = existingVariants.find(
             (existing) =>
               (variant.id && existing.id === variant.id) ||
-              (!variant.id && existing.sku === variant.sku)
+              (!variant.id && existing.sku === variant.sku),
           );
 
           if (existingVariant) {
@@ -135,7 +164,7 @@ export default factories.createCoreController(
             for (const attribute of product_variant_attributes) {
               await strapi.db
                 .query(
-                  'api::product-variant-attribute.product-variant-attribute'
+                  'api::product-variant-attribute.product-variant-attribute',
                 )
                 .create({
                   data: {
@@ -149,7 +178,7 @@ export default factories.createCoreController(
 
         // Delete variants that exist in DB but not in the data payload
         const variantsToDelete = existingVariants.filter(
-          (existing) => !processedVariantIds.includes(existing.id)
+          (existing) => !processedVariantIds.includes(existing.id),
         );
 
         for (const variantToDelete of variantsToDelete) {
@@ -184,5 +213,5 @@ export default factories.createCoreController(
 
       return product;
     },
-  })
+  }),
 );
