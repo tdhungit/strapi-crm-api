@@ -1617,9 +1617,17 @@ export interface ApiProductCategoryProductCategory
     name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    parent: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::product-category.product-category'
+    >;
     product_attributes: Schema.Attribute.Relation<
       'oneToMany',
       'api::product-attribute.product-attribute'
+    >;
+    product_categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-category.product-category'
     >;
     products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;

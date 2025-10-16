@@ -14,11 +14,7 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "slug": {
       "type": "string",
@@ -43,6 +39,18 @@
       "relation": "oneToMany",
       "target": "api::product-attribute.product-attribute",
       "mappedBy": "product_category"
+    },
+    "product_categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-category.product-category",
+      "mappedBy": "parent"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-category.product-category",
+      "inversedBy": "product_categories"
     }
   }
 }
