@@ -50,13 +50,14 @@ export default {
         if (
           firebaseToken &&
           login_provider === contactExist.login_provider &&
-          login_provider_id === contactExist.login_provider_id
+          login_provider_id === contactExist.login_provider_sid
         ) {
+          const token = await strapi
+            .service('api::contact.contact')
+            .generateLoginToken(contactExist, firebaseToken);
           return {
             contact: contactExist,
-            token: strapi
-              .service('api::contact.contact')
-              .generateLoginToken(contactExist, firebaseToken),
+            token,
           };
         }
 
@@ -84,7 +85,7 @@ export default {
       address,
       leadSource: leadSource || 'Website',
       login_provider: login_provider || 'Local',
-      login_provider_id,
+      login_provider_sid: login_provider_id,
       avatar,
     };
 
@@ -108,7 +109,7 @@ export default {
     let token: string = '';
     if (autoLogin) {
       // generate token
-      token = strapi
+      token = await strapi
         .service('api::contact.contact')
         .generateLoginToken(contact);
     }
