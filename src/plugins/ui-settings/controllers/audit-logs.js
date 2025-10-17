@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   'audit-logs': {
     async saveSettings(ctx) {
       const data = ctx.request.body;
@@ -56,7 +56,7 @@ export default {
       // availableContentTypes is content types and not in auditContentTypes
       data.availableContentTypes = contentTypes.filter(
         (contentType) =>
-          !data.auditContentTypes.find((x) => x.uid === contentType.uid)
+          !data.auditContentTypes.find((x) => x.uid === contentType.uid),
       );
 
       return data;

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   settings: {
     async getCategorySettings(ctx) {
       const { category } = ctx.params;

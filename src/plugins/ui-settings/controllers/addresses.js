@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   addresses: {
     async importAddressData(ctx) {
       await strapi.service('api::address.address').importAddressData();

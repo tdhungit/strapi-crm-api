@@ -1,7 +1,7 @@
-const { default: uiSetting } = require('./controllers/ui-settings');
-const { default: auditLogs } = require('./controllers/audit-logs');
-const { default: addresses } = require('./controllers/addresses');
-const { default: settings } = require('./controllers/settings');
+const uiSetting = require('./controllers/ui-settings');
+const auditLogs = require('./controllers/audit-logs');
+const addresses = require('./controllers/addresses');
+const settings = require('./controllers/settings');
 
 module.exports = () => {
   return {

@@ -1,4 +1,4 @@
-const { default: permissions } = require('./controllers/permissions');
+const permissions = require('./controllers/permissions');
 
 module.exports = () => {
   return {

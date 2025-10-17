@@ -1,4 +1,4 @@
-const { default: paymentMethods } = require('./controllers/payment-methods');
+const paymentMethods = require('./controllers/payment-methods');
 
 module.exports = () => {
   return {

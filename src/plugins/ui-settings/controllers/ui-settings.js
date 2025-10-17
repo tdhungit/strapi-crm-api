@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   'ui-settings': {
     async getConfig(ctx) {
       try {

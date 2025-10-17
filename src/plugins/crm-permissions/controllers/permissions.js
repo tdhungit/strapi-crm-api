@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   permissions: {
     async getDepartments(ctx) {
       const result = await strapi.service('api::department.department').find({

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   'payment-methods': {
     async findByName(ctx) {
       const { name, description } = ctx.params;
