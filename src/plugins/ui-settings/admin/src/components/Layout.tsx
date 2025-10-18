@@ -76,6 +76,19 @@ export default function Layout() {
                 >
                   Firebase Config
                 </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname === '/plugins/ui-settings/mail-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/mail-settings')
+                  }
+                >
+                  Mail Settings
+                </SubNavLink>
               </SubNavSection>
             </SubNav>
             <Box marginLeft={4} width='100%'>

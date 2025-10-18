@@ -10,6 +10,16 @@ module.exports = {
       return settings;
     },
 
+    async getSetting(ctx) {
+      const { category, key } = ctx.params;
+
+      const settings = await strapi
+        .service('api::setting.setting')
+        .getSettings(category, key);
+
+      return settings?.[key] || {};
+    },
+
     async updateSetting(ctx) {
       const { category, key } = ctx.params;
       const { value } = ctx.request.body;

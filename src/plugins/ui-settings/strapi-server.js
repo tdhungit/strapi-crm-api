@@ -64,6 +64,12 @@ module.exports = () => {
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
       {
+        method: 'GET',
+        path: '/settings/:category/:key',
+        handler: 'settings.getSetting',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
         method: 'POST',
         path: '/settings/:category/:key',
         handler: 'settings.updateSetting',

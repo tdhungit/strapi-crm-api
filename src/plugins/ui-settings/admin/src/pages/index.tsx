@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import AuditLogsSettingPage from './AuditLogsSettingPage';
 import FirebaseSettings from './FirebaseSettings';
 import ImportAddressData from './ImportAddressData';
+import MailSettings from './MailSettings';
 import SettingsPage from './SettingsPage';
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
         <Route path='/audit-logs' element={<AuditLogsSettingPage />} />
         <Route path='/import-address-data' element={<ImportAddressData />} />
         <Route path='/firebase-config' element={<FirebaseSettings />} />
+        <Route path='/mail-settings' element={<MailSettings />} />
       </Route>
       <Route path='*' element={<Page.Error />} />
     </Routes>

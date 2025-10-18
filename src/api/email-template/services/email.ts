@@ -1,12 +1,23 @@
+import { SendMailOptions } from '../types';
+
 export default () => ({
   async sendMail(
     to: string,
     subject: string,
     ejsString: string,
     data: any = {},
-    options?: any,
+    options?: SendMailOptions,
   ) {
     options = options || {};
+
+    // Get email settings
+    const settings = await strapi
+      .service('api::setting.setting')
+      .getSettings('system', 'mail');
+    const setting = settings?.mail || {};
+
+    options.from = options.from || setting.from || undefined;
+    options.replyTo = options.replyTo || setting.replyTo || undefined;
 
     const emailTemplate = {
       subject: subject,

@@ -19,8 +19,8 @@ export default function FirebaseSettings() {
       return;
     }
 
-    fetchClient.get('/ui-settings/settings/system').then((res) => {
-      setSettings(res.data?.firebase || {});
+    fetchClient.get('/ui-settings/settings/system/firebase').then((res) => {
+      setSettings(res.data || {});
     });
   }, [fetchClient]);
 
