@@ -18,11 +18,7 @@
     "sku": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "photos": {
       "type": "json"
@@ -31,7 +27,27 @@
       "type": "enumeration",
       "required": true,
       "default": "Active",
-      "enum": ["Active", "Inactive"]
+      "enum": [
+        "Active",
+        "Inactive"
+      ]
+    },
+    "weight": {
+      "type": "float"
+    },
+    "weight_unit": {
+      "type": "string"
+    },
+    "taxable": {
+      "type": "boolean",
+      "default": true
+    },
+    "barcode": {
+      "type": "string"
+    },
+    "requires_shipping": {
+      "type": "boolean",
+      "default": true
     },
     "product": {
       "type": "relation",

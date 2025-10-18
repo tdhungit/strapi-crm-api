@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "inventory_manuals",
+  "info": {
+    "singularName": "inventory-manual",
+    "pluralName": "inventory-manuals",
+    "displayName": "Inventory Manual"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "inventory_type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Manual",
+      "enum": ["Manual", "Import"]
+    },
+    "created_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "warehouse": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::warehouse.warehouse"
+    },
+    "inventory_status": {
+      "type": "enumeration",
+      "default": "New",
+      "enum": ["New", "Approved", "Rejected"]
+    },
+    "details": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::inventory-manual-detail.inventory-manual-detail",
+      "mappedBy": "inventory_manual"
+    }
+  }
+}

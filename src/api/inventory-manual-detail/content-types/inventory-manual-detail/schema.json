@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "inventory_manual_details",
+  "info": {
+    "singularName": "inventory-manual-detail",
+    "pluralName": "inventory-manual-details",
+    "displayName": "Inventory Manual Detail"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "product_variant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product-variant.product-variant"
+    },
+    "warehouse": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::warehouse.warehouse"
+    },
+    "price": {
+      "type": "decimal",
+      "default": 0
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true
+    },
+    "inventory_manual": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::inventory-manual.inventory-manual",
+      "inversedBy": "details"
+    }
+  }
+}

@@ -1154,6 +1154,95 @@ export interface ApiImportImport extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiInventoryManualDetailInventoryManualDetail
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'inventory_manual_details';
+  info: {
+    displayName: 'Inventory Manual Detail';
+    pluralName: 'inventory-manual-details';
+    singularName: 'inventory-manual-detail';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    inventory_manual: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::inventory-manual.inventory-manual'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory-manual-detail.inventory-manual-detail'
+    > &
+      Schema.Attribute.Private;
+    price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    product_variant: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::product-variant.product-variant'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    warehouse: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::warehouse.warehouse'
+    >;
+  };
+}
+
+export interface ApiInventoryManualInventoryManual
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'inventory_manuals';
+  info: {
+    displayName: 'Inventory Manual';
+    pluralName: 'inventory-manuals';
+    singularName: 'inventory-manual';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    created_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    details: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory-manual-detail.inventory-manual-detail'
+    >;
+    inventory_status: Schema.Attribute.Enumeration<
+      ['New', 'Approved', 'Rejected']
+    > &
+      Schema.Attribute.DefaultTo<'New'>;
+    inventory_type: Schema.Attribute.Enumeration<['Manual', 'Import']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Manual'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory-manual.inventory-manual'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    warehouse: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::warehouse.warehouse'
+    >;
+  };
+}
+
 export interface ApiInventoryInventory extends Struct.CollectionTypeSchema {
   collectionName: 'inventories';
   info: {
@@ -1785,6 +1874,7 @@ export interface ApiProductVariantProductVariant
     draftAndPublish: false;
   };
   attributes: {
+    barcode: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1814,6 +1904,8 @@ export interface ApiProductVariantProductVariant
       'oneToMany',
       'api::purchase-order-detail.purchase-order-detail'
     >;
+    requires_shipping: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
     sale_order_details: Schema.Attribute.Relation<
       'oneToMany',
       'api::sale-order-detail.sale-order-detail'
@@ -1821,12 +1913,15 @@ export interface ApiProductVariantProductVariant
     sku: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    taxable: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     variant_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Active'>;
+    weight: Schema.Attribute.Float;
+    weight_unit: Schema.Attribute.String;
   };
 }
 
@@ -2402,6 +2497,38 @@ export interface ApiTimelineTimeline extends Struct.CollectionTypeSchema {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+  };
+}
+
+export interface ApiVendorVendor extends Struct.CollectionTypeSchema {
+  collectionName: 'vendors';
+  info: {
+    displayName: 'Vendor';
+    pluralName: 'vendors';
+    singularName: 'vendor';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Schema.Attribute.Component<'common.address', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vendor.vendor'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -3030,6 +3157,8 @@ declare module '@strapi/strapi' {
       'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::import.import': ApiImportImport;
+      'api::inventory-manual-detail.inventory-manual-detail': ApiInventoryManualDetailInventoryManualDetail;
+      'api::inventory-manual.inventory-manual': ApiInventoryManualInventoryManual;
       'api::inventory.inventory': ApiInventoryInventory;
       'api::invoice-detail.invoice-detail': ApiInvoiceDetailInvoiceDetail;
       'api::invoice.invoice': ApiInvoiceInvoice;
@@ -3058,6 +3187,7 @@ declare module '@strapi/strapi' {
       'api::static-page.static-page': ApiStaticPageStaticPage;
       'api::supplier.supplier': ApiSupplierSupplier;
       'api::timeline.timeline': ApiTimelineTimeline;
+      'api::vendor.vendor': ApiVendorVendor;
       'api::warehouse.warehouse': ApiWarehouseWarehouse;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
