@@ -15,9 +15,6 @@
       "type": "string",
       "required": true
     },
-    "content": {
-      "type": "richtext"
-    },
     "type": {
       "type": "enumeration",
       "default": "HTML",
@@ -25,6 +22,20 @@
         "HTML",
         "Text"
       ]
+    },
+    "for_module": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Accounts",
+      "enum": [
+        "Accounts",
+        "Contacts",
+        "Leads",
+        "Opportunities"
+      ]
+    },
+    "content": {
+      "type": "richtext"
     },
     "rawContent": {
       "type": "json"

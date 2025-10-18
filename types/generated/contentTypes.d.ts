@@ -1017,6 +1017,11 @@ export interface ApiEmailTemplateEmailTemplate
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    for_module: Schema.Attribute.Enumeration<
+      ['Accounts', 'Contacts', 'Leads', 'Opportunities']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Accounts'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
