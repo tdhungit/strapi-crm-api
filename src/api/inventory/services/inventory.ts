@@ -105,8 +105,6 @@ export default factories.createCoreService(
       warehouseId: number,
       items: { variantId: number; quantity: number }[],
     ) {
-      const entriesCreate = [];
-
       for await (const item of items) {
         const inventory = await strapi.db
           .query('api::inventory.inventory')
@@ -117,26 +115,24 @@ export default factories.createCoreService(
             },
           });
 
-        if (inventory) {
+        if (inventory?.id) {
           await strapi.db.query('api::inventory.inventory').update({
             where: { id: inventory.id },
             data: {
               stock_quantity: inventory.stock_quantity + item.quantity,
+              last_updated: new Date(),
             },
           });
         } else {
-          entriesCreate.push({
-            product_variant: item.variantId,
-            warehouse: warehouseId,
-            stock_quantity: item.quantity,
+          await strapi.db.query('api::inventory.inventory').create({
+            data: {
+              product_variant: item.variantId,
+              warehouse: warehouseId,
+              stock_quantity: item.quantity,
+              last_updated: new Date(),
+            },
           });
         }
-      }
-
-      if (entriesCreate.length > 0) {
-        await strapi.db.query('api::inventory.inventory').createMany({
-          data: entriesCreate,
-        });
       }
     },
   }),
