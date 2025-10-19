@@ -4,17 +4,17 @@ export default {
   register({ strapi }: { strapi: Core.Strapi }) {
     // Global lifecycle
     strapi.db.lifecycles.subscribe((event) => {
-      // check and auto install app
+      // Check and auto install app
       strapi.service('api::setting.install').autoInstall(event);
 
-      // Call the audit log service to log the action
+      // Audit log
       strapi.service('api::audit-log.audit-log').logAction(event);
 
-      // Call the inventory service to trigger timeline entries
-      strapi.service('api::inventory.inventory').triggerTimeline(event);
+      // Inventory change
+      strapi.service('api::inventory.inventory').triggerChange(event);
 
-      // Call when payment changes status
-      strapi.service('api::payment.payment').triggerPaymentChange(event);
+      // Payment change
+      strapi.service('api::payment.payment').triggerChange(event);
     });
   },
 

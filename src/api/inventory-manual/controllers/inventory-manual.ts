@@ -134,5 +134,37 @@ export default factories.createCoreController(
     async delete(ctx) {
       return ctx.badRequest('Inventory Manual deletion is disabled');
     },
+
+    async changeStatus(ctx) {
+      const { id } = ctx.params;
+      const { status } = ctx.request.body;
+
+      const entry = await strapi.db
+        .query('api::inventory-manual.inventory-manual')
+        .findOne({
+          where: {
+            documentId: id,
+          },
+        });
+
+      if (!entry) {
+        return ctx.notFound('Inventory Manual not found');
+      }
+
+      if (entry.inventory_status !== 'New') {
+        return ctx.badRequest('Cannot edit a submitted inventory manual');
+      }
+
+      await strapi.db.query('api::inventory-manual.inventory-manual').update({
+        where: {
+          id: entry.id,
+        },
+        data: {
+          inventory_status: status,
+        },
+      });
+
+      return { message: 'Success' };
+    },
   }),
 );

@@ -86,7 +86,7 @@ export default factories.createCoreService(
         });
     },
 
-    async triggerPaymentChange(event: Event) {
+    async triggerChange(event: Event) {
       const { action, model, result, params } = event;
 
       if (model.uid !== 'api::payment.payment') {
