@@ -963,6 +963,79 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDashboardItemDashboardItem
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'dashboard_items';
+  info: {
+    displayName: 'Dashboard Item';
+    pluralName: 'dashboard-items';
+    singularName: 'dashboard-item';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dashboard: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::dashboard.dashboard'
+    >;
+    height: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<300>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dashboard-item.dashboard-item'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    weight: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    widget: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface ApiDashboardDashboard extends Struct.CollectionTypeSchema {
+  collectionName: 'dashboards';
+  info: {
+    displayName: 'Dashboard';
+    pluralName: 'dashboards';
+    singularName: 'dashboard';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dashboard_items: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dashboard-item.dashboard-item'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dashboard.dashboard'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiDepartmentDepartment extends Struct.CollectionTypeSchema {
   collectionName: 'departments';
   info: {
@@ -3153,6 +3226,8 @@ declare module '@strapi/strapi' {
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::dashboard-item.dashboard-item': ApiDashboardItemDashboardItem;
+      'api::dashboard.dashboard': ApiDashboardDashboard;
       'api::department.department': ApiDepartmentDepartment;
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
       'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;

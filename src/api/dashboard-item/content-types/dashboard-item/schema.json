@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dashboard_items",
+  "info": {
+    "singularName": "dashboard-item",
+    "pluralName": "dashboard-items",
+    "displayName": "Dashboard Item"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "widget": {
+      "type": "string",
+      "required": true
+    },
+    "height": {
+      "type": "integer",
+      "default": 300
+    },
+    "weight": {
+      "type": "integer",
+      "default": 0
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "dashboard": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::dashboard.dashboard",
+      "inversedBy": "dashboard_items"
+    }
+  }
+}

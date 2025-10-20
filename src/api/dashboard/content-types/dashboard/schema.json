@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dashboards",
+  "info": {
+    "singularName": "dashboard",
+    "pluralName": "dashboards",
+    "displayName": "Dashboard"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "dashboard_items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dashboard-item.dashboard-item",
+      "mappedBy": "dashboard"
+    }
+  }
+}
