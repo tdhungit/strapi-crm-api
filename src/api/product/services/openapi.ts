@@ -1,8 +1,14 @@
-import { ProductFormType } from '../types/openapi.product';
+import { NormalizeDataType, ProductFormType } from '../types/openapi';
 
 export default () => ({
-  async normalizeProduct(product: ProductFormType) {
+  async normalizeProduct(product: ProductFormType): Promise<NormalizeDataType> {
     return {
+      vendor: {
+        name: product.vendor,
+      },
+      product_category: {
+        name: product.product_category,
+      },
       product: {
         name: product.name,
         summary: product.summary,
@@ -11,7 +17,6 @@ export default () => ({
         product_status: product.status || 'Active',
         unit: 'Unit',
         photos: product.photos || [],
-        // Note: product_category is a relation; resolve and attach in controller if needed
       },
       product_variants: (product.variants || []).map((variant) => ({
         name: variant.name,
@@ -26,21 +31,23 @@ export default () => ({
           typeof variant.requires_shipping === 'boolean'
             ? variant.requires_shipping
             : true,
-        // product relation is set after product creation
+        variant_options: variant.options || [],
       })),
       product_attributes: (product.options || []).map((opt) => ({
         name: opt.name,
-        // description is optional; omit or set from metadata if you prefer
         weight: typeof opt.position === 'number' ? opt.position : 0,
-        metadata: { values: opt.values || [] },
-        // product_category relation can be attached later if required
+        metadata: {
+          options:
+            opt.values?.length > 0
+              ? opt.values.map((value) => ({ value }))
+              : [],
+        },
       })),
       product_prices: (product.variants || []).map((variant) => ({
         price_type: 'Sale',
         before_price: null,
         price: variant.price ?? 0,
         price_status: 'Active',
-        // product_variant relation should be linked after variant creation
       })),
     };
   },

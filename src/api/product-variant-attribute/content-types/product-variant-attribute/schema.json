@@ -35,6 +35,10 @@
         "Active",
         "Inactive"
       ]
+    },
+    "position": {
+      "type": "integer",
+      "default": 1
     }
   }
 }

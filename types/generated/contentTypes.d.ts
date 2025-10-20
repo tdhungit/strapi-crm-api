@@ -1847,6 +1847,7 @@ export interface ApiProductVariantAttributeProductVariantAttribute
       'api::product-variant-attribute.product-variant-attribute'
     > &
       Schema.Attribute.Private;
+    position: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<1>;
     product_attribute: Schema.Attribute.Relation<
       'manyToOne',
       'api::product-attribute.product-attribute'
