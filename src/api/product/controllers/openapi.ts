@@ -79,6 +79,10 @@ export default {
         .create({
           data: {
             ...variant,
+            photos:
+              variant?.photos?.length > 0
+                ? variant.photos
+                : normalize.product.photos,
             product: { connect: { id: product.id } },
           },
         });
