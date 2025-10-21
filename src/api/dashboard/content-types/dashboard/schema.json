@@ -25,6 +25,10 @@
       "relation": "oneToMany",
       "target": "api::dashboard-item.dashboard-item",
       "mappedBy": "dashboard"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
