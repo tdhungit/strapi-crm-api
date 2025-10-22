@@ -68,6 +68,15 @@ export default function FirebaseSettings() {
           />
         </Field.Root>
         <Field.Root>
+          <Field.Label>Database URL</Field.Label>
+          <TextInput
+            placeholder='Enter your database url'
+            name='databaseURL'
+            value={settings.databaseURL || ''}
+            onChange={handleInputChange}
+          />
+        </Field.Root>
+        <Field.Root>
           <Field.Label>Project Id</Field.Label>
           <TextInput
             placeholder='Enter your project id'
