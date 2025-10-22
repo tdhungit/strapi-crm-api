@@ -8,10 +8,10 @@ export default {
       return ctx.throw(400, 'Missing required parameters');
     }
 
-    await strapi
+    const res = await strapi
       .service('api::notification.notification')
       .send(userId, title, message);
 
-    return ctx.send({ success: true });
+    return ctx.send({ success: true, response: res });
   },
 };

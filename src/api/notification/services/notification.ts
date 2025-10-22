@@ -4,10 +4,12 @@ export default () => ({
       .service('api::setting.setting')
       .getFirebaseApp();
     const ref = database.ref(`/notifications/${userId}`);
-    await ref.set({
+    return await ref.push({
       title,
       body,
       timestamp: Date.now(),
+      pushed: false,
+      read: false,
     });
   },
 });
