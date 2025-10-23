@@ -1,6 +1,15 @@
 import { SendMailOptions } from '../types';
 
 export default () => ({
+  async getMailServices() {
+    return [
+      {
+        name: 'SendGrid',
+        value: 'SendGrid',
+      },
+    ];
+  },
+
   async sendMail(
     to: string,
     subject: string,

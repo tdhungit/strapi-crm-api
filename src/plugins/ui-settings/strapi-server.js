@@ -30,6 +30,12 @@ module.exports = () => {
         handler: 'ui-settings.uploadFavicon',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      {
+        method: 'GET',
+        path: '/mail-services',
+        handler: 'ui-settings.getMailServices',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
       // Audit Logs
       {
         method: 'POST',

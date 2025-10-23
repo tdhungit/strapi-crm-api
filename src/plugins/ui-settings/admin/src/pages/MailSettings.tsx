@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  Combobox,
+  ComboboxOption,
   Field,
   TextInput,
   Typography,
@@ -11,12 +13,17 @@ import { useEffect, useState } from 'react';
 export default function MailSettings() {
   const fetchClient = useFetchClient();
 
+  const [mailServices, setMailServices] = useState<any>([]);
   const [settings, setSettings] = useState<any>({});
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchClient.get('/ui-settings/settings/system/mail').then((response) => {
       setSettings(response.data || {});
+    });
+
+    fetchClient.get('/ui-settings/mail-services').then((response) => {
+      setMailServices(response.data || []);
     });
   }, []);
 
@@ -39,40 +46,94 @@ export default function MailSettings() {
 
   return (
     <div>
-      <Typography variant='epsilon'>Mail Configuration</Typography>
+      <Box style={{ flexDirection: 'column', display: 'flex', gap: 16 }}>
+        <Typography variant='epsilon'>Mail Configuration</Typography>
 
-      <Box
-        marginTop={4}
-        style={{ flexDirection: 'column', display: 'flex', gap: 16 }}
-      >
-        <Field.Root>
-          <Field.Label>Send From Email</Field.Label>
-          <TextInput
-            placeholder='Enter send mail from'
-            name='from'
-            value={settings.from || ''}
-            onChange={(e) => {
-              setSettings((prev) => ({
-                ...prev,
-                from: e.target.value,
-              }));
-            }}
-          />
-        </Field.Root>
-        <Field.Root>
-          <Field.Label>Reply To</Field.Label>
-          <TextInput
-            placeholder='Enter reply to'
-            name='replyTo'
-            value={settings.replyTo || ''}
-            onChange={(e) => {
-              setSettings((prev) => ({
-                ...prev,
-                replyTo: e.target.value,
-              }));
-            }}
-          />
-        </Field.Root>
+        <Box
+          borderColor={'gray'}
+          borderRadius={2}
+          padding={4}
+          style={{ flexDirection: 'column', display: 'flex', gap: 16 }}
+        >
+          <Field.Root>
+            <Field.Label>Send From Email</Field.Label>
+            <TextInput
+              placeholder='Enter send mail from'
+              name='from'
+              value={settings.from || ''}
+              onChange={(e) => {
+                setSettings((prev) => ({
+                  ...prev,
+                  from: e.target.value,
+                }));
+              }}
+            />
+          </Field.Root>
+          <Field.Root>
+            <Field.Label>Reply To</Field.Label>
+            <TextInput
+              placeholder='Enter reply to'
+              name='replyTo'
+              value={settings.replyTo || ''}
+              onChange={(e) => {
+                setSettings((prev) => ({
+                  ...prev,
+                  replyTo: e.target.value,
+                }));
+              }}
+            />
+          </Field.Root>
+        </Box>
+
+        <Typography variant='epsilon'>Mail Service Configuration</Typography>
+
+        <Box
+          borderColor={'gray'}
+          borderRadius={2}
+          padding={4}
+          style={{ flexDirection: 'column', display: 'flex', gap: 16 }}
+        >
+          <Field.Root>
+            <Field.Label>Mail Service</Field.Label>
+            <Combobox
+              value={settings.service || ''}
+              onChange={(value) => {
+                setSettings((prev) => ({
+                  ...prev,
+                  service: value,
+                }));
+              }}
+            >
+              {mailServices.map((service: any) => (
+                <ComboboxOption key={service.value} value={service.value}>
+                  {service.name}
+                </ComboboxOption>
+              ))}
+            </Combobox>
+          </Field.Root>
+          {settings.service === 'SendGrid' && (
+            <>
+              <Field.Root>
+                <Field.Label>SendGrid API Key</Field.Label>
+                <TextInput
+                  placeholder='Enter send grid api key'
+                  name='apiKey'
+                  value={settings.SendGrid?.apiKey || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      SendGrid: {
+                        ...(prev.SendGrid || {}),
+                        apiKey: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+            </>
+          )}
+        </Box>
+
         <Button
           variant='default'
           type='button'

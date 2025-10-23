@@ -73,5 +73,17 @@ module.exports = {
         return ctx.badRequest('Error uploading favicon');
       }
     },
+
+    async getMailServices(ctx) {
+      try {
+        const mailServices = await strapi
+          .service('api::email-template.email')
+          .getMailServices();
+        return mailServices;
+      } catch (error) {
+        console.error('Error getting mail services:', error);
+        return ctx.badRequest('Error getting mail services');
+      }
+    },
   },
 };
