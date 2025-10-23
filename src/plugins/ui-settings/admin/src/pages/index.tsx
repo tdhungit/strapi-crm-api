@@ -2,7 +2,7 @@ import { Page } from '@strapi/strapi/admin';
 import { Route, Routes } from 'react-router-dom';
 import Layout from '../components/Layout';
 import AuditLogsSettingPage from './AuditLogsSettingPage';
-import ChatBoxSettings from './ChatboxSettings';
+import ChatBoxSettings from './ChatBoxSettings';
 import FirebaseSettings from './FirebaseSettings';
 import ImportAddressData from './ImportAddressData';
 import MailSettings from './MailSettings';
