@@ -224,4 +224,12 @@ export default {
     delete config.serviceAccountJson;
     return config;
   },
+
+  async getChatBoxConfig(ctx: Context) {
+    const chatboxConfig = await strapi
+      .service('api::setting.setting')
+      .getSettings('system', 'chatbox');
+    const config = chatboxConfig.chatbox || {};
+    return config;
+  },
 };

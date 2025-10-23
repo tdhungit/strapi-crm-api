@@ -33,6 +33,14 @@ export default {
       },
     },
     {
+      method: 'GET',
+      path: '/customers/contact/chatbox-config',
+      handler: 'customer.getChatBoxConfig',
+      config: {
+        auth: false,
+      },
+    },
+    {
       method: 'POST',
       path: '/customers/contact/social-merge-to-local',
       handler: 'customer.contactMergeSocial2Local',
