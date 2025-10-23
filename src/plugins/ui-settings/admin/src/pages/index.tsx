@@ -5,6 +5,7 @@ import AuditLogsSettingPage from './AuditLogsSettingPage';
 import FirebaseSettings from './FirebaseSettings';
 import ImportAddressData from './ImportAddressData';
 import MailSettings from './MailSettings';
+import RedisSettings from './RedisSettings';
 import SettingsPage from './SettingsPage';
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path='/import-address-data' element={<ImportAddressData />} />
         <Route path='/firebase-config' element={<FirebaseSettings />} />
         <Route path='/mail-settings' element={<MailSettings />} />
+        <Route path='/redis-settings' element={<RedisSettings />} />
       </Route>
       <Route path='*' element={<Page.Error />} />
     </Routes>

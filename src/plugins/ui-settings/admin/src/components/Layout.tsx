@@ -65,6 +65,19 @@ export default function Layout() {
                 </SubNavLink>
                 <SubNavLink
                   className={
+                    location.pathname === '/plugins/ui-settings/redis-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/redis-settings')
+                  }
+                >
+                  Redis Settings
+                </SubNavLink>
+                <SubNavLink
+                  className={
                     location.pathname === '/plugins/ui-settings/firebase-config'
                       ? 'active'
                       : ''
