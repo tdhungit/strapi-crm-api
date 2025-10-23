@@ -31,13 +31,13 @@ export default function AuditLogsSettingPage() {
   const addToAuditContentTypes = (ct: any) => {
     setAuditContentTypes([...auditContentTypes, ct]);
     setAvailableContentTypes(
-      availableContentTypes.filter((item: any) => item.uid !== ct.uid)
+      availableContentTypes.filter((item: any) => item.uid !== ct.uid),
     );
   };
 
   const removeFromAuditContentTypes = (ct: any) => {
     setAuditContentTypes(
-      auditContentTypes.filter((item: any) => item.uid !== ct.uid)
+      auditContentTypes.filter((item: any) => item.uid !== ct.uid),
     );
     setAvailableContentTypes([...availableContentTypes, ct]);
   };
@@ -119,8 +119,13 @@ export default function AuditLogsSettingPage() {
         </Box>
       </Flex>
 
-      <div style={{ marginTop: 20 }}>
-        <Button onClick={handleSave} loading={isSaving} disabled={isSaving}>
+      <div style={{ marginTop: 20, flexDirection: 'column', display: 'flex' }}>
+        <Button
+          onClick={handleSave}
+          loading={isSaving}
+          disabled={isSaving}
+          style={{ width: '100%' }}
+        >
           Save
         </Button>
       </div>

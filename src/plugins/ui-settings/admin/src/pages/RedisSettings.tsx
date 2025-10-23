@@ -57,10 +57,10 @@ export default function RedisSettings() {
             onChange={handleInputChange}
           />
         </Field.Root>
+        <Button onClick={handleSave} marginTop={4}>
+          Save
+        </Button>
       </Box>
-      <Button onClick={handleSave} marginTop={4}>
-        Save
-      </Button>
     </div>
   );
 }

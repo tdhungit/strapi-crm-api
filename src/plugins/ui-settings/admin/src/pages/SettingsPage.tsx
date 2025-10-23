@@ -1,6 +1,6 @@
 import { useFetchClient } from '@strapi/admin/strapi-admin';
 import { Box, Button, Field, Flex, TextInput } from '@strapi/design-system';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const defaultSettings = {
   pageTitle: '',
@@ -126,7 +126,7 @@ const SettingsPage = () => {
                 formData,
                 {
                   headers: { 'Content-Type': 'multipart/form-data' },
-                }
+                },
               );
               handleInputChange('favicon', uploadRes?.data?.url || '');
             } catch (error) {
@@ -148,8 +148,13 @@ const SettingsPage = () => {
         )}
       </Field.Root>
 
-      <Flex justifyContent='flex-end' style={{ marginTop: 15 }}>
-        <Button onClick={handleSave} loading={isSaving} disabled={isSaving}>
+      <Flex style={{ marginTop: 15, flexDirection: 'column' }}>
+        <Button
+          onClick={handleSave}
+          loading={isSaving}
+          disabled={isSaving}
+          style={{ width: '100%' }}
+        >
           Save
         </Button>
       </Flex>

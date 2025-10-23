@@ -1,6 +1,6 @@
 import { Box, Button, Status, Typography } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ImportAddressData() {
   const { post, get } = useFetchClient();
@@ -59,8 +59,12 @@ export default function ImportAddressData() {
         </Box>
       </Box>
 
-      <Box marginTop={4}>
-        <Button onClick={handleImportAddressData} loading={isLoading}>
+      <Box marginTop={4} style={{ flexDirection: 'column', display: 'flex' }}>
+        <Button
+          onClick={handleImportAddressData}
+          loading={isLoading}
+          style={{ width: '100%' }}
+        >
           Import Address Data
         </Button>
       </Box>

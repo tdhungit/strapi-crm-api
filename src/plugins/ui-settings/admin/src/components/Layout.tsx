@@ -102,6 +102,20 @@ export default function Layout() {
                 >
                   Mail Settings
                 </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname ===
+                    '/plugins/ui-settings/chatbox-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/chatbox-settings')
+                  }
+                >
+                  ChatBox Settings
+                </SubNavLink>
               </SubNavSection>
             </SubNav>
             <Box marginLeft={4} width='100%'>
