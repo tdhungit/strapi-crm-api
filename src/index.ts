@@ -18,5 +18,7 @@ export default {
     });
   },
 
-  bootstrap(/* { strapi }: { strapi: Core.Strapi } */) {},
+  bootstrap(/* { strapi }: { strapi: Core.Strapi } */) {
+    // Start cronjob @TODO
+  },
 };

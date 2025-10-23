@@ -79,7 +79,7 @@ export default factories.createCoreService(
 
     async checkFirebaseToken(contact: any, token: string) {
       const { auth } = await strapi
-        .service('api::setting.setting')
+        .service('api::setting.firebase')
         .getFirebaseApp();
       const decoded = await auth.verifyIdToken(token);
       const { uid } = decoded;
@@ -96,7 +96,7 @@ export default factories.createCoreService(
       firebaseToken: string,
     ) {
       const { auth } = await strapi
-        .service('api::setting.setting')
+        .service('api::setting.firebase')
         .getFirebaseApp();
       const decoded = await auth.verifyIdToken(firebaseToken);
       const { uid, email } = decoded;
