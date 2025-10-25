@@ -3,4 +3,6 @@ export interface SendMailOptions {
   replyTo?: string;
   cc?: string;
   bcc?: string;
+  contentType?: string;
+  data?: any;
 }

@@ -62,7 +62,7 @@ export default function MailSettings() {
               name='from'
               value={settings.from || ''}
               onChange={(e) => {
-                setSettings((prev) => ({
+                setSettings((prev: any) => ({
                   ...prev,
                   from: e.target.value,
                 }));
@@ -70,15 +70,44 @@ export default function MailSettings() {
             />
           </Field.Root>
           <Field.Root>
+            <Field.Label>Send From Name</Field.Label>
+            <TextInput
+              placeholder='Enter send mail from name'
+              name='fromName'
+              value={settings.fromName || ''}
+              onChange={(e) => {
+                setSettings((prev: any) => ({
+                  ...prev,
+                  fromName: e.target.value,
+                }));
+              }}
+            />
+          </Field.Root>
+
+          <Field.Root>
             <Field.Label>Reply To</Field.Label>
             <TextInput
               placeholder='Enter reply to'
               name='replyTo'
               value={settings.replyTo || ''}
               onChange={(e) => {
-                setSettings((prev) => ({
+                setSettings((prev: any) => ({
                   ...prev,
                   replyTo: e.target.value,
+                }));
+              }}
+            />
+          </Field.Root>
+          <Field.Root>
+            <Field.Label>Reply To Name</Field.Label>
+            <TextInput
+              placeholder='Enter reply to name'
+              name='replyToName'
+              value={settings.replyToName || ''}
+              onChange={(e) => {
+                setSettings((prev: any) => ({
+                  ...prev,
+                  replyToName: e.target.value,
                 }));
               }}
             />
@@ -98,7 +127,7 @@ export default function MailSettings() {
             <Combobox
               value={settings.service || ''}
               onChange={(value) => {
-                setSettings((prev) => ({
+                setSettings((prev: any) => ({
                   ...prev,
                   service: value,
                 }));
@@ -125,6 +154,23 @@ export default function MailSettings() {
                       SendGrid: {
                         ...(prev.SendGrid || {}),
                         apiKey: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>SendGrid Template ID</Field.Label>
+                <TextInput
+                  placeholder='Enter send grid template id'
+                  name='templateId'
+                  value={settings.SendGrid?.templateId || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      SendGrid: {
+                        ...(prev.SendGrid || {}),
+                        templateId: e.target.value,
                       },
                     }));
                   }}
