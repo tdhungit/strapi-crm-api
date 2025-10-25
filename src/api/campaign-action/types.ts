@@ -14,3 +14,8 @@ export interface CampaignActionType {
   run_at?: Date;
   schedule?: any;
 }
+
+export interface CampaignActionRunResult {
+  status: string;
+  data: any;
+}

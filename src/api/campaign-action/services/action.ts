@@ -1,13 +1,18 @@
-import { CampaignActionType } from '../types';
+import { CampaignActionRunResult, CampaignActionType } from '../types';
 
 export default {
-  async run(action: CampaignActionType) {
-    if (this[action.name]) {
-      console.log('Running action...', action.name);
-      const actionName = action.name + 'Action';
-      return this[actionName](action);
+  async run(action: CampaignActionType): Promise<CampaignActionRunResult> {
+    const actionName = action.name + 'Action';
+    if (this[actionName]) {
+      console.log('Running action...', actionName);
+      const res: CampaignActionRunResult = await this[actionName](action);
+      return res;
     } else {
-      console.log('Action not found...', action.name);
+      console.log('Action not found...', actionName);
+      return {
+        status: 'Failed',
+        data: null,
+      };
     }
   },
 
@@ -18,7 +23,13 @@ export default {
       .map((key) => key.replace('Action', ''));
   },
 
-  async Send_EmailAction(action: CampaignActionType) {
+  async Send_EmailAction(
+    action: CampaignActionType,
+  ): Promise<CampaignActionRunResult> {
     console.log('Sending email...', action);
+    return {
+      status: 'Running',
+      data: action,
+    };
   },
 };

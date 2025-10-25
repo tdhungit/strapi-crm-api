@@ -546,6 +546,40 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCampaignActionHistoryCampaignActionHistory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'campaign_action_histories';
+  info: {
+    displayName: 'Campaign Action History';
+    pluralName: 'campaign-action-histories';
+    singularName: 'campaign-action-history';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    campaign_action: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::campaign-action.campaign-action'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::campaign-action-history.campaign-action-history'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    run_status: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCampaignActionCampaignAction
   extends Struct.CollectionTypeSchema {
   collectionName: 'campaign_actions';
@@ -3218,6 +3252,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::account.account': ApiAccountAccount;
       'api::audit-log.audit-log': ApiAuditLogAuditLog;
+      'api::campaign-action-history.campaign-action-history': ApiCampaignActionHistoryCampaignActionHistory;
       'api::campaign-action.campaign-action': ApiCampaignActionCampaignAction;
       'api::campaign.campaign': ApiCampaignCampaign;
       'api::cart-detail.cart-detail': ApiCartDetailCartDetail;

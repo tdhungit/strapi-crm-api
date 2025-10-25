@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "campaign_action_histories",
+  "info": {
+    "singularName": "campaign-action-history",
+    "pluralName": "campaign-action-histories",
+    "displayName": "Campaign Action History"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "campaign_action": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::campaign-action.campaign-action"
+    },
+    "run_status": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}
