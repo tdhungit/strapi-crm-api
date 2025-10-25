@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "crm_workflows",
+  "info": {
+    "singularName": "crm-workflow",
+    "pluralName": "crm-workflows",
+    "displayName": "Workflow"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "module": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "leads",
+        "contacts",
+        "accounts"
+      ]
+    },
+    "trigger": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "beforeCreate",
+        "afterCreate",
+        "beforeUpdate",
+        "afterUpdate",
+        "conditions"
+      ]
+    },
+    "workflow_status": {
+      "type": "enumeration",
+      "enum": [
+        "Ready",
+        "Running",
+        "Completed",
+        "Failed"
+      ]
+    },
+    "run_at": {
+      "type": "datetime"
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

@@ -8,7 +8,7 @@ export default factories.createCoreService(
         .query('api::campaign-action.campaign-action')
         .findMany({
           where: {
-            action_status: 'Running',
+            action_status: 'Queue',
           },
           populate: ['campaign'],
         });

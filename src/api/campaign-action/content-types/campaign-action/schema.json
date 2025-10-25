@@ -38,10 +38,12 @@
       "default": "Ready",
       "enum": [
         "Ready",
+        "Queue",
         "Running",
         "Pending",
         "Completed",
-        "Suspended"
+        "Suspended",
+        "Failed"
       ]
     },
     "run_at": {

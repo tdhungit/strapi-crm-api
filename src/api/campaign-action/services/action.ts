@@ -4,6 +4,16 @@ export default {
   async run(action: CampaignActionType): Promise<CampaignActionRunResult> {
     const actionName = action.name + 'Action';
     if (this[actionName]) {
+      // Update status = Running
+      await strapi.db.query('api::campaign-action.campaign-action').update({
+        where: {
+          id: action.id,
+        },
+        data: {
+          action_status: 'Running',
+        },
+      });
+
       const res: CampaignActionRunResult = await this[actionName](action);
 
       // Update status campaign action

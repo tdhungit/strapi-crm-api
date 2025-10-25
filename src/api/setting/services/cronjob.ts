@@ -42,8 +42,22 @@ export default {
       return;
     }
 
-    await strapi
-      .service('api::campaign-action.campaign-action')
-      .checkAndProcessAction();
+    // Check and process campaign actions
+    try {
+      await strapi
+        .service('api::campaign-action.campaign-action')
+        .checkAndProcessAction();
+    } catch (error) {
+      console.log('Campaign actions processed failed', error);
+    }
+
+    // Check and process crm workflows
+    try {
+      await strapi
+        .service('api::crm-workflow.crm-workflow')
+        .checkAndProcessWorkflow();
+    } catch (error) {
+      console.log('CRM workflows processed failed', error);
+    }
   },
 };

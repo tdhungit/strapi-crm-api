@@ -27,12 +27,12 @@ export default factories.createCoreController(
           id: actionId,
         },
         data: {
-          action_status: 'Running',
+          action_status: 'Queue',
         },
       });
 
       return {
-        status: 'Running',
+        status: 'Queue',
         data: action,
       };
     },
