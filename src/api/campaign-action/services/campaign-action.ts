@@ -10,6 +10,7 @@ export default factories.createCoreService(
           where: {
             action_status: 'Running',
           },
+          populate: ['campaign'],
         });
 
       actions.forEach(async (action) => {

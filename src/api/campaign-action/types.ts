@@ -10,7 +10,15 @@ export interface CampaignActionType {
   total?: number;
   success?: number;
   error?: number;
-  metadata?: any;
+  metadata?: {
+    actionSettings?: {
+      fromName?: string;
+      fromEmail?: string;
+      replyToName?: string;
+      replyToEmail?: string;
+      templateId?: number;
+    };
+  };
   run_at?: Date;
   schedule?: any;
 }

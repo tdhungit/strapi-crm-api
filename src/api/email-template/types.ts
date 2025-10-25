@@ -1,8 +1,16 @@
 export interface SendMailOptions {
   from?: string;
+  fromName?: string;
   replyTo?: string;
+  replyToName?: string;
   cc?: string;
   bcc?: string;
   contentType?: string;
   data?: any;
+  template?: any;
+}
+
+export interface SendMailMultipleDataType {
+  to: string | { email: string; name: string };
+  data: any;
 }

@@ -1,5 +1,5 @@
 import sendgrid from '@sendgrid/mail';
-import { SendMailOptions } from '../types';
+import { SendMailMultipleDataType, SendMailOptions } from '../types';
 
 export default () => ({
   async getSettings() {
@@ -53,7 +53,12 @@ export default () => ({
     await sendgrid.send(msg);
   },
 
-  async sendTemplate(tos: string[], templateId: string, data: any = {}) {
+  async sendTemplate(
+    tos: string[],
+    templateId: string,
+    data: any = {},
+    options?: SendMailOptions,
+  ) {
     const setting = await this.getSettings();
     if (!setting?.SendGrid?.templateId) {
       throw new Error('SendGrid template id is not configured');
@@ -63,7 +68,7 @@ export default () => ({
 
     const { subject, content } = await strapi
       .service('api::email-template.email-template')
-      .parseTemplateContent(templateId, data);
+      .parseTemplateContent(templateId, data, options?.template || null);
 
     const personalizations = tos.map((to) => ({
       to: [{ email: to }],
@@ -84,12 +89,20 @@ export default () => ({
       },
       personalizations,
       templateId: setting.SendGrid.templateId,
+      replyToList: {
+        email: setting.replyTo,
+        name: setting.replyToName,
+      },
     };
 
     await sendgrid.send(msg);
   },
 
-  async sendMultiple(templateId: number, data: { to: string; data: any }[]) {
+  async sendMultiple(
+    templateId: number,
+    data: SendMailMultipleDataType[],
+    options?: SendMailOptions,
+  ) {
     const setting = await this.getSettings();
     if (!setting?.SendGrid?.templateId) {
       throw new Error('SendGrid template id is not configured');
@@ -97,11 +110,14 @@ export default () => ({
 
     sendgrid.setApiKey(setting.SendGrid.apiKey);
 
-    const template = await strapi.db
-      .query('api::email-template.email-template')
-      .findOne({
-        where: { id: templateId },
-      });
+    let template = options?.template || null;
+    if (!template) {
+      template = await strapi.db
+        .query('api::email-template.email-template')
+        .findOne({
+          where: { id: templateId },
+        });
+    }
 
     const personalizations = [];
     for await (const item of data) {
@@ -132,6 +148,10 @@ export default () => ({
       },
       personalizations,
       templateId: setting.SendGrid.templateId,
+      replyToList: {
+        email: setting.replyTo,
+        name: setting.replyToName,
+      },
     };
 
     await sendgrid.send(msg);

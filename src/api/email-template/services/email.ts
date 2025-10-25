@@ -1,4 +1,5 @@
-import { SendMailOptions } from '../types';
+import { wait } from '../../../helpers/utils';
+import { SendMailMultipleDataType, SendMailOptions } from '../types';
 
 export default () => ({
   async getMailServices() {
@@ -119,7 +120,7 @@ export default () => ({
 
   async sendMultiple(
     templateId: number,
-    data: { to: string; data: any }[],
+    data: SendMailMultipleDataType[],
     options?: SendMailOptions,
   ) {
     options = options || {};
@@ -140,11 +141,14 @@ export default () => ({
     }
 
     if (service === 'SMTP') {
-      const template = await strapi.db
-        .query('api::email-template.email-template')
-        .findOne({
-          where: { id: templateId },
-        });
+      let template = options?.template || null;
+      if (!template) {
+        template = await strapi.db
+          .query('api::email-template.email-template')
+          .findOne({
+            where: { id: templateId },
+          });
+      }
 
       if (!template) {
         throw new Error('Template not found');
@@ -172,6 +176,44 @@ export default () => ({
       }
 
       return;
+    }
+  },
+
+  async sendBatches(
+    templateId: number,
+    data: SendMailMultipleDataType[],
+    options?: SendMailOptions,
+  ) {
+    options = options || {};
+    let template = options?.template || null;
+    if (!template) {
+      template = await strapi.db
+        .query('api::email-template.email-template')
+        .findOne({
+          where: { id: templateId },
+        });
+    }
+
+    if (!template) {
+      throw new Error('Template not found');
+    }
+
+    options.template = template;
+
+    const batchSize = 100;
+    const totalBatches = Math.ceil(data.length / batchSize);
+    for (let i = 0; i < totalBatches; i++) {
+      const batch = data.slice(i * batchSize, (i + 1) * batchSize);
+
+      this.sendMultiple(templateId, batch, options)
+        .then(() => {
+          console.log(`Batch ${i + 1} sent successfully`);
+        })
+        .catch((err: any) => {
+          console.log(`Batch ${i + 1} sent failed`, err);
+        });
+
+      await wait(1000);
     }
   },
 });

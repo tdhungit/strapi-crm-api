@@ -15,12 +15,15 @@ export default factories.createCoreService(
     async parseTemplateContent(
       templateId: number,
       data: Record<string, any> = {},
+      template?: any,
     ) {
-      const template = await strapi.db
-        .query('api::email-template.email-template')
-        .findOne({
-          where: { id: templateId },
-        });
+      if (!template) {
+        template = await strapi.db
+          .query('api::email-template.email-template')
+          .findOne({
+            where: { id: templateId },
+          });
+      }
 
       if (!template) {
         throw new Error('Template not found');
