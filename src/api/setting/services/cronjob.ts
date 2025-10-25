@@ -42,6 +42,8 @@ export default {
       return;
     }
 
-    console.log('Processing job', job);
+    await strapi
+      .service('api::campaign-action.campaign-action')
+      .checkAndProcessAction();
   },
 };

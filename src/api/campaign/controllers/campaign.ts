@@ -21,11 +21,20 @@ export default factories.createCoreController(
         return ctx.notFound('Action not found');
       }
 
-      const res = await strapi
-        .service('api::campaign-action.campaign-action')
-        .runAction(action.id);
+      // Update status
+      await strapi.db.query('api::campaign-action.campaign-action').update({
+        where: {
+          id: actionId,
+        },
+        data: {
+          action_status: 'Running',
+        },
+      });
 
-      return res;
+      return {
+        status: 'Running',
+        data: action,
+      };
     },
   }),
 );
