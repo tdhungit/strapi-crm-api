@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "crm_workflow_actions",
+  "info": {
+    "singularName": "crm-workflow-action",
+    "pluralName": "crm-workflow-actions",
+    "displayName": "Workflow Action"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "workflow": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::crm-workflow.crm-workflow",
+      "inversedBy": "workflow_actions"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "action_status": {
+      "type": "enumeration",
+      "enum": [
+        "Ready",
+        "Queue",
+        "Running",
+        "Completed",
+        "Failed"
+      ]
+    },
+    "run_at": {
+      "type": "datetime"
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

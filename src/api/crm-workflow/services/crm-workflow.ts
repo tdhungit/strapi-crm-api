@@ -3,25 +3,38 @@ import { factories } from '@strapi/strapi';
 export default factories.createCoreService(
   'api::crm-workflow.crm-workflow',
   ({ strapi }) => ({
-    async run(workflow: any) {},
+    async run(workflowAction: any) {},
 
     async checkAndProcessWorkflow() {
-      const workflows = await strapi.db
-        .query('api::crm-workflow.crm-workflow')
+      const workflowActions = await strapi.db
+        .query('api::crm-workflow-action.crm-workflow-action')
         .findMany({
           where: {
-            workflow_status: 'Ready',
-            trigger: 'conditions',
+            action_status: 'Queue',
+            workflow: {
+              workflow_status: 'Active',
+              trigger: 'conditions',
+            },
+          },
+          populate: {
+            workflow: true,
           },
         });
 
-      workflows.forEach(async (workflow) => {
-        this.run(workflow)
+      workflowActions.forEach(async (workflowAction) => {
+        this.run(workflowAction)
           .then(() => {
-            console.log('Workflow run successfully: ', workflow.id);
+            console.log(
+              'Workflow run successfully: ',
+              workflowAction.workflow.id,
+            );
           })
           .catch((err: any) => {
-            console.log('Workflow run failed: ', workflow.id, err);
+            console.log(
+              'Workflow run failed: ',
+              workflowAction.workflow.id,
+              err,
+            );
           });
       });
     },

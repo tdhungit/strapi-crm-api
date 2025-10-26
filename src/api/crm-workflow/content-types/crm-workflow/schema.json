@@ -37,11 +37,10 @@
     },
     "workflow_status": {
       "type": "enumeration",
+      "default": "Active",
       "enum": [
-        "Ready",
-        "Running",
-        "Completed",
-        "Failed"
+        "Active",
+        "Inactive"
       ]
     },
     "run_at": {
@@ -49,6 +48,12 @@
     },
     "metadata": {
       "type": "json"
+    },
+    "workflow_actions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::crm-workflow-action.crm-workflow-action",
+      "mappedBy": "workflow"
     }
   }
 }

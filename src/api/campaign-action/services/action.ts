@@ -1,6 +1,13 @@
 import { CampaignActionRunResult, CampaignActionType } from '../types';
 
 export default {
+  getListActions() {
+    // find all function in this object have end is Action
+    return Object.keys(this)
+      .filter((key) => key.endsWith('Action'))
+      .map((key) => key.replace('Action', ''));
+  },
+
   async run(action: CampaignActionType): Promise<CampaignActionRunResult> {
     const actionName = action.name + 'Action';
     if (this[actionName]) {
@@ -45,13 +52,6 @@ export default {
         data: null,
       };
     }
-  },
-
-  getListActions() {
-    // find all function in this object have end is Action
-    return Object.keys(this)
-      .filter((key) => key.endsWith('Action'))
-      .map((key) => key.replace('Action', ''));
   },
 
   async Send_EmailAction(

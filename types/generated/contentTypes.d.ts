@@ -1005,6 +1005,44 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCrmWorkflowActionCrmWorkflowAction
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'crm_workflow_actions';
+  info: {
+    displayName: 'Workflow Action';
+    pluralName: 'crm-workflow-actions';
+    singularName: 'crm-workflow-action';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    action_status: Schema.Attribute.Enumeration<
+      ['Ready', 'Queue', 'Running', 'Completed', 'Failed']
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::crm-workflow-action.crm-workflow-action'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    run_at: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    workflow: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::crm-workflow.crm-workflow'
+    >;
+  };
+}
+
 export interface ApiCrmWorkflowCrmWorkflow extends Struct.CollectionTypeSchema {
   collectionName: 'crm_workflows';
   info: {
@@ -1044,9 +1082,12 @@ export interface ApiCrmWorkflowCrmWorkflow extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    workflow_status: Schema.Attribute.Enumeration<
-      ['Ready', 'Running', 'Completed', 'Failed']
+    workflow_actions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::crm-workflow-action.crm-workflow-action'
     >;
+    workflow_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
   };
 }
 
@@ -3315,6 +3356,7 @@ declare module '@strapi/strapi' {
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::crm-workflow-action.crm-workflow-action': ApiCrmWorkflowActionCrmWorkflowAction;
       'api::crm-workflow.crm-workflow': ApiCrmWorkflowCrmWorkflow;
       'api::dashboard-item.dashboard-item': ApiDashboardItemDashboardItem;
       'api::dashboard.dashboard': ApiDashboardDashboard;
