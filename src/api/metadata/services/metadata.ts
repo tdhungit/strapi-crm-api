@@ -21,7 +21,7 @@ export default () => ({
   async getAllContentTypes(): Promise<ContentTypeUIType[]> {
     const systemContentTypes = this.systemContentTypes();
     const contentTypes: ContentTypeUIType[] = Object.values(
-      strapi.contentTypes
+      strapi.contentTypes,
     ).map((ct) => ({
       uid: ct.uid,
       ...ct.info,
@@ -45,7 +45,7 @@ export default () => ({
         (ct) =>
           (ct.uid.startsWith('api::') ||
             ct.uid === 'plugin::users-permissions.user') &&
-          !excludes.includes(ct.uid)
+          !excludes.includes(ct.uid),
       ) // chỉ lấy custom content types và users
       .map((ct) => ({
         uid: ct.uid, // ví dụ: "api::account.account"
@@ -62,31 +62,31 @@ export default () => ({
   async getCRMContentTypes(): Promise<ContentTypeType[]> {
     const contentType = await this.getContentTypes();
     return contentType.filter(
-      (ct) => !this.systemContentTypes().includes(ct.uid)
+      (ct) => !this.systemContentTypes().includes(ct.uid),
     );
   },
 
   async getContentTypeFromCollectionName(
-    collectionName
-  ): Promise<ContentTypeType> {
+    collectionName: string,
+  ): Promise<ContentTypeType | null> {
     const contentType = Object.values(strapi.contentTypes).find(
-      (ct) => ct.collectionName === collectionName
+      (ct) => ct.collectionName === collectionName,
     );
 
-    return contentType;
+    return contentType || null;
   },
 
-  async getContentTypeFromUid(uid): Promise<ContentTypeType> {
+  async getContentTypeFromUid(uid: string): Promise<ContentTypeType | null> {
     const contentType = Object.values(strapi.contentTypes).find(
-      (ct) => ct.uid === uid
+      (ct) => ct.uid === uid,
     );
 
-    return contentType;
+    return contentType || null;
   },
 
   async getContentTypeConfiguration(
     uid: any,
-    type: string = 'content_types'
+    type: string = 'content_types',
   ): Promise<ContentTypeConfigurationType> {
     const config = await strapi.db.query('strapi::core-store').findOne({
       where: {
@@ -180,7 +180,7 @@ export default () => ({
     for await (const component of Object.values(strapi.components)) {
       const config = await this.getContentTypeConfiguration(
         component.uid,
-        'components'
+        'components',
       );
       components.push({
         uid: component.uid,

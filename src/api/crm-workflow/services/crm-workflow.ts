@@ -1,11 +1,51 @@
 import { factories } from '@strapi/strapi';
-import { WorkflowType } from './../types';
+import { ContentTypeType } from '../../metadata/types';
+import { WorkflowConditionType, WorkflowType } from './../types';
 
 export default factories.createCoreService(
   'api::crm-workflow.crm-workflow',
   ({ strapi }) => ({
     async getWorkflowConditionsRecords(workflow: WorkflowType): Promise<any[]> {
-      return [];
+      interface WorkflowConditionGroupType {
+        conditions: WorkflowConditionType[];
+        operator: string;
+      }
+
+      const conditions: WorkflowConditionGroupType[] =
+        workflow.metadata?.conditions || [];
+      if (!conditions.length) {
+        return [];
+      }
+
+      const contentType: ContentTypeType | null = await strapi
+        .service('api::metadata.metadata')
+        .getContentTypeFromCollectionName(workflow.module);
+      if (!contentType) {
+        return [];
+      }
+
+      const where = {};
+      conditions.forEach((condition) => {
+        const groupOperator = '$' + (condition.operator || 'and');
+        where[groupOperator] = [];
+        condition.conditions.forEach((c) => {
+          const operator = '$' + (c.operator || 'eq');
+          where[groupOperator].push({
+            [c.field]: {
+              [operator]: c.value,
+            },
+          });
+        });
+      });
+
+      if (Object.keys(where).length === 0) {
+        return [];
+      }
+
+      const uid = contentType.uid;
+      return await strapi.db.query(uid).findMany({
+        where,
+      });
     },
 
     async run(workflow: WorkflowType) {

@@ -25,3 +25,9 @@ export interface WorkflowActionRunResult {
   status: string;
   metadata: Record<string, any>;
 }
+
+export interface WorkflowConditionType {
+  field: string;
+  value: string;
+  operator: string;
+}
