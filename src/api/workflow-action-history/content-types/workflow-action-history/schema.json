@@ -1,20 +1,20 @@
 {
   "kind": "collectionType",
-  "collectionName": "campaign_action_histories",
+  "collectionName": "workflow_action_histories",
   "info": {
-    "singularName": "campaign-action-history",
-    "pluralName": "campaign-action-histories",
-    "displayName": "Campaign Action History"
+    "singularName": "workflow-action-history",
+    "pluralName": "workflow-action-histories",
+    "displayName": "Workflow Action History"
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "campaign_action": {
+    "workflow_action": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::campaign-action.campaign-action"
+      "target": "api::crm-workflow-action.crm-workflow-action"
     },
     "run_status": {
       "type": "string"

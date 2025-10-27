@@ -21,6 +21,10 @@
       "type": "string",
       "required": true
     },
+    "is_repeat": {
+      "type": "boolean",
+      "default": false
+    },
     "action_status": {
       "type": "enumeration",
       "enum": [
