@@ -21,19 +21,24 @@
       "type": "string",
       "required": true
     },
-    "is_repeat": {
-      "type": "boolean",
-      "default": false
-    },
     "action_status": {
+      "type": "enumeration",
+      "default": "Active",
+      "enum": [
+        "Active",
+        "Inactive"
+      ]
+    },
+    "run_status": {
       "type": "enumeration",
       "enum": [
         "Ready",
-        "Queue",
-        "Running",
-        "Completed",
-        "Failed"
+        "Running"
       ]
+    },
+    "is_repeat": {
+      "type": "boolean",
+      "default": false
     },
     "run_at": {
       "type": "datetime"

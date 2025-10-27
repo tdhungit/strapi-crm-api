@@ -19,12 +19,6 @@
     "run_status": {
       "type": "string"
     },
-    "module": {
-      "type": "string"
-    },
-    "record_id": {
-      "type": "integer"
-    },
     "metadata": {
       "type": "json"
     }

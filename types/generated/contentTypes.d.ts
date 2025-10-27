@@ -572,9 +572,7 @@ export interface ApiCampaignActionHistoryCampaignActionHistory
     > &
       Schema.Attribute.Private;
     metadata: Schema.Attribute.JSON;
-    module: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    record_id: Schema.Attribute.Integer;
     run_status: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1019,9 +1017,8 @@ export interface ApiCrmWorkflowActionCrmWorkflowAction
     draftAndPublish: false;
   };
   attributes: {
-    action_status: Schema.Attribute.Enumeration<
-      ['Ready', 'Queue', 'Running', 'Completed', 'Failed']
-    >;
+    action_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1036,12 +1033,49 @@ export interface ApiCrmWorkflowActionCrmWorkflowAction
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     run_at: Schema.Attribute.DateTime;
+    run_status: Schema.Attribute.Enumeration<['Ready', 'Running']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     workflow: Schema.Attribute.Relation<
       'manyToOne',
       'api::crm-workflow.crm-workflow'
+    >;
+  };
+}
+
+export interface ApiCrmWorkflowHistoryCrmWorkflowHistory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'crm_workflow_histories';
+  info: {
+    displayName: 'Workflow History';
+    pluralName: 'crm-workflow-histories';
+    singularName: 'crm-workflow-history';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::crm-workflow-history.crm-workflow-history'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    module: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    record_id: Schema.Attribute.Integer;
+    run_status: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    workflow_action: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::crm-workflow-action.crm-workflow-action'
     >;
   };
 }
@@ -1072,6 +1106,7 @@ export interface ApiCrmWorkflowCrmWorkflow extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     run_at: Schema.Attribute.DateTime;
+    run_status: Schema.Attribute.Enumeration<['Ready', 'Running']>;
     trigger: Schema.Attribute.Enumeration<
       [
         'beforeCreate',
@@ -2786,42 +2821,6 @@ export interface ApiWarehouseWarehouse extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiWorkflowActionHistoryWorkflowActionHistory
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'workflow_action_histories';
-  info: {
-    displayName: 'Workflow Action History';
-    pluralName: 'workflow-action-histories';
-    singularName: 'workflow-action-history';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::workflow-action-history.workflow-action-history'
-    > &
-      Schema.Attribute.Private;
-    metadata: Schema.Attribute.JSON;
-    module: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    record_id: Schema.Attribute.Integer;
-    run_status: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    workflow_action: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::crm-workflow-action.crm-workflow-action'
-    >;
-  };
-}
-
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -3396,6 +3395,7 @@ declare module '@strapi/strapi' {
       'api::country.country': ApiCountryCountry;
       'api::coupon.coupon': ApiCouponCoupon;
       'api::crm-workflow-action.crm-workflow-action': ApiCrmWorkflowActionCrmWorkflowAction;
+      'api::crm-workflow-history.crm-workflow-history': ApiCrmWorkflowHistoryCrmWorkflowHistory;
       'api::crm-workflow.crm-workflow': ApiCrmWorkflowCrmWorkflow;
       'api::dashboard-item.dashboard-item': ApiDashboardItemDashboardItem;
       'api::dashboard.dashboard': ApiDashboardDashboard;
@@ -3436,7 +3436,6 @@ declare module '@strapi/strapi' {
       'api::timeline.timeline': ApiTimelineTimeline;
       'api::vendor.vendor': ApiVendorVendor;
       'api::warehouse.warehouse': ApiWarehouseWarehouse;
-      'api::workflow-action-history.workflow-action-history': ApiWorkflowActionHistoryWorkflowActionHistory;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

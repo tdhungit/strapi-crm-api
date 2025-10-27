@@ -22,6 +22,7 @@ export default factories.createCoreController(
             module: data.module,
             trigger: data.trigger,
             workflow_status: data.workflow_status || 'Active',
+            run_status: 'Ready',
             run_at: data.run_at ? new Date(data.run_at) : null,
             metadata: data.metadata || {},
           },
@@ -35,7 +36,8 @@ export default factories.createCoreController(
               data: {
                 workflow: entry.id,
                 name: action.name,
-                action_status: 'Ready',
+                action_status: action.action_status || 'Active',
+                run_status: 'Ready',
                 is_repeat: action.is_repeat || false,
                 metadata: action.metadata || {},
               },
@@ -88,7 +90,7 @@ export default factories.createCoreController(
                 },
                 data: {
                   name: action.name,
-                  action_status: 'Ready',
+                  action_status: action.action_status || 'Active',
                   is_repeat: action.is_repeat || false,
                   metadata: action.metadata || {},
                 },
@@ -100,7 +102,8 @@ export default factories.createCoreController(
                 data: {
                   workflow: entry.id,
                   name: action.name,
-                  action_status: 'Ready',
+                  action_status: action.action_status || 'Active',
+                  run_status: 'Ready',
                   is_repeat: action.is_repeat || false,
                   metadata: action.metadata || {},
                 },

@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "workflow_action_histories",
+  "collectionName": "crm_workflow_histories",
   "info": {
-    "singularName": "workflow-action-history",
-    "pluralName": "workflow-action-histories",
-    "displayName": "Workflow Action History"
+    "singularName": "crm-workflow-history",
+    "pluralName": "crm-workflow-histories",
+    "displayName": "Workflow History"
   },
   "options": {
     "draftAndPublish": false
@@ -16,14 +16,14 @@
       "relation": "oneToOne",
       "target": "api::crm-workflow-action.crm-workflow-action"
     },
-    "run_status": {
-      "type": "string"
-    },
     "module": {
       "type": "string"
     },
     "record_id": {
       "type": "integer"
+    },
+    "run_status": {
+      "type": "string"
     },
     "metadata": {
       "type": "json"

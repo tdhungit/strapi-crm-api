@@ -43,6 +43,13 @@
         "Inactive"
       ]
     },
+    "run_status": {
+      "type": "enumeration",
+      "enum": [
+        "Ready",
+        "Running"
+      ]
+    },
     "run_at": {
       "type": "datetime"
     },
