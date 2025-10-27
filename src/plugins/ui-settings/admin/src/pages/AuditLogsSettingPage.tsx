@@ -58,7 +58,7 @@ export default function AuditLogsSettingPage() {
 
   return (
     <div>
-      <Typography fontSize={24}>Audit Logs Settings</Typography>
+      <Typography variant='beta'>Audit Logs Settings</Typography>
 
       <Flex gap={4} direction='row' alignItems='flex-start' marginTop={4}>
         <Box background='neutral0'>

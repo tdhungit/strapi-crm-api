@@ -24,9 +24,9 @@ export default function ChatBoxSettings() {
     });
   }, [fetchClient]);
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: any) => {
     const { name, value } = event.target;
-    setSettings((prev) => ({
+    setSettings((prev: any) => ({
       ...prev,
       [name]: value,
     }));
@@ -48,7 +48,7 @@ export default function ChatBoxSettings() {
 
   return (
     <div>
-      <Typography variant='epsilon'>ChatBox Settings</Typography>
+      <Typography variant='beta'>ChatBox Settings</Typography>
 
       <Box
         marginTop={4}

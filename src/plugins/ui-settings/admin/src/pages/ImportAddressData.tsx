@@ -35,7 +35,7 @@ export default function ImportAddressData() {
 
   return (
     <div>
-      <Typography fontSize={24}>Import/Update Address Data</Typography>
+      <Typography variant='beta'>Import/Update Address Data</Typography>
 
       <Box marginTop={4}>
         <Typography variant='delta' fontWeight='bold'>

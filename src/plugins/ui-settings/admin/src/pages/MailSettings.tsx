@@ -1,9 +1,9 @@
 import {
   Box,
   Button,
-  Combobox,
-  ComboboxOption,
   Field,
+  SingleSelect,
+  SingleSelectOption,
   TextInput,
   Typography,
 } from '@strapi/design-system';
@@ -47,7 +47,7 @@ export default function MailSettings() {
   return (
     <div>
       <Box style={{ flexDirection: 'column', display: 'flex', gap: 16 }}>
-        <Typography variant='epsilon'>Mail Configuration</Typography>
+        <Typography variant='beta'>Mail Configuration</Typography>
 
         <Box
           borderColor={'gray'}
@@ -124,9 +124,9 @@ export default function MailSettings() {
         >
           <Field.Root>
             <Field.Label>Mail Service</Field.Label>
-            <Combobox
+            <SingleSelect
               value={settings.service || ''}
-              onChange={(value) => {
+              onValueChange={(value) => {
                 setSettings((prev: any) => ({
                   ...prev,
                   service: value,
@@ -134,11 +134,11 @@ export default function MailSettings() {
               }}
             >
               {mailServices.map((service: any) => (
-                <ComboboxOption key={service.value} value={service.value}>
+                <SingleSelectOption key={service.value} value={service.value}>
                   {service.name}
-                </ComboboxOption>
+                </SingleSelectOption>
               ))}
-            </Combobox>
+            </SingleSelect>
           </Field.Root>
           {settings.service === 'SendGrid' && (
             <>

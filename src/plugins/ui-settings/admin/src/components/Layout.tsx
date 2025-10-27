@@ -36,7 +36,21 @@ export default function Layout() {
                   icon={<Cog />}
                   onClick={() => navigation('/plugins/ui-settings')}
                 >
-                  System Settings
+                  CRM Settings
+                </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname ===
+                    '/plugins/ui-settings/ecommerce-site-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Cog />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/ecommerce-site-settings')
+                  }
+                >
+                  ECommerce Settings
                 </SubNavLink>
                 <SubNavLink
                   className={
@@ -88,6 +102,20 @@ export default function Layout() {
                   }
                 >
                   Firebase Config
+                </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname ===
+                    '/plugins/ui-settings/supabase-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/supabase-settings')
+                  }
+                >
+                  Supabase Settings
                 </SubNavLink>
                 <SubNavLink
                   className={

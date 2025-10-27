@@ -6,7 +6,7 @@ import {
   TextInput,
   Typography,
 } from '@strapi/design-system';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function FirebaseSettings() {
   const fetchClient = useFetchClient();
@@ -24,9 +24,9 @@ export default function FirebaseSettings() {
     });
   }, [fetchClient]);
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setSettings((prev) => ({
+    setSettings((prev: any) => ({
       ...prev,
       [name]: value,
     }));
@@ -44,7 +44,7 @@ export default function FirebaseSettings() {
 
   return (
     <div>
-      <Typography variant='epsilon'>Firebase Configuration</Typography>
+      <Typography variant='beta'>Firebase Configuration</Typography>
       <Box
         marginTop={4}
         style={{ flexDirection: 'column', display: 'flex', gap: 16 }}
@@ -145,7 +145,7 @@ export default function FirebaseSettings() {
                     headers: { 'Content-Type': 'multipart/form-data' },
                   },
                 );
-                setSettings((prev) => ({
+                setSettings((prev: any) => ({
                   ...prev,
                   serviceAccountJson: uploadRes.data.path,
                 }));

@@ -1,5 +1,12 @@
 import { useFetchClient } from '@strapi/admin/strapi-admin';
-import { Box, Button, Field, Flex, TextInput } from '@strapi/design-system';
+import {
+  Box,
+  Button,
+  Field,
+  Flex,
+  TextInput,
+  Typography,
+} from '@strapi/design-system';
 import { useEffect, useState } from 'react';
 
 const defaultSettings = {
@@ -12,7 +19,7 @@ const SettingsPage = () => {
   const [settings, setSettings] = useState(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<any>({});
 
   const fetchClient = useFetchClient();
   const { get, post } = fetchClient;
@@ -35,7 +42,7 @@ const SettingsPage = () => {
   }, []);
 
   // Handle input changes
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setSettings((prev) => ({
       ...prev,
       [field]: value,
@@ -43,7 +50,7 @@ const SettingsPage = () => {
 
     // Clear error for this field
     if (errors[field]) {
-      setErrors((prev) => ({
+      setErrors((prev: any) => ({
         ...prev,
         [field]: null,
       }));
@@ -80,6 +87,10 @@ const SettingsPage = () => {
 
   return (
     <Box>
+      <div style={{ marginBottom: 16 }}>
+        <Typography variant='beta'>CRM Settings</Typography>
+      </div>
+
       <Field.Root>
         <Field.Label>Page Title</Field.Label>
         <TextInput
