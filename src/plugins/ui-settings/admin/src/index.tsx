@@ -1,15 +1,14 @@
 import { Eye } from '@strapi/icons';
-import React from 'react';
 import pluginId from './pluginId';
 
 export default {
-  register(app) {
+  register(app: any) {
     app.addMenuLink({
       to: `/plugins/${pluginId}`,
       icon: () => <Eye />,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
-        defaultMessage: 'UI Settings',
+        defaultMessage: 'CRM Settings',
       },
       Component: async () => {
         const component = await import('./pages');
@@ -20,11 +19,11 @@ export default {
 
     app.registerPlugin({
       id: pluginId,
-      name: 'UI Settings',
+      name: 'CRM Settings',
     });
   },
 
-  async bootstrap(app) {
+  async bootstrap(app: any) {
     let config: any = {};
     try {
       const res = await fetch('/ui-settings/config', {
@@ -34,7 +33,7 @@ export default {
       });
       config = await res.json();
     } catch (error) {
-      console.error('Error fetching UI settings config:', error);
+      console.error('Error fetching CRM settings config:', error);
     }
 
     const applyConfig = () => {

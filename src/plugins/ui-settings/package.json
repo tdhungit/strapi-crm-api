@@ -1,12 +1,12 @@
 {
   "name": "ui-settings",
   "version": "1.0.0",
-  "description": "UI Settings plugin for Strapi CRM",
+  "description": "CRM Settings plugin for Strapi CRM",
   "main": "./strapi-server.js",
   "strapi": {
     "name": "ui-settings",
-    "displayName": "UI Settings",
-    "description": "Customize UI settings like page title and favicon",
+    "displayName": "CRM Settings",
+    "description": "Customize CRM settings like page title and favicon",
     "kind": "plugin"
   },
   "dependencies": {},
