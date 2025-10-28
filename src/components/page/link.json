@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_page_links",
+  "info": {
+    "displayName": "Link"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "href": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "richtext"
+    },
+    "target": {
+      "type": "enumeration",
+      "default": "_blank",
+      "enum": [
+        "none",
+        "_blank"
+      ]
+    }
+  },
+  "config": {}
+}

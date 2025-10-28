@@ -42,6 +42,11 @@
     },
     "footer": {
       "type": "string"
+    },
+    "socials": {
+      "type": "component",
+      "component": "page.link",
+      "repeatable": true
     }
   }
 }

@@ -28,11 +28,26 @@ export interface PageBanner extends Struct.ComponentSchema {
   };
 }
 
+export interface PageLink extends Struct.ComponentSchema {
+  collectionName: 'components_page_links';
+  info: {
+    displayName: 'Link';
+  };
+  attributes: {
+    href: Schema.Attribute.String;
+    icon: Schema.Attribute.RichText;
+    target: Schema.Attribute.Enumeration<['none', '_blank']> &
+      Schema.Attribute.DefaultTo<'_blank'>;
+    title: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'common.address': CommonAddress;
       'page.banner': PageBanner;
+      'page.link': PageLink;
     }
   }
 }

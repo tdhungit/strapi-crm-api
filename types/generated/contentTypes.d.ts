@@ -1312,6 +1312,7 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     slogan: Schema.Attribute.String;
+    socials: Schema.Attribute.Component<'page.link', true>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
