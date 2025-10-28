@@ -1306,10 +1306,7 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
       'api::global-setting.global-setting'
     > &
       Schema.Attribute.Private;
-    logo: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
+    logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
     slogan: Schema.Attribute.String;
     socials: Schema.Attribute.Component<'page.link', true>;
