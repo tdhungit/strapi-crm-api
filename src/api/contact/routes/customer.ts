@@ -18,6 +18,14 @@ export default {
     },
     {
       method: 'POST',
+      path: '/customers/contact/register-from-supabase',
+      handler: 'customer.contactRegisterFromSupabase',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
       path: '/customers/contact/login',
       handler: 'customer.contactLogin',
       config: {
@@ -26,8 +34,8 @@ export default {
     },
     {
       method: 'GET',
-      path: '/customers/contact/firebase-config',
-      handler: 'customer.getFirebaseConfig',
+      path: '/customers/contact/ecommerce-config',
+      handler: 'customer.getECommerceConfig',
       config: {
         auth: false,
       },

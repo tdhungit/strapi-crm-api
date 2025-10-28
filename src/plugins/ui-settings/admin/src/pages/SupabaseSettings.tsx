@@ -67,6 +67,24 @@ export default function SupabaseSettings() {
             onChange={handleInputChange}
           />
         </Field.Root>
+        <Field.Root>
+          <Field.Label>Publishable key</Field.Label>
+          <TextInput
+            placeholder='Enter your publishable key'
+            name='publishableKey'
+            value={settings.publishableKey || ''}
+            onChange={handleInputChange}
+          />
+        </Field.Root>
+        <Field.Root>
+          <Field.Label>Secret key</Field.Label>
+          <TextInput
+            placeholder='Enter your secret key'
+            name='secretKey'
+            value={settings.secretKey || ''}
+            onChange={handleInputChange}
+          />
+        </Field.Root>
         <Button onClick={handleSave} marginTop={4}>
           Save
         </Button>

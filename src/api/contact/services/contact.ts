@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi';
+import { SupabaseClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 
 export default factories.createCoreService(
@@ -91,18 +92,34 @@ export default factories.createCoreService(
     },
 
     async mergeSocial2Local(
+      authService: string,
       login_provider: string,
       login_provider_id: string,
-      firebaseToken: string,
+      token: string,
     ) {
-      const { auth } = await strapi
-        .service('api::setting.firebase')
-        .getFirebaseApp();
-      const decoded = await auth.verifyIdToken(firebaseToken);
-      const { uid, email } = decoded;
+      let uid: string = '';
+      let email: string = '';
+
+      if (authService === 'firebase') {
+        const { auth } = await strapi
+          .service('api::setting.firebase')
+          .getFirebaseApp();
+        const decoded = await auth.verifyIdToken(token);
+        uid = decoded.uid;
+        email = decoded.email;
+      } else {
+        const supabase: SupabaseClient = await strapi
+          .service('api::setting.supabase')
+          .getApp();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser(token);
+        uid = user.id;
+        email = user.email;
+      }
 
       if (!uid || !email) {
-        throw new Error('Invalid Firebase token');
+        throw new Error('Invalid ' + authService + ' token');
       }
 
       const contact = await strapi.db.query('api::contact.contact').findOne({

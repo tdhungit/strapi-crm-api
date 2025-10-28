@@ -1,3 +1,4 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Context } from 'koa';
 import { comparePassword, hashPassword } from '../../../helpers/utils';
 
@@ -120,21 +121,79 @@ export default {
     };
   },
 
+  async contactRegisterFromSupabase(ctx: Context) {
+    const { accessToken: token, login_provider } = ctx.request.body;
+
+    if (!token) {
+      return ctx.badRequest('Missing required fields: token');
+    }
+
+    const supabase: SupabaseClient = await strapi
+      .service('api::setting.supabase')
+      .getApp();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error) {
+      return ctx.badRequest('Invalid token');
+    }
+
+    if (!user) {
+      return ctx.badRequest('User not found');
+    }
+
+    let code = 'new';
+    let contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { email: user.email },
+    });
+
+    if (!contact) {
+      code = 'new';
+      contact = await strapi.db.query('api::contact.contact').create({
+        data: {
+          email: user.email,
+          login_provider: login_provider,
+          login_provider_sid: user.id,
+        },
+      });
+    } else {
+      code = 'confirm_merge';
+      if (
+        contact.login_provider === login_provider &&
+        contact.login_provider_sid === user.id
+      ) {
+        code = 'exist';
+      }
+    }
+
+    const appToken = await strapi
+      .service('api::contact.contact')
+      .generateLoginToken(contact);
+
+    return {
+      code,
+      token: appToken,
+      sid: user.id,
+    };
+  },
+
   async contactMergeSocial2Local(ctx: Context) {
-    const { login_provider, login_provider_id, firebaseToken } =
+    const { login_provider, login_provider_id, token, authService } =
       ctx.request.body;
-    if (!login_provider || !login_provider_id || !firebaseToken) {
+    if (!login_provider || !login_provider_id || !authService || !token) {
       return ctx.badRequest(
-        'Missing required fields: login_provider, login_provider_id, firebaseToken',
+        'Missing required fields: login_provider, login_provider_id, authService, token',
       );
     }
 
-    const token = await strapi
+    const appToken = await strapi
       .service('api::contact.contact')
-      .mergeSocial2Local(login_provider, login_provider_id, firebaseToken);
+      .mergeSocial2Local(authService, login_provider, login_provider_id, token);
 
-    if (token) {
-      return { token };
+    if (appToken) {
+      return { token: appToken };
     } else {
       return ctx.badRequest('Invalid Firebase token');
     }
@@ -216,12 +275,27 @@ export default {
     return { message: 'Password changed successfully' };
   },
 
-  async getFirebaseConfig(ctx: Context) {
-    const firebaseConfig = await strapi
+  async getECommerceConfig(ctx: Context) {
+    const eCommerceConfig = await strapi
       .service('api::setting.setting')
-      .getSettings('system', 'firebase');
-    const config = firebaseConfig.firebase || {};
-    delete config.serviceAccountJson;
+      .getSettings('system', 'ecommerce');
+    const config = eCommerceConfig.ecommerce || {};
+
+    if (config.authService === 'firebase') {
+      const firebaseConfig = await strapi
+        .service('api::setting.setting')
+        .getSettings('system', 'firebase');
+      const firebaseConfigData = firebaseConfig.firebase || {};
+      delete firebaseConfigData.serviceAccountJson;
+      config.firebase = firebaseConfigData;
+    } else if (config.authService === 'supabase') {
+      const supabaseConfig = await strapi
+        .service('api::setting.setting')
+        .getSettings('system', 'supabase');
+      const supabaseConfigData = supabaseConfig.supabase || {};
+      config.supabase = supabaseConfigData;
+    }
+
     return config;
   },
 
