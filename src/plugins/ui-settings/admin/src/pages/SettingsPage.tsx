@@ -4,6 +4,8 @@ import {
   Button,
   Field,
   Flex,
+  SingleSelect,
+  SingleSelectOption,
   TextInput,
   Typography,
 } from '@strapi/design-system';
@@ -13,6 +15,7 @@ const defaultSettings = {
   pageTitle: '',
   pageSubtitle: '',
   favicon: '',
+  thirdPartyService: '',
 };
 
 const SettingsPage = () => {
@@ -22,23 +25,21 @@ const SettingsPage = () => {
   const [errors, setErrors] = useState<any>({});
 
   const fetchClient = useFetchClient();
-  const { get, post } = fetchClient;
 
   // Load current settings
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        setIsLoading(true);
-        const response = await get('/ui-settings/config');
-        setSettings(response?.data || defaultSettings);
-      } catch (error) {
-        console.error('Error loading settings:', error);
-      } finally {
+    setIsLoading(true);
+    fetchClient
+      .get('/ui-settings/config')
+      .then((res) => {
+        setSettings(res?.data || defaultSettings);
+      })
+      .catch((err) => {
+        console.error('Error loading settings:', err);
+      })
+      .finally(() => {
         setIsLoading(false);
-      }
-    };
-
-    loadSettings();
+      });
   }, []);
 
   // Handle input changes
@@ -57,27 +58,11 @@ const SettingsPage = () => {
     }
   };
 
-  // Validate form
-  const validateForm = () => {
-    const newErrors: any = {};
-
-    if (!settings.pageTitle.trim()) {
-      newErrors.pageTitle = 'Page title is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   // Save settings
   const handleSave = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
     try {
       setIsSaving(true);
-      await post('/ui-settings/config', settings);
+      await fetchClient.post('/ui-settings/config', settings);
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {
@@ -91,75 +76,89 @@ const SettingsPage = () => {
         <Typography variant='beta'>CRM Settings</Typography>
       </div>
 
-      <Field.Root>
-        <Field.Label>Page Title</Field.Label>
-        <TextInput
-          name='pageTitle'
-          placeholder='Page Title'
-          value={settings.pageTitle}
-          onChange={(e) => handleInputChange('pageTitle', e.target.value)}
-          style={{ width: '100%', marginRight: 10 }}
-        />
-      </Field.Root>
+      <div style={{ flexDirection: 'column', display: 'flex', gap: 16 }}>
+        <Field.Root>
+          <Field.Label>Page Title</Field.Label>
+          <TextInput
+            name='pageTitle'
+            placeholder='Page Title'
+            value={settings.pageTitle}
+            onChange={(e) => handleInputChange('pageTitle', e.target.value)}
+          />
+        </Field.Root>
 
-      <Field.Root style={{ marginTop: 15 }}>
-        <Field.Label>Page Subtitle</Field.Label>
-        <TextInput
-          name='pageSubtitle'
-          placeholder='Page Subtitle'
-          value={settings.pageSubtitle}
-          onChange={(e) => handleInputChange('pageSubtitle', e.target.value)}
-          style={{ width: '100%', marginRight: 10 }}
-        />
-      </Field.Root>
+        <Field.Root>
+          <Field.Label>Page Subtitle</Field.Label>
+          <TextInput
+            name='pageSubtitle'
+            placeholder='Page Subtitle'
+            value={settings.pageSubtitle}
+            onChange={(e) => handleInputChange('pageSubtitle', e.target.value)}
+          />
+        </Field.Root>
 
-      <Field.Root style={{ marginTop: 15 }}>
-        <Field.Label>Favicon</Field.Label>
-        <TextInput
-          name='favicon'
-          value={settings?.favicon || ''}
-          onChange={(e) => handleInputChange('favicon', e.target.value)}
-          placeholder='Paste favicon URL or upload below'
-          style={{ width: '100%', marginBottom: 8 }}
-        />
-        <input
-          type='file'
-          accept='image/x-icon,image/png,image/jpeg'
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            setIsSaving(true);
-            const formData = new FormData();
-            formData.append('file', file);
-            try {
-              const uploadRes = await post(
-                '/ui-settings/upload-favicon',
-                formData,
-                {
-                  headers: { 'Content-Type': 'multipart/form-data' },
-                },
-              );
-              handleInputChange('favicon', uploadRes?.data?.url || '');
-            } catch (error) {
-              console.error('Error uploading favicon:', error);
-            } finally {
-              setIsSaving(false);
-            }
-          }}
-          style={{ marginTop: 8 }}
-        />
-        {settings.favicon && (
-          <Box style={{ marginTop: 8 }}>
-            <img
-              src={settings.favicon}
-              alt='Favicon preview'
-              style={{ width: 32, height: 32 }}
-            />
-          </Box>
-        )}
-      </Field.Root>
+        <Field.Root>
+          <Field.Label>Favicon</Field.Label>
+          <TextInput
+            name='favicon'
+            value={settings?.favicon || ''}
+            onChange={(e) => handleInputChange('favicon', e.target.value)}
+            placeholder='Paste favicon URL or upload below'
+          />
+          <input
+            type='file'
+            accept='image/x-icon,image/png,image/jpeg'
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              setIsSaving(true);
+              const formData = new FormData();
+              formData.append('file', file);
+              try {
+                const uploadRes = await fetchClient.post(
+                  '/ui-settings/upload-favicon',
+                  formData,
+                  {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                  },
+                );
+                handleInputChange('favicon', uploadRes?.data?.url || '');
+              } catch (error) {
+                console.error('Error uploading favicon:', error);
+              } finally {
+                setIsSaving(false);
+              }
+            }}
+          />
+          {settings.favicon && (
+            <Box style={{ marginTop: 8 }}>
+              <img
+                src={settings.favicon}
+                alt='Favicon preview'
+                style={{ width: 32, height: 32 }}
+              />
+            </Box>
+          )}
+        </Field.Root>
 
-      <Flex style={{ marginTop: 15, flexDirection: 'column' }}>
+        <Field.Root>
+          <Field.Label>Authentication Service</Field.Label>
+          <SingleSelect
+            value={settings.thirdPartyService}
+            onValueChange={(value) => {
+              setSettings((prev: any) => ({
+                ...prev,
+                thirdPartyService: value,
+              }));
+            }}
+          >
+            <SingleSelectOption value='firebase'>Firebase</SingleSelectOption>
+            <SingleSelectOption value='supabase'>Supabase</SingleSelectOption>
+          </SingleSelect>
+        </Field.Root>
+      </div>
+
+      <Flex style={{ marginTop: 15, width: '100%' }}>
         <Button
           onClick={handleSave}
           loading={isSaving}

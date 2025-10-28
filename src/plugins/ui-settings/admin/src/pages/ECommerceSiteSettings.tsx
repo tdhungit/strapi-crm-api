@@ -68,15 +68,7 @@ export default function ECommerceSiteSettings() {
           <Typography variant='epsilon'>Authentication</Typography>
           <Field.Root>
             <Field.Label>Authentication Service</Field.Label>
-            <SingleSelect
-              value={settings.authService}
-              onValueChange={(value) => {
-                setSettings((prev: any) => ({
-                  ...prev,
-                  authService: value,
-                }));
-              }}
-            >
+            <SingleSelect value={settings.authService} disabled>
               <SingleSelectOption value='firebase'>Firebase</SingleSelectOption>
               <SingleSelectOption value='supabase'>Supabase</SingleSelectOption>
             </SingleSelect>

@@ -26,6 +26,7 @@ module.exports = {
             key: `plugin_ui-settings_config`,
           },
         });
+
         if (settings) {
           await store.update({
             where: {
@@ -43,6 +44,33 @@ module.exports = {
             },
           });
         }
+
+        // Update e-commerce setting auth service
+        if (ctx.request.body.thirdPartyService) {
+          const eCommerceSetting = await strapi.db
+            .query('api::setting.setting')
+            .findOne({
+              where: {
+                category: 'system',
+                name: 'ecommerce',
+              },
+            });
+
+          if (eCommerceSetting?.values) {
+            await strapi.db.query('api::setting.setting').update({
+              where: {
+                id: eCommerceSetting.id,
+              },
+              data: {
+                values: {
+                  ...eCommerceSetting.values,
+                  authService: ctx.request.body.thirdPartyService,
+                },
+              },
+            });
+          }
+        }
+
         return { status: 'ok' };
       } catch (error) {
         console.error('Error setting UI settings config:', error);
