@@ -149,5 +149,25 @@ export default factories.createCoreService(
 
       return this.getSettings(category);
     },
+
+    async getCRMSettings() {
+      try {
+        const store = strapi.db.query('strapi::core-store');
+        const settings = await store.findOne({
+          where: {
+            key: `plugin_ui-settings_config`,
+          },
+        });
+        if (settings?.value) {
+          if (typeof settings.value === 'string') {
+            return JSON.parse(settings.value);
+          }
+          return settings.value;
+        }
+        return {};
+      } catch (error) {
+        return {};
+      }
+    },
   }),
 );

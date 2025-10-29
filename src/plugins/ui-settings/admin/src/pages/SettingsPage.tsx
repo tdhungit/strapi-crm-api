@@ -142,7 +142,41 @@ const SettingsPage = () => {
         </Field.Root>
 
         <Field.Root>
-          <Field.Label>Authentication Service</Field.Label>
+          <Field.Label>Third Party Service (auth & notifications)</Field.Label>
+          {settings.thirdPartyService === 'firebase' && (
+            <div>
+              <Typography variant='pi'>
+                Firebase is a third party service that handles authentication
+                and notifications. Please configure it in the Firebase console
+                and add the configuration to "Firebase Settings".
+              </Typography>
+            </div>
+          )}
+          {settings.thirdPartyService === 'supabase' && (
+            <div>
+              <Typography variant='pi'>
+                Supabase is a third party service that handles authentication
+                and notifications. Please configure it in the Supabase console
+                and add the configuration to "Supabase Settings".
+              </Typography>
+              <br />
+              <Typography variant='pi' color={'red'}>
+                Please add <strong>notifications (Enable Realtime)</strong>{' '}
+                table to your Supabase database. Please disable RLS or Add
+                Policy The table should have the following columns:
+                <br />
+                <ul style={{ paddingLeft: 16, fontStyle: 'italic' }}>
+                  <li>id (uuid, primary key)</li>
+                  <li>user_id (number, foreign key to users)</li>
+                  <li>title (text)</li>
+                  <li>body (text)</li>
+                  <li>timestamp (timestamp)</li>
+                  <li>pushed (boolean)</li>
+                  <li>read (boolean)</li>
+                </ul>
+              </Typography>
+            </div>
+          )}
           <SingleSelect
             value={settings.thirdPartyService}
             onValueChange={(value) => {

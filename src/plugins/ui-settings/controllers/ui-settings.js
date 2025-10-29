@@ -1,21 +1,7 @@
 module.exports = {
   'ui-settings': {
     async getConfig(ctx) {
-      try {
-        const store = strapi.db.query('strapi::core-store');
-        const settings = await store.findOne({
-          where: {
-            key: `plugin_ui-settings_config`,
-          },
-        });
-        if (settings?.value) {
-          return settings.value;
-        }
-        return {};
-      } catch (error) {
-        console.error('Error getting UI settings config:', error);
-        return {};
-      }
+      return await strapi.service('api::setting.setting').getCRMSettings();
     },
 
     async setConfig(ctx) {

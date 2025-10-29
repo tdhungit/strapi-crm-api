@@ -101,7 +101,7 @@ export default function Layout() {
                     navigation('/plugins/ui-settings/firebase-config')
                   }
                 >
-                  Firebase Config
+                  Firebase Settings
                 </SubNavLink>
                 <SubNavLink
                   className={
