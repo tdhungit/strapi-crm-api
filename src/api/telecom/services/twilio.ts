@@ -292,4 +292,78 @@ export default {
 
     return { message: 'no action', TaskAssignmentStatus };
   },
+
+  async sendSms({ to, body }) {
+    const settings = await this.getSettings();
+    const { phoneNumber: from } = settings;
+
+    try {
+      const client = await this.getClient(settings);
+      const message = await client.messages.create({
+        body,
+        from,
+        to,
+      });
+
+      const messageData = message.toJSON();
+
+      return await strapi.db.query('api::telecom.telecom').create({
+        data: {
+          type: 'sms',
+          service: 'twilio',
+          sid: message.sid,
+          metadata: messageData,
+          from,
+          to: message.to,
+          direction: 'outbound',
+          type_status: message.status,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  },
+
+  async receiveSMS(
+    data = {
+      ToCountry: '',
+      ToState: '',
+      SmsMessageSid: '',
+      NumMedia: '0',
+      ToCity: '',
+      FromZip: '',
+      SmsSid: '',
+      FromState: '',
+      SmsStatus: 'received',
+      FromCity: '',
+      Body: 'body',
+      FromCountry: 'US',
+      To: '+1...',
+      ToZip: '',
+      NumSegments: '1',
+      MessageSid: '',
+      AccountSid: '',
+      From: '+1...',
+      ApiVersion: '2010-04-01',
+    },
+  ) {
+    if (data.SmsMessageSid) {
+      await strapi.db.query('api::telecom.telecom').create({
+        data: {
+          type: 'sms',
+          direction: 'inbound',
+          from: data.From,
+          to: data.To,
+          body: data.Body,
+          service: 'Twilio',
+          sid: data.SmsSid,
+          metadata: data,
+        },
+      });
+    }
+
+    // return xml response
+    return '<Response></Response>';
+  },
 };

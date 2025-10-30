@@ -1,6 +1,24 @@
 import { Context } from 'koa';
 
 export default {
+  async sendSMS(ctx: Context) {
+    const { to, body } = ctx.request.body;
+
+    if (!to || !body) {
+      ctx.status = 400;
+      ctx.body = { error: 'Missing to or body' };
+      return;
+    }
+
+    return await strapi.service('api::telecom.twilio').sendSMS({ to, body });
+  },
+
+  async smsHandler(ctx: Context) {
+    return await strapi
+      .service('api::telecom.twilio')
+      .receiveSMS(ctx.request.body);
+  },
+
   async getToken(ctx: Context) {
     const { identity, workspaceSid, workerSid } = ctx.request.body;
 
