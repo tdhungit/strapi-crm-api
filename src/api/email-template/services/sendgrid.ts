@@ -48,6 +48,12 @@ export default () => ({
       },
       subject,
       text,
+      headers: {
+        X_Mail_ID: options.mailId || '',
+      },
+      customArgs: {
+        X_Mail_ID: options.mailId || '',
+      },
     };
 
     await sendgrid.send(msg);
@@ -75,6 +81,12 @@ export default () => ({
       subject,
       dynamic_template_data: {
         content,
+      },
+      headers: {
+        X_Mail_ID: options.mailId || '',
+      },
+      customArgs: {
+        X_Mail_ID: options.mailId || '',
       },
     }));
 
@@ -124,15 +136,27 @@ export default () => ({
       const subject = await strapi
         .service('api::email-template.email-template')
         .parseContent(template.title, item.data);
+
       const content = await strapi
         .service('api::email-template.email-template')
         .parseContent(template.content, item.data);
+
+      let mailId = options.mailId || '';
+      if (item.data?.id) {
+        mailId = `${mailId}:${item.data.id}`;
+      }
 
       personalizations.push({
         to: [{ email: item.to }],
         subject,
         dynamic_template_data: {
           content,
+        },
+        headers: {
+          X_Mail_ID: mailId,
+        },
+        customArgs: {
+          X_Mail_ID: mailId,
         },
       });
     }

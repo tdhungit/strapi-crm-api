@@ -1,4 +1,5 @@
 export interface SendMailOptions {
+  mailId?: string;
   from?: string;
   fromName?: string;
   replyTo?: string;

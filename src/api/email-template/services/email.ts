@@ -11,6 +11,10 @@ export default () => ({
     ];
   },
 
+  getMailID() {
+    return Date.now() + Math.random().toString(36).substring(2, 15);
+  },
+
   async send(
     to: string,
     subject: string,
@@ -51,6 +55,9 @@ export default () => ({
           replyTo: options.replyTo || undefined,
           cc: options.cc || undefined,
           bcc: options.bcc || undefined,
+          headers: {
+            X_Mail_ID: options.mailId || this.getMailID(),
+          },
         },
         emailTemplate,
         data,
@@ -109,6 +116,9 @@ export default () => ({
           replyTo: options.replyTo || undefined,
           cc: options.cc || undefined,
           bcc: options.bcc || undefined,
+          headers: {
+            X_Mail_ID: options.mailId || this.getMailID(),
+          },
         },
         emailTemplate,
         data,
@@ -162,6 +172,11 @@ export default () => ({
       };
 
       for await (const item of data) {
+        let mailId = options.mailId || this.getMailID();
+        if (item.data?.id) {
+          mailId = `${mailId}:${item.data.id}`;
+        }
+
         await strapi.plugins['email'].services.email.sendTemplatedEmail(
           {
             to: item.to,
@@ -169,6 +184,9 @@ export default () => ({
             replyTo: options.replyTo || undefined,
             cc: options.cc || undefined,
             bcc: options.bcc || undefined,
+            headers: {
+              X_Mail_ID: mailId,
+            },
           },
           emailTemplate,
           item.data,
