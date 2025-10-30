@@ -40,11 +40,24 @@ export default () => ({
 
     const service = setting.service || 'default';
 
-    if (service === 'SendGrid') {
-      await strapi
-        .service('api::email-template.sendgrid')
-        .send(to, subject, ejsString, data, options);
-      return;
+    switch (service) {
+      case 'SendGrid':
+        await strapi
+          .service('api::email-template.sendgrid')
+          .send(to, subject, ejsString, data, options);
+        return;
+      case 'Mailchimp':
+        await strapi
+          .service('api::email-template.mailchimp')
+          .send(to, subject, ejsString, data, options);
+        return;
+      case 'Mailgun':
+        await strapi
+          .service('api::email-template.mailgun')
+          .send(to, subject, ejsString, data, options);
+        return;
+      default:
+        break;
     }
 
     options.from = options.from || setting.from || undefined;
@@ -87,11 +100,24 @@ export default () => ({
 
     const service = setting.service || 'default';
 
-    if (service === 'SendGrid') {
-      await strapi
-        .service('api::email-template.sendgrid')
-        .sendTemplate(to, templateId, data, options);
-      return;
+    switch (service) {
+      case 'SendGrid':
+        await strapi
+          .service('api::email-template.sendgrid')
+          .sendTemplate(to, templateId, data, options);
+        return;
+      case 'Mailchimp':
+        await strapi
+          .service('api::email-template.mailchimp')
+          .sendTemplate(to, templateId, data, options);
+        return;
+      case 'Mailgun':
+        await strapi
+          .service('api::email-template.mailgun')
+          .sendTemplate(to, templateId, data, options);
+        return;
+      default:
+        break;
     }
 
     const template = await strapi.db
@@ -143,11 +169,24 @@ export default () => ({
 
     const service = setting.service || 'default';
 
-    if (service === 'SendGrid') {
-      await strapi
-        .service('api::email-template.sendgrid')
-        .sendMultiple(templateId, data, options);
-      return;
+    switch (service) {
+      case 'SendGrid':
+        await strapi
+          .service('api::email-template.sendgrid')
+          .sendMultiple(templateId, data, options);
+        return;
+      case 'Mailchimp':
+        await strapi
+          .service('api::email-template.mailchimp')
+          .sendMultiple(templateId, data, options);
+        return;
+      case 'Mailgun':
+        await strapi
+          .service('api::email-template.mailgun')
+          .sendMultiple(templateId, data, options);
+        return;
+      default:
+        break;
     }
 
     let template = options?.template || null;

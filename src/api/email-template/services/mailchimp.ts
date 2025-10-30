@@ -119,6 +119,16 @@ export default {
       throw new Error('Mailchimp API key is not configured');
     }
 
+    let template = options?.template || null;
+    if (!template) {
+      template = await strapi.db
+        .query('api::email-template.email-template')
+        .findOne({
+          where: { id: templateId },
+        });
+      options.template = template;
+    }
+
     const mailchimp = new MailchimpTransactional(setting.Mailchimp.apiKey);
 
     for await (const item of data) {

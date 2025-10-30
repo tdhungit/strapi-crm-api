@@ -235,6 +235,79 @@ export default function MailSettings() {
               </Field.Root>
             </>
           )}
+
+          {settings.service === 'Mailgun' && (
+            <>
+              <Field.Root>
+                <Field.Label>Mailgun API Key</Field.Label>
+                <TextInput
+                  placeholder='Enter mailgun api key'
+                  name='apiKey'
+                  value={settings.Mailgun?.apiKey || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      Mailgun: {
+                        ...(prev.Mailgun || {}),
+                        apiKey: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>Domain</Field.Label>
+                <TextInput
+                  placeholder='Enter mailgun domain'
+                  name='domain'
+                  value={settings.Mailgun?.domain || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      Mailgun: {
+                        ...(prev.Mailgun || {}),
+                        domain: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>Username</Field.Label>
+                <TextInput
+                  placeholder='Enter mailgun username'
+                  name='username'
+                  value={settings.Mailgun?.username || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      Mailgun: {
+                        ...(prev.Mailgun || {}),
+                        username: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>Webhook Token</Field.Label>
+                <TextInput
+                  placeholder='Enter webhook token'
+                  name='webhookToken'
+                  value={settings.Mailgun?.webhookToken || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      Mailgun: {
+                        ...(prev.Mailgun || {}),
+                        webhookToken: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+            </>
+          )}
         </Box>
 
         <Button

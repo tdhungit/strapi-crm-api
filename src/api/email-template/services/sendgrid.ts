@@ -158,6 +158,7 @@ export default () => ({
         .findOne({
           where: { id: templateId },
         });
+      options.template = template;
     }
 
     const personalizations = [];
