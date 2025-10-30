@@ -158,7 +158,54 @@ export default {
     }
 
     const calls = await this.getChildrenCalls(CallSid);
-    // @TODO
+    if (!calls || calls.length === 0) {
+      return;
+    }
+
+    const settings = await this.getSettings();
+    const { phoneNumber } = settings;
+
+    calls.forEach(async (call) => {
+      let from = call.from;
+      if (from.indexOf(':') > 0) {
+        from = from.split(':')[1];
+      }
+
+      let to = call.to;
+      if (to.indexOf(':') > 0) {
+        to = to.split(':')[1];
+      }
+
+      let direction = 'inbound';
+      if (from === phoneNumber) {
+        direction = 'outbound';
+      }
+
+      strapi.db
+        .query('api::telecom.telecom')
+        .create({
+          data: {
+            service: 'twilio',
+            sid: call.sid,
+            type: 'call',
+            direction,
+            from,
+            to,
+            duration: parseInt(call.duration),
+            type_status: call.status,
+            start_time: new Date(call.startTime),
+            end_time: new Date(call.endTime),
+            answered_by: call.answeredBy || '',
+            meta: call,
+          },
+        })
+        .then(() => {
+          // Handle success
+        })
+        .catch((error) => {
+          console.error('Error creating telecom record:', error);
+        });
+    });
   },
 
   async taskrouterAssignmentCallback(

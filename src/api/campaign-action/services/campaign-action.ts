@@ -10,7 +10,7 @@ export default factories.createCoreService(
           where: {
             action_status: 'Queue',
           },
-          populate: ['campaign'],
+          populate: ['campaign.assigned_user'],
         });
 
       actions.forEach(async (action) => {

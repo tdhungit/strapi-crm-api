@@ -1674,10 +1674,6 @@ export interface ApiMailHistoryMailHistory extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    assigned_user: Schema.Attribute.Relation<
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
     clicked: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     createdAt: Schema.Attribute.DateTime;
@@ -2698,6 +2694,45 @@ export interface ApiSupplierSupplier extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTelecomTelecom extends Struct.CollectionTypeSchema {
+  collectionName: 'telecoms';
+  info: {
+    displayName: 'Telecom';
+    pluralName: 'telecoms';
+    singularName: 'telecom';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    answered_by: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    direction: Schema.Attribute.String;
+    duration: Schema.Attribute.Float;
+    end_time: Schema.Attribute.DateTime;
+    from: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::telecom.telecom'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    service: Schema.Attribute.String & Schema.Attribute.Required;
+    sid: Schema.Attribute.String & Schema.Attribute.Required;
+    start_time: Schema.Attribute.DateTime;
+    to: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.String & Schema.Attribute.Required;
+    type_status: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTimelineTimeline extends Struct.CollectionTypeSchema {
   collectionName: 'timelines';
   info: {
@@ -3393,6 +3428,7 @@ declare module '@strapi/strapi' {
       'api::state.state': ApiStateState;
       'api::static-page.static-page': ApiStaticPageStaticPage;
       'api::supplier.supplier': ApiSupplierSupplier;
+      'api::telecom.telecom': ApiTelecomTelecom;
       'api::timeline.timeline': ApiTimelineTimeline;
       'api::vendor.vendor': ApiVendorVendor;
       'api::warehouse.warehouse': ApiWarehouseWarehouse;

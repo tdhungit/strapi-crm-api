@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "telecoms",
+  "info": {
+    "singularName": "telecom",
+    "pluralName": "telecoms",
+    "displayName": "Telecom"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "to": {
+      "type": "string",
+      "required": true
+    },
+    "from": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "type_status": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "float"
+    },
+    "start_time": {
+      "type": "datetime"
+    },
+    "end_time": {
+      "type": "datetime"
+    },
+    "answered_by": {
+      "type": "string"
+    },
+    "service": {
+      "type": "string",
+      "required": true
+    },
+    "sid": {
+      "type": "string",
+      "required": true
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

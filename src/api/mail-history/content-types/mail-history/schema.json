@@ -49,11 +49,6 @@
     "metadata": {
       "type": "json"
     },
-    "assigned_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
-    },
     "source": {
       "type": "string"
     },

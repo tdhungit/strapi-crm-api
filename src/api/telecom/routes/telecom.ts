@@ -1,13 +1,7 @@
-export default {
-  routes: [
-    // {
-    //  method: 'GET',
-    //  path: '/telecom',
-    //  handler: 'telecom.exampleAction',
-    //  config: {
-    //    policies: [],
-    //    middlewares: [],
-    //  },
-    // },
-  ],
-};
+/**
+ * telecom router
+ */
+
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreRouter('api::telecom.telecom');
