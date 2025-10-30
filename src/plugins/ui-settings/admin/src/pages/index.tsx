@@ -10,6 +10,7 @@ import MailSettings from './MailSettings';
 import RedisSettings from './RedisSettings';
 import SettingsPage from './SettingsPage';
 import SupabaseSettings from './SupabaseSettings';
+import TwilioSettings from './TwilioSettings';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path='/redis-settings' element={<RedisSettings />} />
         <Route path='/chatbox-settings' element={<ChatBoxSettings />} />
         <Route path='/supabase-settings' element={<SupabaseSettings />} />
+        <Route path='/twilio-settings' element={<TwilioSettings />} />
       </Route>
       <Route path='*' element={<Page.Error />} />
     </Routes>

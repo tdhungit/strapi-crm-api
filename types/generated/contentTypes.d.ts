@@ -443,7 +443,7 @@ export interface ApiAccountAccount extends Struct.CollectionTypeSchema {
   attributes: {
     address: Schema.Attribute.Component<'common.address', false>;
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     contacts: Schema.Attribute.Relation<'oneToMany', 'api::contact.contact'>;
@@ -523,7 +523,7 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
   attributes: {
     action: Schema.Attribute.String & Schema.Attribute.Required;
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -628,7 +628,7 @@ export interface ApiCampaignActionCampaignAction
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -646,7 +646,7 @@ export interface ApiCampaignCampaign extends Struct.CollectionTypeSchema {
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     campaign_actions: Schema.Attribute.Relation<
@@ -843,7 +843,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
     address: Schema.Attribute.Component<'common.address', false>;
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     avatar: Schema.Attribute.String;
@@ -1250,7 +1250,7 @@ export interface ApiEmailTemplateEmailTemplate
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     content: Schema.Attribute.RichText;
@@ -1366,7 +1366,7 @@ export interface ApiImportImport extends Struct.CollectionTypeSchema {
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -1620,7 +1620,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   attributes: {
     address: Schema.Attribute.Component<'common.address', false>;
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     campaigns: Schema.Attribute.Relation<
@@ -1675,7 +1675,7 @@ export interface ApiMailHistoryMailHistory extends Struct.CollectionTypeSchema {
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
@@ -1724,7 +1724,7 @@ export interface ApiNoteNote extends Struct.CollectionTypeSchema {
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -1759,7 +1759,7 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
     account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
     amount: Schema.Attribute.Decimal;
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     closeDate: Schema.Attribute.Date;
@@ -2008,7 +2008,7 @@ export interface ApiProductPriceListProductPriceList
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -2270,7 +2270,7 @@ export interface ApiPurchaseOrderPurchaseOrder
   };
   attributes: {
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -2377,7 +2377,7 @@ export interface ApiSaleOrderSaleOrder extends Struct.CollectionTypeSchema {
   attributes: {
     account: Schema.Attribute.Relation<'manyToOne', 'api::account.account'>;
     assigned_user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     contact: Schema.Attribute.Relation<'manyToOne', 'api::contact.contact'>;
@@ -2733,7 +2733,7 @@ export interface ApiTimelineTimeline extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -3276,20 +3276,9 @@ export interface PluginUsersPermissionsUser
     draftAndPublish: false;
   };
   attributes: {
-    accounts: Schema.Attribute.Relation<'oneToMany', 'api::account.account'>;
-    audit_logs: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::audit-log.audit-log'
-    >;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    campaign_actions: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::campaign-action.campaign-action'
-    >;
-    campaigns: Schema.Attribute.Relation<'oneToMany', 'api::campaign.campaign'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    contacts: Schema.Attribute.Relation<'oneToMany', 'api::contact.contact'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -3302,22 +3291,12 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    email_templates: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::email-template.email-template'
-    >;
-    imports: Schema.Attribute.Relation<'oneToMany', 'api::import.import'>;
-    leads: Schema.Attribute.Relation<'oneToMany', 'api::lead.lead'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
-    mail_histories: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::mail-history.mail-history'
-    >;
     manager: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
@@ -3326,37 +3305,19 @@ export interface PluginUsersPermissionsUser
       'oneToMany',
       'plugin::users-permissions.user'
     >;
-    notes: Schema.Attribute.Relation<'oneToMany', 'api::note.note'>;
-    opportunities: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::opportunity.opportunity'
-    >;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    product_price_lists: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::product-price-list.product-price-list'
-    >;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    purchase_orders: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::purchase-order.purchase-order'
-    >;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    sale_orders: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::sale-order.sale-order'
-    >;
     settings: Schema.Attribute.Relation<'oneToMany', 'api::setting.setting'>;
-    timelines: Schema.Attribute.Relation<'oneToMany', 'api::timeline.timeline'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -3366,6 +3327,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 3;
       }>;
+    worker_sid: Schema.Attribute.String;
   };
 }
 

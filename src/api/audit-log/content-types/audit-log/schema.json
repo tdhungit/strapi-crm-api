@@ -36,9 +36,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "audit_logs"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

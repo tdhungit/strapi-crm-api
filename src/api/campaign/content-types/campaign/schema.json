@@ -32,9 +32,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "campaigns"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "description": {
       "type": "richtext"

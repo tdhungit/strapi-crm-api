@@ -74,9 +74,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "opportunities"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

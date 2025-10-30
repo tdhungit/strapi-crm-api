@@ -31,9 +31,8 @@
     },
     "user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "timelines"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "metadata": {
       "type": "json"

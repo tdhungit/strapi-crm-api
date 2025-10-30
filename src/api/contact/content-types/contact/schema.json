@@ -84,9 +84,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "contacts"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "account": {
       "type": "relation",

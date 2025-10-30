@@ -132,6 +132,19 @@ export default function Layout() {
                 </SubNavLink>
                 <SubNavLink
                   className={
+                    location.pathname === '/plugins/ui-settings/twilio-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/twilio-settings')
+                  }
+                >
+                  Twilio Settings
+                </SubNavLink>
+                <SubNavLink
+                  className={
                     location.pathname ===
                     '/plugins/ui-settings/chatbox-settings'
                       ? 'active'

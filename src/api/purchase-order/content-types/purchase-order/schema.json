@@ -14,18 +14,11 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "purchase_date": {
       "type": "date",
-      "required": true,
-      "column": {
-        "notNullable": true
-      }
+      "required": true
     },
     "order_status": {
       "type": "enumeration",
@@ -38,10 +31,7 @@
         "Approved",
         "Rejected",
         "Completed"
-      ],
-      "column": {
-        "notNullable": true
-      }
+      ]
     },
     "supplier": {
       "type": "relation",
@@ -56,7 +46,10 @@
     "discount_type": {
       "type": "enumeration",
       "default": "amount",
-      "enum": ["amount", "percentage"]
+      "enum": [
+        "amount",
+        "percentage"
+      ]
     },
     "discount_amount": {
       "type": "decimal",
@@ -65,7 +58,10 @@
     "tax_type": {
       "type": "enumeration",
       "default": "amount",
-      "enum": ["amount", "percentage"]
+      "enum": [
+        "amount",
+        "percentage"
+      ]
     },
     "tax_amount": {
       "type": "decimal",
@@ -91,9 +87,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "purchase_orders"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

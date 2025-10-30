@@ -1,0 +1,5 @@
+/**
+ * telecom service
+ */
+
+export default () => ({});

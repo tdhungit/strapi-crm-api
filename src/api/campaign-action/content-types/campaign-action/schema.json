@@ -17,9 +17,8 @@
     },
     "user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "campaign_actions"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "campaign": {
       "type": "relation",

@@ -66,23 +66,8 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "imports": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::import.import",
-      "mappedBy": "assigned_user"
-    },
-    "accounts": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::account.account",
-      "mappedBy": "assigned_user"
-    },
-    "contacts": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::contact.contact",
-      "mappedBy": "assigned_user"
+    "worker_sid": {
+      "type": "string"
     },
     "members": {
       "type": "relation",
@@ -96,12 +81,6 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "members"
     },
-    "audit_logs": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::audit-log.audit-log",
-      "mappedBy": "assigned_user"
-    },
     "department": {
       "type": "relation",
       "relation": "manyToOne",
@@ -113,72 +92,6 @@
       "relation": "oneToMany",
       "target": "api::setting.setting",
       "mappedBy": "user"
-    },
-    "opportunities": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::opportunity.opportunity",
-      "mappedBy": "assigned_user"
-    },
-    "notes": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::note.note",
-      "mappedBy": "assigned_user"
-    },
-    "email_templates": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::email-template.email-template",
-      "mappedBy": "assigned_user"
-    },
-    "mail_histories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::mail-history.mail-history",
-      "mappedBy": "assigned_user"
-    },
-    "campaigns": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::campaign.campaign",
-      "mappedBy": "assigned_user"
-    },
-    "campaign_actions": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::campaign-action.campaign-action",
-      "mappedBy": "user"
-    },
-    "purchase_orders": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::purchase-order.purchase-order",
-      "mappedBy": "assigned_user"
-    },
-    "product_price_lists": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product-price-list.product-price-list",
-      "mappedBy": "user"
-    },
-    "sale_orders": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::sale-order.sale-order",
-      "mappedBy": "assigned_user"
-    },
-    "timelines": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::timeline.timeline",
-      "mappedBy": "user"
-    },
-    "leads": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::lead.lead",
-      "mappedBy": "assigned_user"
     }
   }
 }

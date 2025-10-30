@@ -29,11 +29,7 @@
     "email": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "phone": {
       "type": "string"
@@ -89,9 +85,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "leads"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

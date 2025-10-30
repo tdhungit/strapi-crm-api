@@ -14,11 +14,7 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "column": {
-        "unique": true,
-        "notNullable": true
-      }
+      "unique": true
     },
     "shortName": {
       "type": "string"
@@ -77,9 +73,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "accounts"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "contacts": {
       "type": "relation",

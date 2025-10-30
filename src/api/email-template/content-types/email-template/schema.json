@@ -42,9 +42,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "email_templates"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "mail_histories": {
       "type": "relation",

@@ -87,9 +87,8 @@
     },
     "assigned_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "sale_orders"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "sale_order_details": {
       "type": "relation",
