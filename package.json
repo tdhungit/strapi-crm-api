@@ -19,6 +19,7 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
+    "@mailchimp/mailchimp_transactional": "^1.0.59",
     "@paypal/paypal-server-sdk": "1.1.0",
     "@sendgrid/mail": "^8.1.6",
     "@strapi/plugin-cloud": "5.27.0",

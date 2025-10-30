@@ -26,7 +26,16 @@ export default () => ({
     text: string,
     options?: SendMailOptions,
   ) {
-    const setting = await this.getSettings();
+    let setting: any;
+    if (!options?.settings) {
+      setting = await this.getSettings();
+    } else {
+      setting = options.settings;
+    }
+
+    if (!setting?.SendGrid?.apiKey) {
+      throw new Error('SendGrid API key is not configured');
+    }
 
     if (options?.contentType === 'template') {
       text = await strapi
@@ -65,7 +74,17 @@ export default () => ({
     data: any = {},
     options?: SendMailOptions,
   ) {
-    const setting = await this.getSettings();
+    let setting: any;
+    if (!options?.settings) {
+      setting = await this.getSettings();
+    } else {
+      setting = options.settings;
+    }
+
+    if (!setting?.SendGrid?.apiKey) {
+      throw new Error('SendGrid API key is not configured');
+    }
+
     if (!setting?.SendGrid?.templateId) {
       throw new Error('SendGrid template id is not configured');
     }
@@ -115,7 +134,17 @@ export default () => ({
     data: SendMailMultipleDataType[],
     options?: SendMailOptions,
   ) {
-    const setting = await this.getSettings();
+    let setting: any;
+    if (!options?.settings) {
+      setting = await this.getSettings();
+    } else {
+      setting = options.settings;
+    }
+
+    if (!setting?.SendGrid?.apiKey) {
+      throw new Error('SendGrid API key is not configured');
+    }
+
     if (!setting?.SendGrid?.templateId) {
       throw new Error('SendGrid template id is not configured');
     }

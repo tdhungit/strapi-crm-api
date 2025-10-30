@@ -140,6 +140,7 @@ export default function MailSettings() {
               ))}
             </SingleSelect>
           </Field.Root>
+
           {settings.service === 'SendGrid' && (
             <>
               <Field.Root>
@@ -171,6 +172,62 @@ export default function MailSettings() {
                       SendGrid: {
                         ...(prev.SendGrid || {}),
                         templateId: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>SendGrid Webhook Token</Field.Label>
+                <TextInput
+                  placeholder='Enter send grid webhook token'
+                  name='webhookToken'
+                  value={settings.SendGrid?.webhookToken || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      SendGrid: {
+                        ...(prev.SendGrid || {}),
+                        webhookToken: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+            </>
+          )}
+
+          {settings.service === 'Mailchimp' && (
+            <>
+              <Field.Root>
+                <Field.Label>Mailchimp API Key</Field.Label>
+                <TextInput
+                  placeholder='Enter mailchimp api key'
+                  name='apiKey'
+                  value={settings.Mailchimp?.apiKey || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      Mailchimp: {
+                        ...(prev.Mailchimp || {}),
+                        apiKey: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>Webhook Token</Field.Label>
+                <TextInput
+                  placeholder='Enter webhook token'
+                  name='webhookToken'
+                  value={settings.Mailchimp?.webhookToken || ''}
+                  onChange={(e) => {
+                    setSettings((prev: any) => ({
+                      ...prev,
+                      Mailchimp: {
+                        ...(prev.Mailchimp || {}),
+                        webhookToken: e.target.value,
                       },
                     }));
                   }}

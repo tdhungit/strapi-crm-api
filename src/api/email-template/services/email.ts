@@ -8,6 +8,14 @@ export default () => ({
         name: 'SendGrid',
         value: 'SendGrid',
       },
+      {
+        name: 'Mailchimp',
+        value: 'Mailchimp',
+      },
+      {
+        name: 'Mailgun',
+        value: 'Mailgun',
+      },
     ];
   },
 
@@ -30,7 +38,7 @@ export default () => ({
       .getSettings('system', 'mail');
     const setting = settings?.mail || {};
 
-    const service = setting.service || 'SMTP';
+    const service = setting.service || 'default';
 
     if (service === 'SendGrid') {
       await strapi
@@ -39,32 +47,28 @@ export default () => ({
       return;
     }
 
-    if (service === 'SMTP') {
-      options.from = options.from || setting.from || undefined;
-      options.replyTo = options.replyTo || setting.replyTo || undefined;
+    options.from = options.from || setting.from || undefined;
+    options.replyTo = options.replyTo || setting.replyTo || undefined;
 
-      const emailTemplate = {
-        subject: subject,
-        html: ejsString,
-      };
+    const emailTemplate = {
+      subject: subject,
+      html: ejsString,
+    };
 
-      await strapi.plugins['email'].services.email.sendTemplatedEmail(
-        {
-          to,
-          from: options.from || undefined,
-          replyTo: options.replyTo || undefined,
-          cc: options.cc || undefined,
-          bcc: options.bcc || undefined,
-          headers: {
-            X_Mail_ID: options.mailId || this.getMailID(),
-          },
+    await strapi.plugins['email'].services.email.sendTemplatedEmail(
+      {
+        to,
+        from: options.from || undefined,
+        replyTo: options.replyTo || undefined,
+        cc: options.cc || undefined,
+        bcc: options.bcc || undefined,
+        headers: {
+          X_Mail_ID: options.mailId || this.getMailID(),
         },
-        emailTemplate,
-        data,
-      );
-
-      return;
-    }
+      },
+      emailTemplate,
+      data,
+    );
   },
 
   async sendTemplate(
@@ -81,7 +85,7 @@ export default () => ({
       .getSettings('system', 'mail');
     const setting = settings?.mail || {};
 
-    const service = setting.service || 'SMTP';
+    const service = setting.service || 'default';
 
     if (service === 'SendGrid') {
       await strapi
@@ -90,42 +94,38 @@ export default () => ({
       return;
     }
 
-    if (service === 'SMTP') {
-      const template = await strapi.db
-        .query('api::email-template.email-template')
-        .findOne({
-          where: { id: templateId },
-        });
+    const template = await strapi.db
+      .query('api::email-template.email-template')
+      .findOne({
+        where: { id: templateId },
+      });
 
-      if (!template) {
-        throw new Error('Template not found');
-      }
-
-      options.from = options.from || setting.from || undefined;
-      options.replyTo = options.replyTo || setting.replyTo || undefined;
-
-      const emailTemplate = {
-        subject: template.title,
-        html: template.content,
-      };
-
-      await strapi.plugins['email'].services.email.sendTemplatedEmail(
-        {
-          to,
-          from: options.from || undefined,
-          replyTo: options.replyTo || undefined,
-          cc: options.cc || undefined,
-          bcc: options.bcc || undefined,
-          headers: {
-            X_Mail_ID: options.mailId || this.getMailID(),
-          },
-        },
-        emailTemplate,
-        data,
-      );
-
-      return;
+    if (!template) {
+      throw new Error('Template not found');
     }
+
+    options.from = options.from || setting.from || undefined;
+    options.replyTo = options.replyTo || setting.replyTo || undefined;
+
+    const emailTemplate = {
+      subject: template.title,
+      html: template.content,
+    };
+
+    await strapi.plugins['email'].services.email.sendTemplatedEmail(
+      {
+        to,
+        from: options.from || undefined,
+        replyTo: options.replyTo || undefined,
+        cc: options.cc || undefined,
+        bcc: options.bcc || undefined,
+        headers: {
+          X_Mail_ID: options.mailId || this.getMailID(),
+        },
+      },
+      emailTemplate,
+      data,
+    );
   },
 
   async sendMultiple(
@@ -141,7 +141,7 @@ export default () => ({
       .getSettings('system', 'mail');
     const setting = settings?.mail || {};
 
-    const service = setting.service || 'SMTP';
+    const service = setting.service || 'default';
 
     if (service === 'SendGrid') {
       await strapi
@@ -150,50 +150,46 @@ export default () => ({
       return;
     }
 
-    if (service === 'SMTP') {
-      let template = options?.template || null;
-      if (!template) {
-        template = await strapi.db
-          .query('api::email-template.email-template')
-          .findOne({
-            where: { id: templateId },
-          });
+    let template = options?.template || null;
+    if (!template) {
+      template = await strapi.db
+        .query('api::email-template.email-template')
+        .findOne({
+          where: { id: templateId },
+        });
+    }
+
+    if (!template) {
+      throw new Error('Template not found');
+    }
+
+    options.from = options.from || setting.from || undefined;
+    options.replyTo = options.replyTo || setting.replyTo || undefined;
+    const emailTemplate = {
+      subject: template.title,
+      html: template.content,
+    };
+
+    for await (const item of data) {
+      let mailId = options.mailId || this.getMailID();
+      if (item.data?.id) {
+        mailId = `${mailId}:${item.data.id}`;
       }
 
-      if (!template) {
-        throw new Error('Template not found');
-      }
-
-      options.from = options.from || setting.from || undefined;
-      options.replyTo = options.replyTo || setting.replyTo || undefined;
-      const emailTemplate = {
-        subject: template.title,
-        html: template.content,
-      };
-
-      for await (const item of data) {
-        let mailId = options.mailId || this.getMailID();
-        if (item.data?.id) {
-          mailId = `${mailId}:${item.data.id}`;
-        }
-
-        await strapi.plugins['email'].services.email.sendTemplatedEmail(
-          {
-            to: item.to,
-            from: options.from || undefined,
-            replyTo: options.replyTo || undefined,
-            cc: options.cc || undefined,
-            bcc: options.bcc || undefined,
-            headers: {
-              X_Mail_ID: mailId,
-            },
+      await strapi.plugins['email'].services.email.sendTemplatedEmail(
+        {
+          to: item.to,
+          from: options.from || undefined,
+          replyTo: options.replyTo || undefined,
+          cc: options.cc || undefined,
+          bcc: options.bcc || undefined,
+          headers: {
+            X_Mail_ID: mailId,
           },
-          emailTemplate,
-          item.data,
-        );
-      }
-
-      return;
+        },
+        emailTemplate,
+        item.data,
+      );
     }
   },
 
@@ -223,13 +219,12 @@ export default () => ({
     for (let i = 0; i < totalBatches; i++) {
       const batch = data.slice(i * batchSize, (i + 1) * batchSize);
 
-      this.sendMultiple(templateId, batch, options)
-        .then(() => {
-          console.log(`Batch ${i + 1} sent successfully`);
-        })
-        .catch((err: any) => {
-          console.log(`Batch ${i + 1} sent failed`, err);
-        });
+      try {
+        await this.sendMultiple(templateId, batch, options);
+        console.log(`Batch ${i + 1} sent successfully`);
+      } catch (error) {
+        console.log(`Batch ${i + 1} sent failed`, error);
+      }
 
       await wait(1000);
     }

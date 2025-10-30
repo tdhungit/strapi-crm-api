@@ -9,6 +9,7 @@ export interface SendMailOptions {
   contentType?: string;
   data?: any;
   template?: any;
+  settings?: any;
 }
 
 export interface SendMailMultipleDataType {
