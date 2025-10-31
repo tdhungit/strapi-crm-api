@@ -26,11 +26,11 @@ export default {
     settings?: any,
   ) {
     settings = settings || (await this.getSettings());
-    const { accountSid, apiKey, apiSecret, twimlAppSid } = settings;
+    const { accountSid, apiKey, apiSecret, twimlSid } = settings;
 
-    if (!accountSid || !apiKey || !apiSecret || !twimlAppSid) {
+    if (!accountSid || !apiKey || !apiSecret || !twimlSid) {
       throw new Error(
-        'Twilio accountSid, apiKey, apiSecret, and twimlAppSid are required',
+        'Twilio accountSid, apiKey, apiSecret, and twimlSid are required',
       );
     }
 
@@ -39,7 +39,7 @@ export default {
     });
 
     const voiceGrant = new twilio.jwt.AccessToken.VoiceGrant({
-      outgoingApplicationSid: twimlAppSid,
+      outgoingApplicationSid: twimlSid,
       incomingAllow: true,
     });
 

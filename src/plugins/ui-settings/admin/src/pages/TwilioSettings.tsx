@@ -1,5 +1,11 @@
 import { useFetchClient } from '@strapi/admin/strapi-admin';
-import { Box, Field, TextInput, Typography } from '@strapi/design-system';
+import {
+  Box,
+  Button,
+  Field,
+  TextInput,
+  Typography,
+} from '@strapi/design-system';
 import { useEffect, useState } from 'react';
 
 export default function TwilioSettings() {
@@ -101,6 +107,17 @@ export default function TwilioSettings() {
           />
         </Field.Root>
         <Field.Root>
+          <Field.Label>TWIML SID</Field.Label>
+          <TextInput
+            type='text'
+            name='twimlSid'
+            value={settings.twimlSid || ''}
+            onChange={(e) => {
+              setSettings({ ...settings, twimlSid: e.target.value });
+            }}
+          />
+        </Field.Root>
+        <Field.Root>
           <Field.Label>Workspace SID</Field.Label>
           <TextInput
             type='text'
@@ -133,6 +150,10 @@ export default function TwilioSettings() {
             }}
           />
         </Field.Root>
+
+        <Button type='button' disabled={loading} onClick={handleSave}>
+          Save
+        </Button>
       </Box>
     </div>
   );

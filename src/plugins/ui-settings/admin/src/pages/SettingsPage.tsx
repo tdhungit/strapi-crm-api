@@ -16,6 +16,7 @@ const defaultSettings = {
   pageSubtitle: '',
   favicon: '',
   thirdPartyService: '',
+  telecomProvider: '',
 };
 
 const SettingsPage = () => {
@@ -188,6 +189,21 @@ const SettingsPage = () => {
           >
             <SingleSelectOption value='firebase'>Firebase</SingleSelectOption>
             <SingleSelectOption value='supabase'>Supabase</SingleSelectOption>
+          </SingleSelect>
+        </Field.Root>
+
+        <Field.Root>
+          <Field.Label>Telecom Provider (SMS & Phone Call)</Field.Label>
+          <SingleSelect
+            value={settings.telecomProvider}
+            onValueChange={(value) => {
+              setSettings((prev: any) => ({
+                ...prev,
+                telecomProvider: value,
+              }));
+            }}
+          >
+            <SingleSelectOption value='twilio'>Twilio</SingleSelectOption>
           </SingleSelect>
         </Field.Root>
       </div>
