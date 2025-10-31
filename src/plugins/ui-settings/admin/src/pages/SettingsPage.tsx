@@ -203,6 +203,7 @@ const SettingsPage = () => {
               }));
             }}
           >
+            <SingleSelectOption value=''>None</SingleSelectOption>
             <SingleSelectOption value='twilio'>Twilio</SingleSelectOption>
           </SingleSelect>
         </Field.Root>

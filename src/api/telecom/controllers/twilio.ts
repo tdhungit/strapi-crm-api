@@ -35,7 +35,7 @@ export default {
       .service('api::telecom.twilio')
       .getAccessToken(identity, workspaceSid, workerSid);
 
-    return { token };
+    return { token, identity, workspaceSid, workerSid };
   },
 
   async voiceHandler(ctx: Context) {
