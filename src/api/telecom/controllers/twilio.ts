@@ -2,7 +2,8 @@ import { Context } from 'koa';
 
 export default {
   async sendSMS(ctx: Context) {
-    const { to, body } = ctx.request.body;
+    const { to, body, module, recordId } = ctx.request.body;
+    const user = ctx.state.user;
 
     if (!to || !body) {
       ctx.status = 400;
@@ -10,7 +11,9 @@ export default {
       return;
     }
 
-    return await strapi.service('api::telecom.twilio').sendSMS({ to, body });
+    return await strapi
+      .service('api::telecom.twilio')
+      .sendSMS({ to, body }, user.id, module, recordId);
   },
 
   async smsHandler(ctx: Context) {

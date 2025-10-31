@@ -51,8 +51,19 @@
       "type": "string",
       "required": true
     },
+    "module": {
+      "type": "string"
+    },
+    "record_id": {
+      "type": "integer"
+    },
     "metadata": {
       "type": "json"
+    },
+    "assigned_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

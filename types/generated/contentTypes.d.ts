@@ -2706,6 +2706,10 @@ export interface ApiTelecomTelecom extends Struct.CollectionTypeSchema {
   };
   attributes: {
     answered_by: Schema.Attribute.String;
+    assigned_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
     body: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -2721,7 +2725,9 @@ export interface ApiTelecomTelecom extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     metadata: Schema.Attribute.JSON;
+    module: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    record_id: Schema.Attribute.Integer;
     service: Schema.Attribute.String & Schema.Attribute.Required;
     sid: Schema.Attribute.String & Schema.Attribute.Required;
     start_time: Schema.Attribute.DateTime;

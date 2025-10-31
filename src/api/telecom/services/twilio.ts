@@ -293,7 +293,12 @@ export default {
     return { message: 'no action', TaskAssignmentStatus };
   },
 
-  async sendSms({ to, body }) {
+  async sendSms(
+    { to, body },
+    userId: number,
+    module?: string,
+    recordId?: number,
+  ) {
     const settings = await this.getSettings();
     const { phoneNumber: from } = settings;
 
@@ -317,6 +322,9 @@ export default {
           to: message.to,
           direction: 'outbound',
           type_status: message.status,
+          assigned_user: userId,
+          module,
+          record_id: recordId || null,
         },
       });
     } catch (e) {
