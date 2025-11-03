@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tag_assignments",
+  "info": {
+    "singularName": "tag-assignment",
+    "pluralName": "tag-assignments",
+    "displayName": "Tag Assignment"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tag": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::tag.tag"
+    },
+    "module": {
+      "type": "string",
+      "required": true
+    },
+    "record_id": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

@@ -2694,6 +2694,68 @@ export interface ApiSupplierSupplier extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTagAssignmentTagAssignment
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'tag_assignments';
+  info: {
+    displayName: 'Tag Assignment';
+    pluralName: 'tag-assignments';
+    singularName: 'tag-assignment';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::tag-assignment.tag-assignment'
+    > &
+      Schema.Attribute.Private;
+    module: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    record_id: Schema.Attribute.Integer & Schema.Attribute.Required;
+    tag: Schema.Attribute.Relation<'oneToOne', 'api::tag.tag'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTagTag extends Struct.CollectionTypeSchema {
+  collectionName: 'tags';
+  info: {
+    displayName: 'Tag';
+    pluralName: 'tags';
+    singularName: 'tag';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tag.tag'> &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiTelecomTelecom extends Struct.CollectionTypeSchema {
   collectionName: 'telecoms';
   info: {
@@ -3435,6 +3497,8 @@ declare module '@strapi/strapi' {
       'api::state.state': ApiStateState;
       'api::static-page.static-page': ApiStaticPageStaticPage;
       'api::supplier.supplier': ApiSupplierSupplier;
+      'api::tag-assignment.tag-assignment': ApiTagAssignmentTagAssignment;
+      'api::tag.tag': ApiTagTag;
       'api::telecom.telecom': ApiTelecomTelecom;
       'api::timeline.timeline': ApiTimelineTimeline;
       'api::vendor.vendor': ApiVendorVendor;
