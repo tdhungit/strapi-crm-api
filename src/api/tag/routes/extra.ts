@@ -10,5 +10,10 @@ export default {
       path: '/tags/:module/:recordId',
       handler: 'tag.getRecordTags',
     },
+    {
+      method: 'GET',
+      path: '/tags/find',
+      handler: 'tag.findTagRecords',
+    },
   ],
 };
