@@ -1005,6 +1005,47 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCrmWebhookCrmWebhook extends Struct.CollectionTypeSchema {
+  collectionName: 'crm_webhooks';
+  info: {
+    displayName: 'Webhook';
+    pluralName: 'crm-webhooks';
+    singularName: 'crm-webhook';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::crm-webhook.crm-webhook'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    trigger: Schema.Attribute.Enumeration<
+      [
+        'beforeCreate',
+        'afterCreate',
+        'beforeUpdate',
+        'afterUpdate',
+        'beforeDelete',
+        'afterDelete',
+      ]
+    > &
+      Schema.Attribute.Required;
+    uid: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    webhook: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ApiCrmWorkflowActionCrmWorkflowAction
   extends Struct.CollectionTypeSchema {
   collectionName: 'crm_workflow_actions';
@@ -3458,6 +3499,7 @@ declare module '@strapi/strapi' {
       'api::contact.contact': ApiContactContact;
       'api::country.country': ApiCountryCountry;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::crm-webhook.crm-webhook': ApiCrmWebhookCrmWebhook;
       'api::crm-workflow-action.crm-workflow-action': ApiCrmWorkflowActionCrmWorkflowAction;
       'api::crm-workflow-history.crm-workflow-history': ApiCrmWorkflowHistoryCrmWorkflowHistory;
       'api::crm-workflow.crm-workflow': ApiCrmWorkflowCrmWorkflow;

@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "crm_webhooks",
+  "info": {
+    "singularName": "crm-webhook",
+    "pluralName": "crm-webhooks",
+    "displayName": "Webhook"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "uid": {
+      "type": "string",
+      "required": true
+    },
+    "trigger": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "beforeCreate",
+        "afterCreate",
+        "beforeUpdate",
+        "afterUpdate",
+        "beforeDelete",
+        "afterDelete"
+      ]
+    },
+    "webhook": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
