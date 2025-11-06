@@ -11,6 +11,7 @@ import RedisSettings from './RedisSettings';
 import SettingsPage from './SettingsPage';
 import SupabaseSettings from './SupabaseSettings';
 import TwilioSettings from './TwilioSettings';
+import WebhookSettings from './WebhookSettings';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path='/chatbox-settings' element={<ChatBoxSettings />} />
         <Route path='/supabase-settings' element={<SupabaseSettings />} />
         <Route path='/twilio-settings' element={<TwilioSettings />} />
+        <Route path='/webhook-settings' element={<WebhookSettings />} />
       </Route>
       <Route path='*' element={<Page.Error />} />
     </Routes>

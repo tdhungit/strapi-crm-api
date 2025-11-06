@@ -157,6 +157,20 @@ export default function Layout() {
                 >
                   ChatBox Settings
                 </SubNavLink>
+                <SubNavLink
+                  className={
+                    location.pathname ===
+                    '/plugins/ui-settings/webhook-settings'
+                      ? 'active'
+                      : ''
+                  }
+                  icon={<Database />}
+                  onClick={() =>
+                    navigation('/plugins/ui-settings/webhook-settings')
+                  }
+                >
+                  Webhook Settings
+                </SubNavLink>
               </SubNavSection>
             </SubNav>
             <Box marginLeft={4} width='100%'>

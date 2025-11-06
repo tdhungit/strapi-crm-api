@@ -2,6 +2,7 @@ const uiSetting = require('./controllers/ui-settings');
 const auditLogs = require('./controllers/audit-logs');
 const addresses = require('./controllers/addresses');
 const settings = require('./controllers/settings');
+const webhooks = require('./controllers/webhooks');
 
 module.exports = () => {
   return {
@@ -87,6 +88,31 @@ module.exports = () => {
         handler: 'settings.uploadFile',
         config: { policies: ['admin::isAuthenticatedAdmin'] },
       },
+      // Webhooks
+      {
+        method: 'POST',
+        path: '/webhooks',
+        handler: 'webhooks.create',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
+        method: 'GET',
+        path: '/webhooks',
+        handler: 'webhooks.list',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
+        method: 'PUT',
+        path: '/webhooks/:id',
+        handler: 'webhooks.update',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
+      {
+        method: 'DELETE',
+        path: '/webhooks/:id',
+        handler: 'webhooks.delete',
+        config: { policies: ['admin::isAuthenticatedAdmin'] },
+      },
     ],
 
     controllers: {
@@ -94,6 +120,7 @@ module.exports = () => {
       ...auditLogs,
       ...addresses,
       ...settings,
+      ...webhooks,
     },
   };
 };
