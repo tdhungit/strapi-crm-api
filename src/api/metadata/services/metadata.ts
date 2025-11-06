@@ -109,7 +109,7 @@ export default () => ({
     const parsedValue = JSON.parse(config.value || '{}');
 
     // get schema
-    let schema;
+    let schema: any;
     if (type === 'content_types') {
       schema = strapi.contentType(uid);
     } else {
@@ -127,7 +127,7 @@ export default () => ({
     };
   },
 
-  async fixDataSave(uid, data) {
+  fixDataSave(uid, data) {
     const fixedData = {};
     const attributes = strapi.contentType(uid).attributes;
 
