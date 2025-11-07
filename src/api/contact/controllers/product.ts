@@ -91,4 +91,9 @@ export default {
       .query('api::product-category.product-category')
       .findOne({ where: { id } });
   },
+
+  async getProductTags(ctx: Context) {
+    const { id } = ctx.params;
+    return await strapi.service('api::tag.tag').getRecordTags('products', id);
+  },
 };

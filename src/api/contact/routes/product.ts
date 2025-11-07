@@ -24,5 +24,13 @@ export default {
         auth: false,
       },
     },
+    {
+      method: 'GET',
+      path: '/sale-products/:id/tags',
+      handler: 'product.getProductTags',
+      config: {
+        auth: false,
+      },
+    },
   ],
 };
