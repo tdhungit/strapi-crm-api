@@ -1,9 +1,10 @@
+import type { Event } from '@strapi/database/dist/lifecycles';
 import type { Core } from '@strapi/strapi';
 
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
     // Global lifecycle
-    strapi.db.lifecycles.subscribe((event) => {
+    strapi.db.lifecycles.subscribe((event: Event) => {
       // Check and auto install app
       strapi.service('api::setting.install').autoInstall(event);
 

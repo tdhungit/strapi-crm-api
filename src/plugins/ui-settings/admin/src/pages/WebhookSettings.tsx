@@ -33,7 +33,7 @@ export default function WebhookSettings() {
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
 
-  const ROW_COUNT = 5;
+  const ROW_COUNT = 6;
   const COL_COUNT = 10;
 
   const fetchClient = useFetchClient();
@@ -106,6 +106,7 @@ export default function WebhookSettings() {
               <Th>Content Type</Th>
               <Th>URL</Th>
               <Th>Event</Th>
+              <Th>Status</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -116,6 +117,7 @@ export default function WebhookSettings() {
                 <Td>{webhook.uid}</Td>
                 <Td>{webhook.webhook}</Td>
                 <Td>{webhook.trigger}</Td>
+                <Td>{webhook.status}</Td>
                 <Td>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <Button
@@ -217,6 +219,19 @@ export default function WebhookSettings() {
                   onChange={(e) => handleInputChange('webhook', e.target.value)}
                   value={webhookData?.webhook || ''}
                 />
+              </Field.Root>
+              <Field.Root width='100%'>
+                <Field.Label>Status</Field.Label>
+                <SingleSelect
+                  placeholder='Pick a status...'
+                  onChange={(e: any) => handleInputChange('status', e)}
+                  value={webhookData?.status}
+                >
+                  <SingleSelectOption value='Active'>Active</SingleSelectOption>
+                  <SingleSelectOption value='Inactive'>
+                    Inactive
+                  </SingleSelectOption>
+                </SingleSelect>
               </Field.Root>
             </div>
           </Dialog.Body>

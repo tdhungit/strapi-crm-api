@@ -34,6 +34,14 @@
     "webhook": {
       "type": "string",
       "required": true
+    },
+    "token": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "default": "Active",
+      "enum": ["Active", "Inactive"]
     }
   }
 }

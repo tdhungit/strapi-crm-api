@@ -1027,6 +1027,9 @@ export interface ApiCrmWebhookCrmWebhook extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
+    token: Schema.Attribute.String;
     trigger: Schema.Attribute.Enumeration<
       [
         'beforeCreate',
