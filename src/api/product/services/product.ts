@@ -7,7 +7,8 @@ export default factories.createCoreService(
       date: Date,
       warehouseId: number,
       priceType: string = 'Sale',
-      options?: { categoryId?: number; limit?: number; offset?: number }
+      options?: { categoryId?: number; limit?: number; offset?: number },
+      filters?: { keyword?: string },
     ) {
       const selectCount = 'count(products.id) as total';
       const select = `
@@ -19,13 +20,21 @@ export default factories.createCoreService(
         max(product_prices.before_price) as max_before_price
       `;
 
-      const getQuery = (select: string, categoryId?: number): string => {
+      const getQuery = (
+        select: string,
+        categoryId?: number,
+        filters?: { keyword?: string },
+      ): string => {
         let andWhere = '';
         let categoryJoin = '';
         if (categoryId) {
           categoryJoin =
             'join products_product_category_lnk on products_product_category_lnk.product_id = products.id';
           andWhere = `and products_product_category_lnk.product_category_id = ${categoryId}`;
+        }
+
+        if (filters?.keyword) {
+          andWhere = `and (products.name like '%${filters.keyword}%' or product_variants.sku like '%${filters.keyword}%' or product_variants.barcode like '%${filters.keyword}%')`;
         }
 
         return `
@@ -74,9 +83,10 @@ export default factories.createCoreService(
       };
 
       const knex = strapi.db.connection;
+      const query = getQuery(select, options?.categoryId, filters);
 
       const [products, total] = await Promise.all([
-        knex.raw(getQuery(select, options?.categoryId), [
+        knex.raw(query, [
           priceType,
           warehouseId,
           date,
@@ -86,7 +96,7 @@ export default factories.createCoreService(
           options?.limit || 10,
           options?.offset || 0,
         ]),
-        knex.raw(getQuery(selectCount, options?.categoryId), [
+        knex.raw(query, [
           priceType,
           warehouseId,
           date,
@@ -106,11 +116,11 @@ export default factories.createCoreService(
             page: options?.offset ? options.offset / options.limit + 1 : 1,
             pageSize: options?.limit || 10,
             pageCount: Math.ceil(
-              (total.rows[0]?.total || 0) / (options?.limit || 10)
+              (total.rows[0]?.total || 0) / (options?.limit || 10),
             ),
           },
         },
       };
     },
-  })
+  }),
 );

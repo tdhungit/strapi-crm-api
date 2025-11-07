@@ -19,13 +19,19 @@ export default {
       return ctx.badRequest('Warehouse ID is required');
     }
 
-    return strapi
-      .service('api::product.product')
-      .findAvailableProducts(date, warehouseId, 'Sale', {
+    const filters = await this.parseFilters(ctx);
+
+    return strapi.service('api::product.product').findAvailableProducts(
+      date,
+      warehouseId,
+      'Sale',
+      {
         categoryId: ctx.query.categoryId,
         limit,
         offset: start,
-      });
+      },
+      filters,
+    );
   },
 
   async findProduct(ctx: Context) {
@@ -95,5 +101,10 @@ export default {
   async getProductTags(ctx: Context) {
     const { id } = ctx.params;
     return await strapi.service('api::tag.tag').getRecordTags('products', id);
+  },
+
+  async parseFilters(ctx: Context) {
+    const { keyword } = ctx.query;
+    return { keyword };
   },
 };
