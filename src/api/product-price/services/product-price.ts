@@ -1,9 +1,11 @@
 import { factories } from '@strapi/strapi';
+import dayjs from 'dayjs';
 
 export default factories.createCoreService(
   'api::product-price.product-price',
   ({ strapi }) => ({
     filterPriceFromDate(date: Date) {
+      const dateStr = dayjs(date).format('YYYY-MM-DD');
       return {
         $or: [
           {
@@ -11,19 +13,19 @@ export default factories.createCoreService(
             end_date: null,
           },
           {
-            start_date: { $lte: date.toISOString() },
-            end_date: { $gte: date.toISOString() },
+            start_date: { $lte: dateStr },
+            end_date: { $gte: dateStr },
           },
           {
-            start_date: { $lte: date.toISOString() },
+            start_date: { $lte: dateStr },
             end_date: null,
           },
           {
             start_date: null,
-            end_date: { $gte: date.toISOString() },
+            end_date: { $gte: dateStr },
           },
         ],
       };
     },
-  })
+  }),
 );

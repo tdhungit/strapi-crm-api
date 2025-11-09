@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi';
+import dayjs from 'dayjs';
 
 export default factories.createCoreService(
   'api::product.product',
@@ -10,6 +11,7 @@ export default factories.createCoreService(
       options?: { categoryId?: number; limit?: number; offset?: number },
       filters?: { keyword?: string },
     ) {
+      const dateStr = dayjs(date).format('YYYY-MM-DD');
       const selectCount = 'count(products.id) as total';
       const select = `
         products.*,
@@ -83,26 +85,25 @@ export default factories.createCoreService(
       };
 
       const knex = strapi.db.connection;
-      const query = getQuery(select, options?.categoryId, filters);
 
       const [products, total] = await Promise.all([
-        knex.raw(query, [
+        knex.raw(getQuery(select, options?.categoryId, filters), [
           priceType,
           warehouseId,
-          date,
-          date,
-          date,
-          date,
+          dateStr,
+          dateStr,
+          dateStr,
+          dateStr,
           options?.limit || 10,
           options?.offset || 0,
         ]),
-        knex.raw(query, [
+        knex.raw(getQuery(selectCount, options?.categoryId, filters), [
           priceType,
           warehouseId,
-          date,
-          date,
-          date,
-          date,
+          dateStr,
+          dateStr,
+          dateStr,
+          dateStr,
           options?.limit || 10,
           options?.offset || 0,
         ]),
