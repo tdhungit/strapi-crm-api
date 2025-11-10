@@ -104,7 +104,7 @@ export default {
   },
 
   async parseFilters(ctx: Context) {
-    const { keyword } = ctx.query;
-    return { keyword };
+    const { keyword, category, brand, price } = ctx.query;
+    return { keyword, category, brand, price };
   },
 };

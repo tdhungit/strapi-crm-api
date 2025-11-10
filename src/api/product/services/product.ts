@@ -9,7 +9,12 @@ export default factories.createCoreService(
       warehouseId: number,
       priceType: string = 'Sale',
       options?: { categoryId?: number; limit?: number; offset?: number },
-      filters?: { keyword?: string },
+      filters?: {
+        keyword?: string;
+        category?: number[];
+        brand?: number[];
+        price?: number[];
+      },
     ) {
       const dateStr = dayjs(date).format('YYYY-MM-DD');
       const selectCount = 'count(products.id) as total';
@@ -25,18 +30,39 @@ export default factories.createCoreService(
       const getQuery = (
         select: string,
         categoryId?: number,
-        filters?: { keyword?: string },
+        filters?: {
+          keyword?: string;
+          category?: number[];
+          brand?: number[];
+          price?: number[];
+        },
       ): string => {
         let andWhere = '';
         let categoryJoin = '';
         if (categoryId) {
           categoryJoin =
             'join products_product_category_lnk on products_product_category_lnk.product_id = products.id';
-          andWhere = `and products_product_category_lnk.product_category_id = ${categoryId}`;
+          andWhere = ` and products_product_category_lnk.product_category_id = ${categoryId}`;
         }
 
         if (filters?.keyword) {
-          andWhere = `and (products.name like '%${filters.keyword}%' or product_variants.sku like '%${filters.keyword}%' or product_variants.barcode like '%${filters.keyword}%')`;
+          andWhere += ` and (products.name like '%${filters.keyword}%' or product_variants.sku like '%${filters.keyword}%' or product_variants.barcode like '%${filters.keyword}%')`;
+        }
+
+        if (filters?.brand?.length > 0) {
+          andWhere += ` and product_variants.brand_id in (${filters.brand.join(',')})`;
+        }
+
+        if (filters?.category?.length > 0) {
+          if (!categoryJoin) {
+            categoryJoin =
+              'join products_product_category_lnk on products_product_category_lnk.product_id = products.id';
+          }
+          andWhere += ` and products_product_category_lnk.product_category_id in (${filters.category.join(',')})`;
+        }
+
+        if (filters?.price?.length > 0) {
+          andWhere += ` and (product_prices.price >= ${filters.price[0]} and product_prices.price <= ${filters.price[1]})`;
         }
 
         return `
