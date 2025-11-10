@@ -39,9 +39,12 @@ export default factories.createCoreService(
       ): string => {
         let andWhere = '';
         let categoryJoin = '';
+        let brandJoin = '';
         if (categoryId) {
-          categoryJoin =
-            'join products_product_category_lnk on products_product_category_lnk.product_id = products.id';
+          if (!categoryJoin) {
+            categoryJoin =
+              'join products_product_category_lnk on products_product_category_lnk.product_id = products.id';
+          }
           andWhere = ` and products_product_category_lnk.product_category_id = ${categoryId}`;
         }
 
@@ -50,7 +53,11 @@ export default factories.createCoreService(
         }
 
         if (filters?.brand?.length > 0) {
-          andWhere += ` and product_variants.brand_id in (${filters.brand.join(',')})`;
+          if (!brandJoin) {
+            brandJoin =
+              'join products_brand_lnk on products_brand_lnk.product_id = products.id';
+          }
+          andWhere += ` and products_brand_lnk.brand_id in (${filters.brand.join(',')})`;
         }
 
         if (filters?.category?.length > 0) {
