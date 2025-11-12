@@ -21,6 +21,7 @@
   "dependencies": {
     "@mailchimp/mailchimp_transactional": "^1.0.59",
     "@paypal/paypal-server-sdk": "1.1.0",
+    "@pgsql/parser": "^1.2.0",
     "@sendgrid/mail": "^8.1.6",
     "@strapi/plugin-cloud": "5.30.0",
     "@strapi/plugin-users-permissions": "5.30.0",

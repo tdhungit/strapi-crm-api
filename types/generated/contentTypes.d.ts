@@ -1231,11 +1231,12 @@ export interface ApiDashboardItemDashboardItem
     metadata: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<['Widget', 'Query']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     weight: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    widget: Schema.Attribute.String & Schema.Attribute.Required;
+    widget: Schema.Attribute.String;
   };
 }
 
@@ -2377,6 +2378,39 @@ export interface ApiPurchaseOrderPurchaseOrder
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     total_discount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     total_tax: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReportReport extends Struct.CollectionTypeSchema {
+  collectionName: 'reports';
+  info: {
+    displayName: 'Report';
+    pluralName: 'reports';
+    singularName: 'report';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    assigned_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::report.report'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -3564,6 +3598,7 @@ declare module '@strapi/strapi' {
       'api::product.product': ApiProductProduct;
       'api::purchase-order-detail.purchase-order-detail': ApiPurchaseOrderDetailPurchaseOrderDetail;
       'api::purchase-order.purchase-order': ApiPurchaseOrderPurchaseOrder;
+      'api::report.report': ApiReportReport;
       'api::sale-order-detail.sale-order-detail': ApiSaleOrderDetailSaleOrderDetail;
       'api::sale-order.sale-order': ApiSaleOrderSaleOrder;
       'api::sequence-counter.sequence-counter': ApiSequenceCounterSequenceCounter;

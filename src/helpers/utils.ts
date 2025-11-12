@@ -1,3 +1,4 @@
+import { Parser } from '@pgsql/parser';
 import bcrypt from 'bcryptjs';
 
 export function isNumeric(value: any): boolean {
@@ -25,4 +26,24 @@ export function comparePassword(
 
 export function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function isSelectQuery(sql: string): Promise<boolean> {
+  const parser = new Parser({ version: 16 });
+  try {
+    const result = await parser.parse(sql);
+
+    for (const stmt of result.stmts) {
+      if (
+        !stmt.stmt ||
+        typeof stmt.stmt !== 'object' ||
+        !('SelectStmt' in stmt.stmt)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  } catch {
+    return false;
+  }
 }

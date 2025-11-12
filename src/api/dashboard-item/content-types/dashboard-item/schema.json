@@ -15,9 +15,12 @@
       "type": "string",
       "required": true
     },
+    "type": {
+      "type": "enumeration",
+      "enum": ["Widget", "Query"]
+    },
     "widget": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "height": {
       "type": "integer",
