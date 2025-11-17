@@ -5,5 +5,10 @@ export default {
       path: '/reports/extra/generate',
       handler: 'report.generateReport',
     },
+    {
+      method: 'GET',
+      path: '/reports/:id/result',
+      handler: 'report.getReportResult',
+    },
   ],
 };

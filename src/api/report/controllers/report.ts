@@ -10,5 +10,34 @@ export default factories.createCoreController(
         .service('api::report.report')
         .generateReport(module, filters, query);
     },
+
+    async getReportResult(ctx: Context) {
+      const { id } = ctx.params;
+
+      const page = ctx.query.current || 1;
+      const pageSize = ctx.query.pageSize || 20;
+
+      const report = await strapi.db.query('api::report.report').findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!report) {
+        return ctx.notFound('Report not found');
+      }
+
+      const { module, filters, query } = report.metadata || {};
+      if (!module || !filters || !query) {
+        return ctx.badRequest('Invalid report metadata');
+      }
+
+      return await strapi
+        .service('api::report.report')
+        .generateReport(module, filters, query, {
+          page,
+          pageSize,
+        });
+    },
   }),
 );
