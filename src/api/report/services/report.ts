@@ -4,7 +4,12 @@ import { ContentTypeType } from '../../metadata/types';
 export default factories.createCoreService(
   'api::report.report',
   ({ strapi }) => ({
-    async generateReport(module: string, filters: any, query: string) {
+    async generateReport(
+      module: string,
+      filters: any,
+      query: string,
+      options?: { page?: number; pageSize?: number },
+    ) {
       const contentType: ContentTypeType | null = await strapi
         .service('api::metadata.metadata')
         .getContentTypeFromCollectionName(module);
@@ -13,9 +18,29 @@ export default factories.createCoreService(
         throw new Error(`Content type not found for module: ${module}`);
       }
 
-      return await strapi.entityService.findMany(contentType.uid as any, {
-        filters,
-      });
+      const page = options?.page || 1;
+      const pageSize = options?.pageSize || 20;
+
+      const [result, count] = await Promise.all([
+        strapi.entityService.findMany(contentType.uid as any, {
+          filters,
+          limit: pageSize,
+          start: page && pageSize ? (page - 1) * pageSize : 0,
+        }),
+        strapi.db.query(contentType.uid as any).count({ where: filters }),
+      ]);
+
+      return {
+        data: result,
+        meta: {
+          pagination: {
+            page,
+            pageSize,
+            pageCount: Math.ceil(count / pageSize),
+            total: count,
+          },
+        },
+      };
     },
   }),
 );
