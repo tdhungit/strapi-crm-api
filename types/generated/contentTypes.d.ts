@@ -1231,7 +1231,8 @@ export interface ApiDashboardItemDashboardItem
     metadata: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String & Schema.Attribute.Required;
-    type: Schema.Attribute.Enumeration<['Widget', 'Query']>;
+    type: Schema.Attribute.Enumeration<['Widget', 'Builder', 'Query']> &
+      Schema.Attribute.DefaultTo<'Widget'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

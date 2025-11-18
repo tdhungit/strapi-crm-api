@@ -17,7 +17,12 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": ["Widget", "Query"]
+      "default": "Widget",
+      "enum": [
+        "Widget",
+        "Builder",
+        "Query"
+      ]
     },
     "widget": {
       "type": "string"
