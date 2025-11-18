@@ -15,5 +15,10 @@ export default {
       path: '/reports/extra/is-valid-query',
       handler: 'report.isValidQuery',
     },
+    {
+      method: 'POST',
+      path: '/reports/extra/parse-query',
+      handler: 'report.parseQuery',
+    },
   ],
 };

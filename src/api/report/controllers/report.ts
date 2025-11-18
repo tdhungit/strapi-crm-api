@@ -1,5 +1,6 @@
 import { factories } from '@strapi/strapi';
 import { Context } from 'koa';
+import { parseSql } from '../../../helpers/utils';
 
 export default factories.createCoreController(
   'api::report.report',
@@ -55,6 +56,16 @@ export default factories.createCoreController(
       }
 
       return { isValid: true };
+    },
+
+    async parseQuery(ctx: Context) {
+      const { query } = ctx.request.body;
+      if (!query) {
+        return ctx.badRequest('Query is required');
+      }
+
+      const result = await parseSql(query);
+      return result?.stmts?.[0]?.stmt || {};
     },
   }),
 );
