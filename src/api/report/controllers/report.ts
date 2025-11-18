@@ -42,10 +42,19 @@ export default factories.createCoreController(
 
     async isValidQuery(ctx: Context) {
       const { query } = ctx.request.body;
-      const isSelect = await strapi
+      if (!query) {
+        return ctx.badRequest('Query is required');
+      }
+
+      const isValid = await strapi
         .service('api::report.report')
         .isValidQuery(query);
-      return { isValid: isSelect };
+
+      if (!isValid) {
+        return ctx.badRequest('Invalid query');
+      }
+
+      return { isValid: true };
     },
   }),
 );
