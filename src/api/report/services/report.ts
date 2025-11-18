@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi';
+import { isSelectQuery } from '../../../helpers/utils';
 import { ContentTypeType } from '../../metadata/types';
 
 export default factories.createCoreService(
@@ -16,6 +17,31 @@ export default factories.createCoreService(
 
       if (!contentType) {
         throw new Error(`Content type not found for module: ${module}`);
+      }
+
+      if (!filters && query) {
+        const isSelect = await isSelectQuery(query);
+        if (!isSelect) {
+          return {
+            data: [],
+            meta: {},
+          };
+        }
+
+        const knex = strapi.db.connection;
+        const data = await knex.raw(query);
+        return {
+          data: data.rows,
+          meta: {
+            fields: data.fields,
+            pagination: {
+              page: 1,
+              pageSize: data.rowCount,
+              pageCount: 1,
+              total: data.rowCount,
+            },
+          },
+        };
       }
 
       const page = options?.page || 1;

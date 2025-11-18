@@ -1,5 +1,6 @@
 import { factories } from '@strapi/strapi';
 import { Context } from 'koa';
+import { isSelectQuery } from '../../../helpers/utils';
 
 export default factories.createCoreController(
   'api::report.report',
@@ -28,7 +29,7 @@ export default factories.createCoreController(
       }
 
       const { module, filters, query } = report.metadata || {};
-      if (!module || !filters || !query) {
+      if (!module) {
         return ctx.badRequest('Invalid report metadata');
       }
 
@@ -38,6 +39,12 @@ export default factories.createCoreController(
           page,
           pageSize,
         });
+    },
+
+    async isSelectQuery(ctx: Context) {
+      const { query } = ctx.request.body;
+      const isSelect = await isSelectQuery(query);
+      return { isValid: isSelect };
     },
   }),
 );

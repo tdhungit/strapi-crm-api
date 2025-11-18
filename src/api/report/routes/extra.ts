@@ -10,5 +10,10 @@ export default {
       path: '/reports/:id/result',
       handler: 'report.getReportResult',
     },
+    {
+      method: 'POST',
+      path: '/reports/extra/is-select-query',
+      handler: 'report.isSelectQuery',
+    },
   ],
 };
