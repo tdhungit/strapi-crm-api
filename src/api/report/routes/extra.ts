@@ -12,8 +12,8 @@ export default {
     },
     {
       method: 'POST',
-      path: '/reports/extra/is-select-query',
-      handler: 'report.isSelectQuery',
+      path: '/reports/extra/is-valid-query',
+      handler: 'report.isValidQuery',
     },
   ],
 };

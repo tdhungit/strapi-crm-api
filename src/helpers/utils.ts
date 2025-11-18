@@ -1,4 +1,5 @@
 import { Parser } from '@pgsql/parser';
+import { ParseResult } from '@pgsql/parser/wasm/v16/types';
 import bcrypt from 'bcryptjs';
 
 export function isNumeric(value: any): boolean {
@@ -28,10 +29,19 @@ export function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function isSelectQuery(sql: string): Promise<boolean> {
+export async function parseSql(sql: string): Promise<ParseResult> {
   const parser = new Parser({ version: 16 });
   try {
     const result = await parser.parse(sql);
+    return result;
+  } catch (error) {
+    throw new Error(`Failed to parse SQL: ${error}`);
+  }
+}
+
+export async function isSelectQuery(sql: string): Promise<boolean> {
+  try {
+    const result = await parseSql(sql);
 
     for (const stmt of result.stmts) {
       if (

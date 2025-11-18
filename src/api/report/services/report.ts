@@ -1,10 +1,45 @@
 import { factories } from '@strapi/strapi';
-import { isSelectQuery } from '../../../helpers/utils';
+import { parseSql } from '../../../helpers/utils';
 import { ContentTypeType } from '../../metadata/types';
 
 export default factories.createCoreService(
   'api::report.report',
   ({ strapi }) => ({
+    async isValidQuery(query: string): Promise<boolean> {
+      try {
+        const result = await parseSql(query);
+
+        for (const stmt of result.stmts) {
+          if (!stmt.stmt || typeof stmt.stmt !== 'object') {
+            return false;
+          }
+
+          if (!('SelectStmt' in stmt.stmt)) {
+            return false;
+          }
+
+          const selectStmt: any = stmt.stmt.SelectStmt;
+          if (!selectStmt.limitCount) {
+            return false;
+          }
+
+          const limit = selectStmt.limitCount.A_Const?.ival?.ival || -1;
+          if (
+            !limit ||
+            typeof limit !== 'number' ||
+            limit <= 0 ||
+            limit > 1000
+          ) {
+            return false;
+          }
+        }
+
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+
     async generateReport(
       module: string,
       filters: any,
@@ -20,8 +55,8 @@ export default factories.createCoreService(
       }
 
       if (!filters && query) {
-        const isSelect = await isSelectQuery(query);
-        if (!isSelect) {
+        const isValid = await this.isValidQuery(query);
+        if (!isValid) {
           return {
             data: [],
             meta: {},

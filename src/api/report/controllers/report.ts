@@ -1,6 +1,5 @@
 import { factories } from '@strapi/strapi';
 import { Context } from 'koa';
-import { isSelectQuery } from '../../../helpers/utils';
 
 export default factories.createCoreController(
   'api::report.report',
@@ -41,9 +40,11 @@ export default factories.createCoreController(
         });
     },
 
-    async isSelectQuery(ctx: Context) {
+    async isValidQuery(ctx: Context) {
       const { query } = ctx.request.body;
-      const isSelect = await isSelectQuery(query);
+      const isSelect = await strapi
+        .service('api::report.report')
+        .isValidQuery(query);
       return { isValid: isSelect };
     },
   }),
