@@ -10,11 +10,11 @@ export default factories.createCoreService(
         return {};
       }
 
-      if (!item.metadata.query) {
+      if (!item.metadata.query && !item.metadata.metadata?.query) {
         return {};
       }
 
-      const query = item.metadata.query;
+      const query = item.metadata.query || item.metadata.metadata?.query;
       // Check query is select
       const isSelect = await isSelectQuery(query);
       if (!isSelect) {
