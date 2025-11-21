@@ -18,23 +18,33 @@ export default factories.createCoreController(
         return ctx.notFound('Item not found');
       }
 
-      const result = await strapi
-        .service('api::dashboard-item.dashboard-item')
-        .getQueryResult(item);
+      if (item.type === 'Query') {
+        const result = await strapi
+          .service('api::dashboard-item.dashboard-item')
+          .getQueryResult(item);
 
-      const fields = result.fields.map((field: any) => ({
-        name: field.name,
-        type: field.format,
-      }));
+        const fields = result.fields.map((field: any) => ({
+          name: field.name,
+          type: field.format,
+        }));
 
-      return {
-        data: result.rows,
-        meta: {
-          ...item.metadata,
-          total: result.rowCount,
-          fields,
-        },
-      };
+        return {
+          data: result.rows,
+          meta: {
+            ...item.metadata,
+            total: result.rowCount,
+            fields,
+          },
+        };
+      }
+
+      if (item.type === 'Builder') {
+        return await strapi
+          .service('api::dashboard-item.dashboard-item')
+          .getFilterBuilderResult(item);
+      }
+
+      return ctx.badRequest('Invalid item type');
     },
   }),
 );

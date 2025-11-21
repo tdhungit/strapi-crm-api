@@ -24,5 +24,40 @@ export default factories.createCoreService(
       const knex = strapi.db.connection;
       return await knex.raw(query);
     },
+
+    async getFilterBuilderResult(item: DashboardItemType) {
+      if (item.type !== 'Builder') {
+        return {};
+      }
+
+      if (!item.metadata.module) {
+        return {};
+      }
+
+      if (!item.metadata.jsonLogic && !item.metadata.metadata?.jsonLogic) {
+        return {};
+      }
+
+      const jsonLogic =
+        item.metadata.jsonLogic || item.metadata.metadata?.jsonLogic;
+      const module = item.metadata.module;
+
+      const contentType = await strapi
+        .service('api::metadata.metadata')
+        .getContentTypeFromCollectionName(module);
+      if (!contentType) {
+        return {};
+      }
+
+      return strapi.service('api::report.report').generateReport(
+        module,
+        null,
+        null,
+        {
+          ...(item.metadata.metadata || {}),
+        },
+        jsonLogic,
+      );
+    },
   }),
 );

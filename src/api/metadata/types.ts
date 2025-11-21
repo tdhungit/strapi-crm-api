@@ -36,6 +36,7 @@ export interface ContentTypeType {
   pluralName: string;
   attributes: AttributesType;
   isCRM?: boolean;
+  info?: any;
 }
 
 export interface ContentTypeConfigurationType {
