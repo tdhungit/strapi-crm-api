@@ -118,7 +118,7 @@ export default factories.createCoreService(
             ),
           );
           // group by
-          query.groupBy(options.yAxis);
+          // query.groupBy(options.yAxis);
         }
       } else if (options?.yAxis) {
         selectColumns.push(options.yAxis);
