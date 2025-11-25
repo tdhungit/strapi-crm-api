@@ -16,7 +16,8 @@
     "start": "strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "fake-data": "npx ts-node src/scripts/fakeData.ts"
   },
   "dependencies": {
     "@mailchimp/mailchimp_transactional": "^1.0.59",
@@ -49,6 +50,7 @@
     "twilio": "^5.10.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@types/ejs": "^3.1.5",
     "@types/node": "^20",
     "@types/react": "^18",
