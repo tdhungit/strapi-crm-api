@@ -4,7 +4,7 @@ export default {
   async getTreeProductCategories(ctx: Context) {
     const roots = await strapi
       .service('api::product-category.product-category')
-      .getTreeProductCategories();
+      .getTreeProductCategories(ctx.query);
     ctx.body = roots;
   },
 };

@@ -24,14 +24,19 @@ export type CategoryNodeType = {
 export default factories.createCoreService(
   'api::product-category.product-category',
   ({ strapi }) => ({
-    async getTreeProductCategories() {
+    async getTreeProductCategories(params: any) {
       // Fetch all categories with minimal fields including parent relation
+      let where = {};
+      if (params?.status) {
+        where = { ...where, category_status: params.status };
+      }
       const categories = (await strapi.entityService.findMany(
         'api::product-category.product-category',
         {
           populate: { parent: { fields: ['id'] } },
           sort: { weight: 'asc' },
           limit: -1,
+          where,
         },
       )) as unknown as CategoryType[];
 
