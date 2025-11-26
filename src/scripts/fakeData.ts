@@ -139,7 +139,7 @@ async function fakeDataProducts(strapi: any) {
       .query('api::product-category.product-category')
       .create({
         data: {
-          name: faker.lorem.sentence(),
+          name: faker.lorem.sentence({ min: 1, max: 3 }),
         },
       });
     const items = {
@@ -150,7 +150,7 @@ async function fakeDataProducts(strapi: any) {
     // brand
     const brand = await strapi.db.query('api::brand.brand').create({
       data: {
-        name: faker.lorem.sentence(),
+        name: faker.lorem.sentence({ min: 1, max: 3 }),
       },
     });
     brands.push(brand.id);
@@ -161,7 +161,7 @@ async function fakeDataProducts(strapi: any) {
         .query('api::product-attribute.product-attribute')
         .create({
           data: {
-            name: faker.lorem.sentence(),
+            name: faker.lorem.sentence({ min: 1, max: 3 }),
             metadata: {
               options: [
                 {
@@ -188,6 +188,8 @@ async function fakeDataProducts(strapi: any) {
   }
 
   for (let i = 0; i < 100; i++) {
+    const product_category_id =
+      faker.helpers.arrayElement(productCategories).product_category;
     // product
     const product = await strapi.db.query('api::product.product').create({
       data: {
@@ -197,11 +199,12 @@ async function fakeDataProducts(strapi: any) {
         summary: faker.lorem.sentence(),
         description: faker.lorem.paragraph(),
         product_status: faker.helpers.arrayElement(['Active']),
-        photos: {
-          url: faker.image.url(),
-        },
-        product_category:
-          faker.helpers.arrayElement(productCategories).product_category,
+        photos: [
+          {
+            url: faker.image.url(),
+          },
+        ],
+        product_category: product_category_id,
         brand: faker.helpers.arrayElement(brands),
       },
     });
@@ -231,13 +234,16 @@ async function fakeDataProducts(strapi: any) {
 
       // product variant attributes
       for (let k = 0; k < 2; k++) {
+        const productCategoryItem = productCategories.find(
+          (item) => item.product_category === product_category_id,
+        );
         await strapi.db
           .query('api::product-variant-attribute.product-variant-attribute')
           .create({
             data: {
               product_variant: variant.id,
               attribute: faker.helpers.arrayElement(
-                faker.helpers.arrayElement(productCategories).attributes,
+                productCategoryItem?.attributes || [],
               ),
               attribute_value: faker.helpers.arrayElement([
                 'Option1',
