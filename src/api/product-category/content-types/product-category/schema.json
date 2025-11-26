@@ -21,12 +21,20 @@
       "required": true,
       "unique": true
     },
-    "weight": {
-      "type": "integer",
-      "default": 0
+    "category_status": {
+      "type": "enumeration",
+      "default": "Active",
+      "enum": [
+        "Active",
+        "Inactive"
+      ]
     },
     "description": {
       "type": "text"
+    },
+    "weight": {
+      "type": "integer",
+      "default": 0
     },
     "products": {
       "type": "relation",

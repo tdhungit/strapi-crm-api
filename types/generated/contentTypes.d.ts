@@ -2007,6 +2007,8 @@ export interface ApiProductCategoryProductCategory
     draftAndPublish: false;
   };
   attributes: {
+    category_status: Schema.Attribute.Enumeration<['Active', 'Inactive']> &
+      Schema.Attribute.DefaultTo<'Active'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
