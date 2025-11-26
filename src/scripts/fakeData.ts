@@ -242,7 +242,7 @@ async function fakeDataProducts(strapi: any) {
           .create({
             data: {
               product_variant: variant.id,
-              attribute: faker.helpers.arrayElement(
+              product_attribute: faker.helpers.arrayElement(
                 productCategoryItem?.attributes || [],
               ),
               attribute_value: faker.helpers.arrayElement([
