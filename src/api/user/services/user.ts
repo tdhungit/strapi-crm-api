@@ -2,10 +2,14 @@ import { PermissionItemType, PermissionType } from '../../department/types';
 import { UserMembersType } from '../types';
 
 export default () => ({
-  async assignFilter(userId, collectionName, action: string = 'read') {
+  async assignFilter(
+    userId: number,
+    collectionName: string,
+    action: string = 'read',
+  ) {
     // get content type information
     const model = Object.values(strapi.contentTypes).find(
-      (ct) => ct.collectionName === collectionName
+      (ct) => ct.collectionName === collectionName,
     );
     // check assigned_user field exist
     if (model && model.attributes.assigned_user) {
@@ -16,13 +20,17 @@ export default () => ({
   },
 
   async generateAssignFilter(
-    userId,
+    userId: number,
     model: any,
     action: string = 'read',
-    filters: any = {}
+    filters: any = {},
   ) {
     // get all members
     const { members, manager } = await this.getUserMembers(userId);
+    // check manager is admin
+    if (manager.role.name === 'Administrator') {
+      return {};
+    }
     // get permissions
     const permissions: PermissionItemType = await strapi
       .service('api::department.department')
@@ -58,7 +66,7 @@ export default () => ({
     };
   },
 
-  async getUserMembers(userId): Promise<UserMembersType> {
+  async getUserMembers(userId: number): Promise<UserMembersType> {
     // get user
     const user = await strapi.db
       .query('plugin::users-permissions.user')
@@ -67,7 +75,7 @@ export default () => ({
           id: userId,
         },
         select: ['id', 'username', 'email'],
-        populate: ['department'],
+        populate: ['department', 'role'],
       });
 
     if (!user) {
@@ -102,18 +110,18 @@ export default () => ({
     };
   },
 
-  async getPermissions(user, uid): Promise<PermissionType> {
+  async getPermissions(user: any, uid: string): Promise<PermissionType> {
     return await strapi
       .service('api::department.department')
       .getPermissionsForUser(user, uid);
   },
 
   async isAccessRecord(
-    userId,
-    uid,
+    userId: number,
+    uid: string,
     record: any,
     action: string = 'read',
-    user: any = null
+    user: any = null,
   ): Promise<boolean> {
     if (action === 'read' && record.assigned_user?.id === userId) {
       return true;
