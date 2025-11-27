@@ -100,4 +100,15 @@ export default {
       metadata: {},
     };
   },
+
+  async Add_To_CampaignAction(
+    action: WorkflowActionType,
+    record: any,
+  ): Promise<WorkflowActionRunResult> {
+    console.log('Adding to campaign...', action.id);
+    return {
+      status: 'Completed',
+      metadata: {},
+    };
+  },
 };
