@@ -1,6 +1,7 @@
 import {
   WorkflowActionRunResult,
   WorkflowActionType,
+  WorkflowEmailActionType,
   WorkflowType,
 } from '../types';
 
@@ -83,10 +84,23 @@ export default {
     action: WorkflowActionType,
     record: any,
   ): Promise<WorkflowActionRunResult> {
-    console.log('Sending email...', action.id);
+    const metadata: WorkflowEmailActionType = action.metadata;
+    const emailTemplateId = metadata.actionSettings?.templateId;
+    const field = metadata.actionSettings?.field;
+    if (!emailTemplateId || !field || !record[field]) {
+      return {
+        status: 'Failed',
+        metadata,
+      };
+    }
+
+    await strapi
+      .service('api::email-template.email')
+      .sendTemplate(record[field], emailTemplateId, record);
+
     return {
       status: 'Completed',
-      metadata: {},
+      metadata,
     };
   },
 

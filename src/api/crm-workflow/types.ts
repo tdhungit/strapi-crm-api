@@ -7,7 +7,7 @@ export interface WorkflowType {
   workflow_status: string;
   run_status: string;
   run_at: Date;
-  metadata: Record<string, any>;
+  metadata: any;
   workflow_actions: WorkflowActionType[];
 }
 
@@ -18,16 +18,26 @@ export interface WorkflowActionType {
   action_status: string;
   run_status: string;
   is_repeat: boolean;
-  metadata: Record<string, any>;
+  metadata: any;
 }
 
 export interface WorkflowActionRunResult {
   status: string;
-  metadata: Record<string, any>;
+  metadata: any;
 }
 
 export interface WorkflowConditionType {
   field: string;
   value: string;
   operator: string;
+}
+
+export interface WorkflowEmailActionType {
+  actionSettings?: {
+    field?: string;
+    fromName?: string;
+    fromEmail?: string;
+    replyToEmail?: string;
+    templateId?: number;
+  };
 }
