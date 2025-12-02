@@ -23,6 +23,7 @@ export interface WorkflowActionType {
 
 export interface WorkflowActionRunResult {
   status: string;
+  message?: string;
   metadata: any;
 }
 
@@ -38,6 +39,13 @@ export interface WorkflowEmailActionType {
     fromName?: string;
     fromEmail?: string;
     replyToEmail?: string;
+    templateId?: number;
+  };
+}
+
+export interface WorkflowSmsActionType {
+  actionSettings?: {
+    field?: string;
     templateId?: number;
   };
 }

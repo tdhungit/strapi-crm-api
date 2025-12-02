@@ -2,6 +2,7 @@ import {
   WorkflowActionRunResult,
   WorkflowActionType,
   WorkflowEmailActionType,
+  WorkflowSmsActionType,
   WorkflowType,
 } from '../types';
 
@@ -90,6 +91,7 @@ export default {
     if (!emailTemplateId || !field || !record[field]) {
       return {
         status: 'Failed',
+        message: 'Missing required parameters',
         metadata,
       };
     }
@@ -108,10 +110,35 @@ export default {
     action: WorkflowActionType,
     record: any,
   ): Promise<WorkflowActionRunResult> {
-    console.log('Sending sms...', action.id);
+    const metadata: WorkflowSmsActionType = action.metadata;
+    const smsTemplateId = metadata.actionSettings?.templateId;
+    const field = metadata.actionSettings?.field;
+    if (!smsTemplateId || !field || !record[field]) {
+      return {
+        status: 'Failed',
+        message: 'Missing required parameters',
+        metadata,
+      };
+    }
+
+    let body = '';
+    try {
+      body = await strapi
+        .service('api::email-template.email-template')
+        .parseTemplateContent(smsTemplateId, record);
+    } catch (error) {
+      return {
+        status: 'Failed',
+        message: error.message || 'Error parsing template content',
+        metadata,
+      };
+    }
+
+    await strapi.service('api::telecom.sms').sendSms(record[field], body);
+
     return {
       status: 'Completed',
-      metadata: {},
+      metadata,
     };
   },
 

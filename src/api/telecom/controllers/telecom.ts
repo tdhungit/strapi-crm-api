@@ -5,34 +5,25 @@ export default factories.createCoreController(
   'api::telecom.telecom',
   ({ strapi }) => ({
     async sendSMS(ctx: Context) {
-      const settings = await strapi
-        .service('api::setting.setting')
-        .getCRMSettings();
-
-      const { telecomProvider } = settings;
-      if (!telecomProvider) {
-        ctx.status = 400;
-        ctx.body = { error: 'Missing required parameters' };
-        return;
-      }
-
       const { to, body, module, recordId } = ctx.request.body;
       const user = ctx.state.user;
 
-      if (!to || !body) {
+      const result = await strapi.service('api::telecom.sms').sendSMS({
+        to,
+        body,
+        module,
+        recordId,
+        userId: user.id,
+      });
+
+      if (result.error) {
         ctx.status = 400;
-        ctx.body = { error: 'Missing required parameters' };
+        ctx.body = { error: result.error };
         return;
       }
 
-      if (telecomProvider === 'twilio') {
-        return await strapi
-          .service('api::telecom.twilio')
-          .sendSMS({ to, body }, user.id, module, recordId);
-      }
-
-      ctx.status = 400;
-      ctx.body = { error: 'Unsupported telecom provider' };
+      ctx.status = 200;
+      ctx.body = result;
     },
   }),
 );
