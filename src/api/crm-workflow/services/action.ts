@@ -1,6 +1,7 @@
 import {
   WorkflowActionRunResult,
   WorkflowActionType,
+  WorkflowAddToCampaignActionType,
   WorkflowEmailActionType,
   WorkflowSmsActionType,
   WorkflowType,
@@ -65,7 +66,7 @@ export default {
     if (this[actionName]) {
       for await (const record of records) {
         if (await this.canRun(workflow, action, record)) {
-          const res = await this[actionName](action, record);
+          const res = await this[actionName](action, record, workflow);
           await this.saveActionHistory(
             workflow,
             action,
@@ -84,6 +85,7 @@ export default {
   async Send_EmailAction(
     action: WorkflowActionType,
     record: any,
+    workflow?: WorkflowType,
   ): Promise<WorkflowActionRunResult> {
     const metadata: WorkflowEmailActionType = action.metadata;
     const emailTemplateId = metadata.actionSettings?.templateId;
@@ -109,6 +111,7 @@ export default {
   async Send_SmsAction(
     action: WorkflowActionType,
     record: any,
+    workflow?: WorkflowType,
   ): Promise<WorkflowActionRunResult> {
     const metadata: WorkflowSmsActionType = action.metadata;
     const smsTemplateId = metadata.actionSettings?.templateId;
@@ -145,8 +148,64 @@ export default {
   async Add_To_CampaignAction(
     action: WorkflowActionType,
     record: any,
+    workflow?: WorkflowType,
   ): Promise<WorkflowActionRunResult> {
-    console.log('Adding to campaign...', action.id);
+    const metadata: WorkflowAddToCampaignActionType = action.metadata;
+    const campaignId = metadata.actionSettings?.campaignId;
+    if (!campaignId) {
+      return {
+        status: 'Failed',
+        message: 'Missing required parameters',
+        metadata,
+      };
+    }
+
+    const campaign = await strapi.db.query('api::campaign.campaign').findOne({
+      where: {
+        id: campaignId,
+      },
+    });
+    if (!campaign) {
+      return {
+        status: 'Failed',
+        message: 'Campaign not found',
+        metadata,
+      };
+    }
+
+    switch (workflow?.module) {
+      case 'contact':
+        await strapi.db.query('api::campaign.campaign').update({
+          where: {
+            id: campaignId,
+          },
+          data: {
+            contacts: {
+              connect: {
+                id: record.id,
+              },
+            },
+          },
+        });
+        break;
+      case 'lead':
+        await strapi.db.query('api::campaign.campaign').update({
+          where: {
+            id: campaignId,
+          },
+          data: {
+            leads: {
+              connect: {
+                id: record.id,
+              },
+            },
+          },
+        });
+        break;
+      default:
+        break;
+    }
+
     return {
       status: 'Completed',
       metadata: {},

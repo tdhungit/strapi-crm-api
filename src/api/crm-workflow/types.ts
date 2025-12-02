@@ -49,3 +49,9 @@ export interface WorkflowSmsActionType {
     templateId?: number;
   };
 }
+
+export interface WorkflowAddToCampaignActionType {
+  actionSettings?: {
+    campaignId?: number;
+  };
+}
