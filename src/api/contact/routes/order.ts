@@ -18,6 +18,14 @@ export default {
     },
     {
       method: 'POST',
+      path: '/customers/contact/cart/is-valid-coupons',
+      handler: 'order.isValidCoupons',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
+    {
+      method: 'POST',
       path: '/customers/contact/orders',
       handler: 'order.createOrderFromCart',
       config: {

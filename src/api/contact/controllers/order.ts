@@ -86,6 +86,47 @@ export default {
     return { cart };
   },
 
+  async isValidCoupons(ctx: Context) {
+    const { id } = ctx.state.contact;
+    const { couponIds } = ctx.request.body;
+
+    const cart = await strapi.db.query('api::cart.cart').findOne({
+      where: { contact: { id } },
+      populate: ['contact', 'cart_details.product_variant'],
+    });
+
+    if (
+      !cart ||
+      !cart.cart_details ||
+      cart.cart_details.length === 0 ||
+      !cart.contact?.id
+    ) {
+      return ctx.badRequest('Invalid cart');
+    }
+
+    const coupons = await strapi.db.query('api::coupon.coupon').findMany({
+      where: {
+        id: {
+          $in: couponIds,
+        },
+      },
+    });
+
+    if (
+      !coupons ||
+      coupons.length === 0 ||
+      coupons.length !== couponIds.length
+    ) {
+      return ctx.badRequest('Invalid coupon');
+    }
+
+    const isValidCoupons = await strapi
+      .service('api::coupon.coupon')
+      .isValidCoupons(coupons, cart);
+
+    return { isValidCoupons };
+  },
+
   async createOrderFromCart(ctx: Context) {
     const { id } = ctx.state.contact;
     const {
