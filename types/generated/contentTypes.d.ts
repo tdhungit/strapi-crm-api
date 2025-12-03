@@ -1021,6 +1021,10 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    product_categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-category.product-category'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     sale_orders: Schema.Attribute.Relation<
       'manyToMany',

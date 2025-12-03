@@ -78,6 +78,11 @@
       "relation": "manyToMany",
       "target": "api::sale-order.sale-order",
       "inversedBy": "coupons"
+    },
+    "product_categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-category.product-category"
     }
   }
 }
