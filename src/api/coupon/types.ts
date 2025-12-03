@@ -12,4 +12,6 @@ export interface CouponType {
   discount_type?: string;
   discount_value?: number;
   max_amount?: number;
+  min_order_amount?: number;
+  product_categories?: any;
 }

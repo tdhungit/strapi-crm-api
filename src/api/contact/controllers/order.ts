@@ -128,6 +128,16 @@ export default {
       }
     }
 
+    // check valid coupons
+    if (coupons && coupons.length > 0) {
+      const isValidCoupons = await strapi
+        .service('api::coupon.coupon')
+        .isValidCoupons(coupons, cart);
+      if (!isValidCoupons) {
+        return ctx.badRequest('Invalid coupon');
+      }
+    }
+
     const contactAddress = await strapi.db
       .query('api::contact-address.contact-address')
       .findOne({
