@@ -285,4 +285,56 @@ export default {
 
     return { message: 'Order updated successfully' };
   },
+
+  async addToCart(ctx: Context) {
+    const { id } = ctx.state.contact;
+
+    const contact = await strapi.db.query('api::contact.contact').findOne({
+      where: { id },
+    });
+
+    if (!contact) {
+      return ctx.badRequest('Invalid user');
+    }
+
+    let cart = await strapi.db.query('api::cart.cart').findOne({
+      where: {
+        contact: {
+          id: id,
+        },
+      },
+      populate: ['cart_details'],
+    });
+
+    const { items } = ctx.request.body;
+    for await (const item of items) {
+      const existingItem = cart?.cart_details?.find(
+        (detail: any) => detail.product_variant === item.id,
+      );
+
+      if (existingItem) {
+        // Update quantity if item already exists
+        await strapi.db.query('api::cart-detail.cart-detail').update({
+          where: { id: existingItem.id },
+          data: { quantity: existingItem.quantity + item.cartQty },
+        });
+      } else {
+        // Create new cart detail
+        await strapi.db.query('api::cart-detail.cart-detail').create({
+          data: {
+            cart: cart?.id,
+            product_variant: item.id,
+            quantity: item.cartQty,
+            price: item.price,
+            discount_type: item.discountType || 'percentage',
+            discount_amount: item.discountAmount || 0,
+            tax_type: 'percentage',
+            tax_amount: item.taxAmount || 0,
+          },
+        });
+      }
+    }
+
+    return { message: 'Items added to cart successfully', cart };
+  },
 };

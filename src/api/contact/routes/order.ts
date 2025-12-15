@@ -56,5 +56,13 @@ export default {
         policies: ['api::contact.is-authenticated'],
       },
     },
+    {
+      method: 'POST',
+      path: '/customers/contact/cart/add',
+      handler: 'order.addToCart',
+      config: {
+        policies: ['api::contact.is-authenticated'],
+      },
+    },
   ],
 };
